@@ -4,10 +4,12 @@
 
 #include "runtime.h"
 #include "defs_GOOS_GOARCH.h"
+#include "irt_nacl.h"
 #include "os_GOOS.h"
 #include "arch_GOARCH.h"
 #include "textflag.h"
 #include "stack.h"
+#include "syscall_nacl.h"
 
 int8 *goos = "nacl";
 extern SigTab runtime·sigtab[];
@@ -120,7 +122,7 @@ semacreate(void)
 	
 	mu = runtime·nacl_mutex_create(0);
 	if(mu < 0) {
-		runtime·printf("nacl_mutex_create: error %d\n", -mu);
+		// runtime·printf("nacl_mutex_create: error %d\n", -mu);
 		runtime·throw("semacreate");
 	}
 	cond = runtime·nacl_cond_create(0);
@@ -158,7 +160,7 @@ semasleep(void)
 	
 	ret = runtime·nacl_mutex_lock(g->m->waitsemalock);
 	if(ret < 0) {
-		//runtime·printf("nacl_mutex_lock: error %d\n", -ret);
+		runtime·printf("nacl_mutex_lock: error %d\n", -ret);
 		runtime·throw("semasleep");
 	}
 	if(g->m->waitsemacount > 0) {
@@ -293,20 +295,67 @@ runtime·closeonexec(int32)
 
 uint32 runtime·writelock; // test-and-set spin lock for runtime.write
 
-/*
-An attempt at IRT. Doesn't work. See end of sys_nacl_amd64.s.
 
-void (*runtime·nacl_irt_query)(void);
+typedef int32 (*TYPE_nacl_irt_query)(const int8 *interface_ident,
+				     void *table, int32 tablesize);
 
-int8 runtime·nacl_irt_basic_v0_1_str[] = "nacl-irt-basic-0.1";
-void *runtime·nacl_irt_basic_v0_1[6]; // exit, gettod, clock, nanosleep, sched_yield, sysconf
-int32 runtime·nacl_irt_basic_v0_1_size = sizeof(runtime·nacl_irt_basic_v0_1);
+struct nacl_irt_entry {
+	int8 *name;
+	void **funtab;
+	int32 size;
+	int32 is_required;
+};
 
-int8 runtime·nacl_irt_memory_v0_3_str[] = "nacl-irt-memory-0.3";
-void *runtime·nacl_irt_memory_v0_3[3]; // mmap, munmap, mprotect
-int32 runtime·nacl_irt_memory_v0_3_size = sizeof(runtime·nacl_irt_memory_v0_3);
+TYPE_nacl_irt_query runtime·nacl_irt_query;
 
-int8 runtime·nacl_irt_thread_v0_1_str[] = "nacl-irt-thread-0.1";
-void *runtime·nacl_irt_thread_v0_1[3]; // thread_create, thread_exit, thread_nice
-int32 runtime·nacl_irt_thread_v0_1_size = sizeof(runtime·nacl_irt_thread_v0_1);
-*/
+int32 runtime·nacl_irt_is_enabled;
+
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_basic_v0_1[IRT_BASIC_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_memory_v0_3[IRT_MEMORY_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_thread_v0_1[IRT_THREAD_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_futex_v0_1[IRT_FUTEX_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_fdio_v0_1[IRT_FDIO_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_filename_v0_1[IRT_FILENAME_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_exception_handling_v0_1[IRT_EXCEPTION_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_mutex_v0_1[IRT_MUTEX_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_cond_v0_1[IRT_COND_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_sem_v0_1[IRT_SEM_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_tls_v0_1[IRT_TLS_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_random_v0_1[IRT_RANDOM_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_clock_v0_1[IRT_CLOCK_SIZE];
+#pragma dataflag NOPTR
+void *runtime·nacl_irt_ppapihook_v0_1[IRT_PPAPIHOOK_SIZE];
+
+#pragma dataflag NOPTR
+struct nacl_irt_entry runtime·nacl_irt_entries[] = {
+#define NACL_IRT_ENTRY(name, s) { (name), (s), sizeof(s) }
+	NACL_IRT_ENTRY("nacl-irt-basic-0.1", runtime·nacl_irt_basic_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-memory-0.3", runtime·nacl_irt_memory_v0_3),
+	NACL_IRT_ENTRY("nacl-irt-thread-0.1", runtime·nacl_irt_thread_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-futex-0.1", runtime·nacl_irt_futex_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-fdio-0.1", runtime·nacl_irt_fdio_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-filename-0.1", runtime·nacl_irt_filename_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-exception-handling-0.1", runtime·nacl_irt_exception_handling_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-mutex-0.1", runtime·nacl_irt_mutex_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-cond-0.1", runtime·nacl_irt_cond_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-sem-0.1", runtime·nacl_irt_sem_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-tls-0.1", runtime·nacl_irt_tls_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-random-0.1", runtime·nacl_irt_random_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-clock_get-0.1", runtime·nacl_irt_clock_v0_1),
+	NACL_IRT_ENTRY("nacl-irt-ppapihook-0.1", runtime·nacl_irt_ppapihook_v0_1),
+	{ 0 },
+#undef NACL_IRT_ENTRY
+};

@@ -61,7 +61,7 @@ LSym*
 listsort(LSym *l, int (*cmp)(LSym*, LSym*), int off)
 {
 	LSym *l1, *l2, *le;
-	#define NEXT(l) (*(LSym**)((char*)(l)+off))
+#define NEXT(l) (*(LSym**)((char*)(l)+off))
 
 	if(l == 0 || NEXT(l) == 0)
 		return l;
@@ -1272,7 +1272,7 @@ address(void)
 	Section *s, *text, *data, *rodata, *symtab, *pclntab, *noptr, *bss, *noptrbss;
 	Section *typelink;
 	LSym *sym, *sub;
-	uvlong va;
+	uvlong va, foff;
 	vlong vlen;
 
 	va = INITTEXT;
@@ -1286,17 +1286,22 @@ address(void)
 	}
 	segtext.len = va - INITTEXT;
 	segtext.filelen = segtext.len;
-	if(HEADTYPE == Hnacl)
-		va += 32; // room for the "halt sled"
+	foff = segtext.fileoff + segtext.filelen;
+	if(HEADTYPE == Hnacl) {
+		// data starts from 0x10000000 to leave room for the IRT, which
+		// is normally located at 0xfa00000.
+		va = 0x10000000;
+	}
 
 	if(segrodata.sect != nil) {
 		// align to page boundary so as not to mix
 		// rodata and executable text.
 		va = rnd(va, INITRND);
+		foff = rnd(foff, INITRND);
 
 		segrodata.rwx = 04;
 		segrodata.vaddr = va;
-		segrodata.fileoff = va - segtext.vaddr + segtext.fileoff;
+		segrodata.fileoff = foff;
 		segrodata.filelen = 0;
 		for(s=segrodata.sect; s != nil; s=s->next) {
 			va = rnd(va, s->align);
@@ -1305,12 +1310,14 @@ address(void)
 		}
 		segrodata.len = va - segrodata.vaddr;
 		segrodata.filelen = segrodata.len;
+		foff += segrodata.filelen;
 	}
 
 	va = rnd(va, INITRND);
+	foff = rnd(foff, INITRND);
 	segdata.rwx = 06;
 	segdata.vaddr = va;
-	segdata.fileoff = va - segtext.vaddr + segtext.fileoff;
+	segdata.fileoff = foff;
 	segdata.filelen = 0;
 	if(HEADTYPE == Hwindows)
 		segdata.fileoff = segtext.fileoff + rnd(segtext.len, PEFILEALIGN);

@@ -10,9 +10,13 @@
 //	8(FP) - envc
 //	12(FP) - argc
 //	16(FP) - argv, then 0, then envv, then 0, then auxv
-TEXT _rt0_386_nacl(SB),NOSPLIT,$8
-	MOVL	argc+12(FP), AX
-	LEAL	argv+16(FP), BX
+TEXT _rt0_386_nacl(SB),NOSPLIT,$24
+	MOVL	arg+0(FP), AX
+	MOVL	AX, 0(SP)
+	CALL	runtime·nacl_sysinfo(SB)
+	MOVL	arg+0(FP), CX
+	MOVL	8(CX), AX
+	LEAL	12(CX), BX
 	MOVL	AX, 0(SP)
 	MOVL	BX, 4(SP)
 	CALL	main(SB)

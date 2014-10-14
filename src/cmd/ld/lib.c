@@ -1456,6 +1456,8 @@ datoff(vlong addr)
 {
 	if(addr >= segdata.vaddr)
 		return addr - segdata.vaddr + segdata.fileoff;
+	if(addr >= segrodata.vaddr)
+		return addr - segrodata.vaddr + segrodata.fileoff;
 	if(addr >= segtext.vaddr)
 		return addr - segtext.vaddr + segtext.fileoff;
 	diag("datoff %#llx", addr);
