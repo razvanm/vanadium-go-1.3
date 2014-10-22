@@ -361,7 +361,7 @@ nacl_exception_handler_irt:
 nacl_exception_handler_done:
 	ADDL	$8, SP
 	CALL	runtime·nacl_restorestack(SB)
-	MOVL	AX, 12(SP)
+	MOVL	AX, ret+8(FP)
 	RET
 
 TEXT runtime·nacl_sem_create(SB),NOSPLIT,$0
