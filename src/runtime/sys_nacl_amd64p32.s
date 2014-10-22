@@ -31,8 +31,8 @@ TEXT runtime·nacl_swapstack(SB),NOSPLIT,$0
 	JE	nss_return // executing on m->g0 already
 
 	// Switch to m->g0 stack.
-	MOVQ	(g_sched+gobuf_sp)(SI), SI
-	LEAQ	-4(SI), SP
+	MOVL	(g_sched+gobuf_sp)(SI), SI
+	LEAL	-4(SI), SP
 
 nss_return:
 	MOVL	-4(NFP), AX
@@ -47,7 +47,7 @@ TEXT runtime·nacl_restorestack(SB),NOSPLIT,$0
 	JMP	BX
 
 // Begin a NaCl IRT call.  Execute call on the main m->g0 stack.
-// On return, SP is the main m->g0 stack, BP holds the original stack frame, and
+// On return, SP is the main m->g0 stack, NFP holds the original stack frame, and
 // the current stack contains the original SP at 0(SP).	 Call runtime·entersyscall
 // only if the stack is switched and the current P is set.
 TEXT runtime·nacl_entersyscall(SB),NOSPLIT,$0-0
@@ -624,6 +624,7 @@ mmap_done:
 	CMPL 	AX, $-4095
 	JNA 	2(PC)
 	NEGL 	AX
+	CALL	runtime·nacl_exitsyscall(SB)
 	MOVL	AX, ret+24(FP)
 	RET
 

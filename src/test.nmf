@@ -1,7 +1,6 @@
 {
   "program": {
-    "x86-32": {
-      "url": "test.nexe"
-    }
+    "x86-32": { "url": "test-32.nexe" },
+    "x86-64": { "url": "test-64.nexe" }
   }
 }
