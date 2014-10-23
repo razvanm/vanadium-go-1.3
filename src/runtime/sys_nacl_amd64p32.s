@@ -645,8 +645,7 @@ realtime:
 	CALL	runtime·nacl_swapstack(SB)
 	SUBL	$16, SP
 	MOVL 	$0, DI // real time clock
-	LEAL 	0(SP), AX
-	MOVL 	AX, SI // timespec
+	MOVL 	SP, SI // timespec
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	now_irt
 	NACL_SYSCALL(SYS_clock_gettime)
@@ -658,13 +657,12 @@ now_done:
 	MOVL 	0(SP), AX // low 32 sec
 	MOVL 	4(SP), CX // high 32 sec
 	MOVL 	8(SP), BX // nsec
+	// sec is in AX, nsec in BX
+	MOVL	AX, 0(NFP)
+	MOVL	CX, 4(NFP)
+	MOVL	BX, 8(NFP)
 	ADDL	$16, SP
 	CALL	runtime·nacl_restorestack(SB)
-	
-	// sec is in AX, nsec in BX
-	MOVL	AX, sec+0(FP)
-	MOVL	CX, sec+4(FP)
-	MOVL	BX, nsec+8(FP)
 	RET
 
 TEXT syscall·now(SB),NOSPLIT,$0
@@ -688,9 +686,9 @@ clock_gettime_done:
 	RET
 
 TEXT runtime·nanotime(SB),NOSPLIT,$0
-	MOVQ runtime·timens(SB), AX
-	CMPQ AX, $0
-	JEQ 3(PC)
+	MOVQ 	runtime·timens(SB), AX
+	CMPQ 	AX, $0
+	JEQ 	3(PC)
 	MOVQ	AX, ret+0(FP)
 	RET
 	CALL	runtime·nacl_swapstack(SB)
@@ -706,6 +704,7 @@ nanotime_irt:
 nanotime_done:	
 	MOVQ 	0(SP), AX // sec
 	MOVL 	8(SP), DX // nsec
+	ADDL	$16, SP
 
 	// sec is in AX, nsec in DX
 	// return nsec in AX
