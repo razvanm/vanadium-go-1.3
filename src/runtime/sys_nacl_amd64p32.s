@@ -18,26 +18,26 @@
 #define NFP	R14
 
 TEXT runtime·nacl_swapstack(SB),NOSPLIT,$0
-	LEAL	4(SP), NFP
+	LEAL	8(SP), NFP
 	
 	get_tls(CX)
 	CMPL	CX, $0
 	JE	nss_return  // Not a Go-managed thread. Do not switch stack.
 
-	MOVL	g(CX), DI
-	MOVL	g_m(DI), DI
-	MOVL	m_g0(DI), SI
-	CMPL	g(CX), SI
+	MOVQ	g(CX), DI
+	MOVQ	g_m(DI), DI
+	MOVQ	m_g0(DI), SI
+	CMPQ	g(CX), SI
 	JE	nss_return // executing on m->g0 already
 
 	// Switch to m->g0 stack.
-	MOVL	(g_sched+gobuf_sp)(SI), SI
-	LEAL	-4(SI), SP
+	MOVQ	(g_sched+gobuf_sp)(SI), SI
+	LEAL	-8(SI), SP
 
 nss_return:
-	MOVL	-4(NFP), AX
+	MOVQ	-8(NFP), AX
 	MOVL	NFP, (SP)
-	ADDL	$4, NFP
+	ADDL	$8, NFP
 	JMP	AX
 
 // Restore the original stack.	Must not modify AX.
@@ -55,31 +55,31 @@ TEXT runtime·nacl_entersyscall(SB),NOSPLIT,$0-0
 	MOVL	SP, NFP
 
 	get_tls(CX)
-	TESTL	CX, CX
+	TESTQ	CX, CX
 	JZ	nen_return  // Not a Go-managed thread. Do not switch stack.
 
-	MOVL	g(CX), DI
-	MOVL	g_m(DI), DI
-	MOVL	m_g0(DI), SI
-	CMPL	g(CX), SI
+	MOVQ	g(CX), DI
+	MOVQ	g_m(DI), DI
+	MOVQ	m_g0(DI), SI
+	CMPQ	g(CX), SI
 	JE	nen_return  // Executing on m->g0 already.
 
-	MOVL	m_p(DI), DX
-	TESTL	DX, DX
+	MOVQ	m_p(DI), DX
+	TESTQ	DX, DX
 	JZ	nen_swapstack  // Not a goroutine.
 
 	CALL	runtime·entersyscall(SB)
 	MOVL	$1, AX
 	MOVL	SP, NFP
 	get_tls(CX)
-	MOVL	g(CX), DI
-	MOVL	g_m(DI), DI
-	MOVL	m_g0(DI), SI
+	MOVQ	g(CX), DI
+	MOVQ	g_m(DI), DI
+	MOVQ	m_g0(DI), SI
 
 nen_swapstack:
 	// Switch to m->g0 stack.
-	MOVL	(g_sched+gobuf_sp)(SI), SI
-	LEAL	-4(SI), SP
+	MOVQ	(g_sched+gobuf_sp)(SI), SI
+	LEAL	-8(SI), SP
 
 nen_return:
 	SUBL	$8, SP
@@ -92,24 +92,24 @@ nen_return:
 // Finish a NaCl IRT call.  Restores the stack, and calls runtime·exitsyscall,
 // but only if runtime·entersyscall was called on entry.  Must not modify AX.
 TEXT runtime·nacl_exitsyscall(SB),NOSPLIT,$0-0
-	MOVL	8(SP), BX
+	MOVL	12(SP), BX
 	TESTL	BX, BX
 	JZ	nex_return
 	MOVL	(SP), BX
-	MOVL	4(SP), SP
+	MOVL	8(SP), SP
 	MOVL	BX, (SP)
 	CALL	runtime·nacl_wrap_exitsyscall(SB)
 	RET
 nex_return:	
-	MOVL	(SP), BX
-	MOVL	4(SP), SP
-	MOVL	BX, (SP)
+	MOVQ	(SP), BX
+	MOVL	8(SP), SP
+	MOVQ	BX, (SP)
 	RET
 	
-TEXT runtime·nacl_wrap_exitsyscall(SB),NOSPLIT,$4
-	MOVL	AX, (SP)
+TEXT runtime·nacl_wrap_exitsyscall(SB),NOSPLIT,$8
+	MOVQ	AX, (SP)
 	CALL	runtime·exitsyscall(SB)
-	MOVL	(SP), AX
+	MOVQ	(SP), AX
 	RET
 
 TEXT runtime·settls(SB),NOSPLIT,$0
@@ -148,7 +148,6 @@ TEXT runtime·open(SB),NOSPLIT,$0
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	open_irt
 	NACL_SYSCALL(SYS_open)
-	CALL	runtime·nacl_exitsyscall(SB)
 	JMP	open_done
 open_irt:
 	SUBL	$4, SP
@@ -189,7 +188,6 @@ TEXT runtime·read(SB),NOSPLIT,$0
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	read_irt
 	NACL_SYSCALL(SYS_read)
-	CALL	runtime·nacl_exitsyscall(SB)
 	JMP	read_done
 read_irt:
 	SUBL	$4, SP
@@ -218,7 +216,7 @@ TEXT syscall·naclWrite(SB), NOSPLIT, $24-20
 	MOVL AX, ret+16(FP)
 	RET
 
-TEXT runtime·write(SB),NOSPLIT,$16-20
+TEXT runtime·write(SB),NOSPLIT,$0
 	CALL	runtime·nacl_entersyscall(SB)
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	write_irt
@@ -260,6 +258,7 @@ write_fail:
 	// Write with playback header.
 	// First, lock to avoid interleaving writes.
 playback:
+	SUBL	$16, SP
 	MOVL $1, BX
 	XCHGL	runtime·writelock(SB), BX
 	CMPL BX, $0
@@ -282,6 +281,7 @@ playback:
 	MOVL 4(NFP), SI  // p
 	MOVL 8(NFP), DX  // n
 	NACL_SYSCALL(SYS_write)
+	ADDL	$16, SP
 
 	// Unlock.
 	MOVL	$0, runtime·writelock(SB)
@@ -354,6 +354,7 @@ TEXT runtime·nacl_sem_wait(SB),NOSPLIT,$0
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	sem_wait_irt
 	NACL_SYSCALL(SYS_sem_wait)
+	JMP	sem_wait_done
 sem_wait_irt:
 	MOVL	runtime·nacl_irt_sem_v0_1+(IRT_SEM_WAIT*4)(SB), AX
 	CALL	AX
@@ -576,6 +577,7 @@ TEXT runtime·nacl_nanosleep(SB),NOSPLIT,$0
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	nanosleep_irt
 	NACL_SYSCALL(SYS_nanosleep)
+	JMP	nanosleep_done
 nanosleep_irt:
 	MOVL	runtime·nacl_irt_basic_v0_1+(IRT_BASIC_NANOSLEEP*4)(SB), AX
 	CALL	AX
@@ -591,7 +593,7 @@ TEXT runtime·osyield(SB),NOSPLIT,$0
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	osyield_irt
 	NACL_SYSCALL(SYS_sched_yield)
-	RET
+	JMP	osyield_done
 osyield_irt:
 	MOVL	runtime·nacl_irt_basic_v0_1+(IRT_BASIC_SCHED_YIELD*4)(SB), AX
 	CALL	AX
@@ -620,6 +622,7 @@ mmap_irt:
 	MOVL	runtime·nacl_irt_memory_v0_3+(IRT_MEMORY_MMAP*4)(SB), AX
 	CALL	AX
 mmap_done:	
+	ADDL	$12, SP
 	NEGL	AX
 	CMPL 	AX, $-4095
 	JNA 	2(PC)
