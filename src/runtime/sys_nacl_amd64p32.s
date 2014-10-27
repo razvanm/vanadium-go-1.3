@@ -120,6 +120,7 @@ TEXT runtime·exit(SB),NOSPLIT,$0
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	exit_irt
 	NACL_SYSCALL(SYS_exit)
+	CALL	runtime·nacl_restorestack(SB)
 	MOVL	$0x13, 0x13  // crash
 exit_irt:
 	MOVL	runtime·nacl_irt_basic_v0_1+(IRT_BASIC_EXIT*4)(SB), AX
@@ -291,9 +292,9 @@ write_done:
 	RET
 
 TEXT runtime·nacl_exception_stack(SB),NOSPLIT,$0
-	CALL	runtime·nacl_swapstack(SB)
-	MOVL	0(NFP), DI  // p
-	MOVL	4(NFP), SI  // size
+	// CALL	runtime·nacl_swapstack(SB)
+	MOVL	p+0(FP), DI  // p
+	MOVL	size+4(FP), SI  // size
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	nacl_exception_stack_irt
 	NACL_SYSCALL(SYS_exception_stack)
@@ -303,14 +304,14 @@ nacl_exception_stack_irt:
 	CALL	AX
 	NEGL	AX
 nacl_exception_stack_done:
-	CALL	runtime·nacl_restorestack(SB)
+	// CALL	runtime·nacl_restorestack(SB)
 	MOVL	AX, ret+8(FP)
 	RET
 
 TEXT runtime·nacl_exception_handler(SB),NOSPLIT,$0
-	CALL	runtime·nacl_swapstack(SB)
-	MOVL	0(NFP), DI  // fn
-	MOVL	4(NFP), SI  // arg
+	// CALL	runtime·nacl_swapstack(SB)
+	MOVL	fn+0(FP), DI  // fn
+	MOVL	arg+4(FP), SI  // arg
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	nacl_exception_handler_irt
 	NACL_SYSCALL(SYS_exception_handler)
@@ -320,7 +321,7 @@ nacl_exception_handler_irt:
 	CALL	AX
 	NEGL	AX
 nacl_exception_handler_done:
-	CALL	runtime·nacl_restorestack(SB)
+	// CALL	runtime·nacl_restorestack(SB)
 	MOVL	AX, ret+8(FP)
 	RET
 
