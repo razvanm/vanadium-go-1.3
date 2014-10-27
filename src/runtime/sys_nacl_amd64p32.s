@@ -16,16 +16,16 @@
 #define NFP	R14
 
 TEXT runtime·nacl_swapstack(SB),NOSPLIT,$0
-	LEAQ	8(SP), NFP
+	LEAL	8(SP), NFP
 
 	get_tls(CX)
-	CMPL	CX, $0
+	TESTL	CX, CX
 	JE	nss_return  // Not a Go-managed thread. Do not switch stack.
 
-	MOVQ	g(CX), DI
-	MOVQ	g_m(DI), DI
-	MOVQ	m_g0(DI), SI
-	CMPQ	g(CX), SI
+	MOVL	g(CX), DI
+	MOVL	g_m(DI), DI
+	MOVL	m_g0(DI), SI
+	CMPL	g(CX), SI
 	JE	nss_return // executing on m->g0 already
 
 	// Switch to m->g0 stack.
@@ -33,14 +33,14 @@ TEXT runtime·nacl_swapstack(SB),NOSPLIT,$0
 	LEAL	-8(SI), SP
 
 nss_return:
-	MOVQ	-8(NFP), AX
-	MOVQ	NFP, (SP)
+	MOVL	-8(NFP), AX
+	MOVL	NFP, (SP)
 	ADDL	$8, NFP
 	JMP	AX
 
 // Restore the original stack.	Must not modify AX.
 TEXT runtime·nacl_restorestack(SB),NOSPLIT,$0
-	MOVQ	(SP), BX
+	MOVL	(SP), BX
 	MOVL	8(SP), SP
 	JMP	BX
 
@@ -53,30 +53,30 @@ TEXT runtime·nacl_entersyscall(SB),NOSPLIT,$0-0
 	MOVL	SP, NFP
 
 	get_tls(CX)
-	TESTQ	CX, CX
+	TESTL	CX, CX
 	JZ	nen_return  // Not a Go-managed thread. Do not switch stack.
 
-	MOVQ	g(CX), DI
-	MOVQ	g_m(DI), DI
-	MOVQ	m_g0(DI), SI
-	CMPQ	g(CX), SI
+	MOVL	g(CX), DI
+	MOVL	g_m(DI), DI
+	MOVL	m_g0(DI), SI
+	CMPL	g(CX), SI
 	JE	nen_return  // Executing on m->g0 already.
 
-	MOVQ	m_p(DI), DX
-	TESTQ	DX, DX
+	MOVL	m_p(DI), DX
+	TESTL	DX, DX
 	JZ	nen_swapstack  // Not a goroutine.
 
 	CALL	runtime·entersyscall(SB)
 	MOVL	$1, AX
 	MOVL	SP, NFP
 	get_tls(CX)
-	MOVQ	g(CX), DI
-	MOVQ	g_m(DI), DI
-	MOVQ	m_g0(DI), SI
+	MOVL	g(CX), DI
+	MOVL	g_m(DI), DI
+	MOVL	m_g0(DI), SI
 
 nen_swapstack:
 	// Switch to m->g0 stack.
-	MOVQ	(g_sched+gobuf_sp)(SI), SI
+	MOVL	(g_sched+gobuf_sp)(SI), SI
 	LEAL	-8(SI), SP
 
 nen_return:
@@ -96,18 +96,14 @@ TEXT runtime·nacl_exitsyscall(SB),NOSPLIT,$0-0
 	MOVL	(SP), BX
 	MOVL	8(SP), SP
 	MOVL	BX, (SP)
-	CALL	runtime·nacl_wrap_exitsyscall(SB)
+	PUSHQ	AX
+	CALL	runtime·exitsyscall(SB)
+	POPQ	AX
 	RET
 nex_return:
-	MOVQ	(SP), BX
+	MOVL	(SP), BX
 	MOVL	8(SP), SP
-	MOVQ	BX, (SP)
-	RET
-
-TEXT runtime·nacl_wrap_exitsyscall(SB),NOSPLIT,$8
-	MOVQ	AX, (SP)
-	CALL	runtime·exitsyscall(SB)
-	MOVQ	(SP), AX
+	MOVL	BX, (SP)
 	RET
 
 TEXT runtime·settls(SB),NOSPLIT,$0
@@ -292,9 +288,9 @@ write_done:
 	RET
 
 TEXT runtime·nacl_exception_stack(SB),NOSPLIT,$0
-	// CALL	runtime·nacl_swapstack(SB)
-	MOVL	p+0(FP), DI  // p
-	MOVL	size+4(FP), SI  // size
+	CALL	runtime·nacl_swapstack(SB)
+	MOVL	0(NFP), DI  // p
+	MOVL	4(NFP), SI  // size
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	nacl_exception_stack_irt
 	NACL_SYSCALL(SYS_exception_stack)
@@ -304,14 +300,14 @@ nacl_exception_stack_irt:
 	CALL	AX
 	NEGL	AX
 nacl_exception_stack_done:
-	// CALL	runtime·nacl_restorestack(SB)
+	CALL	runtime·nacl_restorestack(SB)
 	MOVL	AX, ret+8(FP)
 	RET
 
 TEXT runtime·nacl_exception_handler(SB),NOSPLIT,$0
-	// CALL	runtime·nacl_swapstack(SB)
-	MOVL	fn+0(FP), DI  // fn
-	MOVL	arg+4(FP), SI  // arg
+	CALL	runtime·nacl_swapstack(SB)
+	MOVL	0(NFP), DI  // fn
+	MOVL	4(NFP), SI  // arg
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	nacl_exception_handler_irt
 	NACL_SYSCALL(SYS_exception_handler)
@@ -321,7 +317,7 @@ nacl_exception_handler_irt:
 	CALL	AX
 	NEGL	AX
 nacl_exception_handler_done:
-	// CALL	runtime·nacl_restorestack(SB)
+	CALL	runtime·nacl_restorestack(SB)
 	MOVL	AX, ret+8(FP)
 	RET
 
@@ -439,6 +435,8 @@ TEXT runtime·nacl_mutex_unlock(SB),NOSPLIT,$0
 	MOVL	0(NFP), DI  // mutex
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	mutex_unlock_irt
+	NACL_SYSCALL(SYS_mutex_unlock)
+	JMP	mutex_unlock_done
 mutex_unlock_irt:
 	MOVL	runtime·nacl_irt_mutex_v0_1+(IRT_MUTEX_UNLOCK*4)(SB), AX
 	CALL	AX
@@ -563,7 +561,7 @@ TEXT runtime·mstart_nacl(SB),NOSPLIT,$0
 	NACL_SYSCALL(SYS_tls_get)
 	JMP	mstart_done
 mstart_irt:
-	MOVL	runtime·nacl_irt_tls_v0_1+(IRT_TLS_INIT*4)(SB), AX
+	MOVL	runtime·nacl_irt_tls_v0_1+(IRT_TLS_GET*4)(SB), AX
 	CALL	AX
 mstart_done:
 	SUBL	$8, AX
@@ -583,7 +581,6 @@ nanosleep_irt:
 	CALL	AX
 	NEGL	AX
 nanosleep_done:
-	ADDL	$8, SP
 	CALL	runtime·nacl_exitsyscall(SB)
 	MOVL	AX, ret+8(FP)
 	RET
