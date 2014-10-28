@@ -11,8 +11,11 @@
 	MOVL $(0x10000 + ((code)<<5)), AX; CALL AX
 
 // NFP is the "NaCl frame pointer."  We use it to refer to the caller's frame.
-// The callee executes on the C stack, which is different from the caller's stack
-// if the caller is a goroutine.
+// System/IRT calls run on C stack, which is different from the caller's stack
+// if the caller is a goroutine.  NFP should be a callee-save register in the
+// NaCl calling convention, so that the register survives external calls; and it
+// should be a caller-save register in the Go calling convention.  R15 is
+// reserved for exclusive use by NaCl, so we choose R14 instead.
 #define NFP	R14
 
 TEXT runtime·nacl_swapstack(SB),NOSPLIT,$0
