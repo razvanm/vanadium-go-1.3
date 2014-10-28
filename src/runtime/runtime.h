@@ -60,6 +60,7 @@ typedef	struct	SudoG		SudoG;
 typedef	struct	Mutex		Mutex;
 typedef	struct	M		M;
 typedef	struct	P		P;
+typedef	struct	SchedT	SchedT;
 typedef	struct	Note		Note;
 typedef	struct	Slice		Slice;
 typedef	struct	String		String;
@@ -248,9 +249,9 @@ struct	GCStats
 
 struct	LibCall
 {
-	void*	fn;
+	uintptr	fn;
 	uintptr	n;	// number of parameters
-	void*	args;	// parameters
+	uintptr	args;	// parameters
 	uintptr	r1;	// return values
 	uintptr	r2;
 	uintptr	err;	// error number
@@ -370,7 +371,7 @@ struct	M
 	uintptr scalararg[4];	// scalar argument/return for mcall
 	void*   ptrarg[4];	// pointer argument/return for mcall
 #ifdef GOOS_windows
-	void*	thread;		// thread handle
+	uintptr	thread;		// thread handle
 	// these are here because they are too large to be on the stack
 	// of low-level NOSPLIT functions.
 	LibCall	libcall;
@@ -383,11 +384,11 @@ struct	M
 	// these are here because they are too large to be on the stack
 	// of low-level NOSPLIT functions.
 	LibCall	libcall;
-	struct {
+	struct MTs {
 		int64	tv_sec;
 		int64	tv_nsec;
 	} ts;
-	struct {
+	struct MScratch {
 		uintptr v[6];
 	} scratch;
 #endif
@@ -431,6 +432,42 @@ enum {
 	// The max value of GOMAXPROCS.
 	// There are no fundamental restrictions on the value.
 	MaxGomaxprocs = 1<<8,
+};
+
+struct	SchedT
+{
+	Mutex	lock;
+
+	uint64	goidgen;
+
+	M*	midle;	 // idle m's waiting for work
+	int32	nmidle;	 // number of idle m's waiting for work
+	int32	nmidlelocked; // number of locked m's waiting for work
+	int32	mcount;	 // number of m's that have been created
+	int32	maxmcount;	// maximum number of m's allowed (or die)
+
+	P*	pidle;  // idle P's
+	uint32	npidle;
+	uint32	nmspinning;
+
+	// Global runnable queue.
+	G*	runqhead;
+	G*	runqtail;
+	int32	runqsize;
+
+	// Global cache of dead G's.
+	Mutex	gflock;
+	G*	gfree;
+	int32	ngfree;
+
+	uint32	gcwaiting;	// gc is waiting to run
+	int32	stopwait;
+	Note	stopnote;
+	uint32	sysmonwait;
+	Note	sysmonnote;
+	uint64	lastpoll;
+
+	int32	profilehz;	// cpu profiling rate
 };
 
 // The m->locked word holds two pieces of state counting active calls to LockOSThread/lockOSThread.
@@ -638,12 +675,12 @@ void    runtime·gcphasework(G*);
 struct Defer
 {
 	int32	siz;
-	bool	special;	// not part of defer frame
+	bool	started;
 	uintptr	argp;		// where args were copied from
 	uintptr	pc;
 	FuncVal*	fn;
+	Panic*	panic;	// panic that is running defer
 	Defer*	link;
-	void*	args[1];	// padded to actual size
 };
 
 // argp used in Defer structs when there is no argp.
@@ -657,7 +694,6 @@ struct Panic
 	void*	argp;	// pointer to arguments of deferred call run during panic; cannot move - known to liblink
 	Eface	arg;		// argument to panic
 	Panic*	link;		// link to earlier panic
-	Defer*	defer;		// current executing defer
 	bool	recovered;	// whether this panic is over
 	bool	aborted;	// the panic was aborted
 };
@@ -666,6 +702,7 @@ struct Panic
  * stack traces
  */
 typedef struct Stkframe Stkframe;
+typedef struct BitVector BitVector;
 struct Stkframe
 {
 	Func*	fn;	// function being run
@@ -677,9 +714,11 @@ struct Stkframe
 	uintptr	varp;	// top of local variables
 	uintptr	argp;	// pointer to function arguments
 	uintptr	arglen;	// number of bytes at argp
+	BitVector*	argmap;	// force use of this argmap
 };
 
 intgo	runtime·gentraceback(uintptr, uintptr, uintptr, G*, intgo, uintptr*, intgo, bool(**)(Stkframe*, void*), void*, bool);
+void	runtime·tracebackdefers(G*, bool(**)(Stkframe*, void*), void*);
 void	runtime·traceback(uintptr pc, uintptr sp, uintptr lr, G* gp);
 void	runtime·tracebackothers(G*);
 bool	runtime·haszeroargs(uintptr pc);
@@ -694,7 +733,6 @@ enum
  * external data
  */
 extern	String	runtime·emptystring;
-extern	uintptr runtime·zerobase;
 extern	G**	runtime·allg;
 extern	Slice	runtime·allgs; // []*G
 extern	uintptr runtime·allglen;
@@ -715,6 +753,8 @@ extern	DebugVars	runtime·debug;
 extern	uintptr	runtime·maxstacksize;
 extern	Note	runtime·signote;
 extern	ForceGCState	runtime·forcegc;
+extern	SchedT	runtime·sched;
+extern	int32		runtime·newprocs;
 
 /*
  * common functions and data
@@ -764,7 +804,6 @@ void	runtime·goenvs(void);
 void	runtime·goenvs_unix(void);
 void*	runtime·getu(void);
 void	runtime·throw(int8*);
-void	runtime·panicstring(int8*);
 bool	runtime·canpanic(G*);
 void	runtime·prints(int8*);
 void	runtime·printf(int8*, ...);
@@ -774,6 +813,7 @@ int32	runtime·mcmp(byte*, byte*, uintptr);
 void	runtime·memmove(void*, void*, uintptr);
 String	runtime·catstring(String, String);
 String	runtime·gostring(byte*);
+Slice	runtime·makeStringSlice(intgo);
 String  runtime·gostringn(byte*, intgo);
 Slice	runtime·gobytes(byte*, intgo);
 String	runtime·gostringnocopy(byte*);
@@ -801,10 +841,10 @@ void	runtime·mpreinit(M*);
 void	runtime·minit(void);
 void	runtime·unminit(void);
 void	runtime·signalstack(byte*, int32);
+void	runtime·tracebackinit(void);
 void	runtime·symtabinit(void);
 Func*	runtime·findfunc(uintptr);
 int32	runtime·funcline(Func*, uintptr, String*);
-int32	runtime·funcarglen(Func*, uintptr);
 int32	runtime·funcspdelta(Func*, uintptr);
 int8*	runtime·funcname(Func*);
 int32	runtime·pcdatavalue(Func*, int32, uintptr);
@@ -812,6 +852,7 @@ void	runtime·stackinit(void);
 Stack	runtime·stackalloc(uint32);
 void	runtime·stackfree(Stack);
 void	runtime·shrinkstack(G*);
+void	runtime·shrinkfinish(void);
 MCache*	runtime·allocmcache(void);
 void	runtime·freemcache(MCache*);
 void	runtime·mallocinit(void);
@@ -845,14 +886,15 @@ void	runtime·atomicstore(uint32 volatile*, uint32);
 void	runtime·atomicstore64(uint64 volatile*, uint64);
 uint64	runtime·atomicload64(uint64 volatile*);
 void*	runtime·atomicloadp(void* volatile*);
+uintptr	runtime·atomicloaduintptr(uintptr volatile*);
 void	runtime·atomicstorep(void* volatile*, void*);
+void	runtime·atomicstoreuintptr(uintptr volatile*, uintptr);
 void	runtime·atomicor8(byte volatile*, byte);
 
 void	runtime·setg(G*);
 void	runtime·newextram(void);
 void	runtime·exit(int32);
 void	runtime·breakpoint(void);
-void	runtime·gosched(void);
 void	runtime·gosched_m(G*);
 void	runtime·schedtrace(bool);
 void	runtime·park(bool(*)(G*, void*), void*, String);
@@ -863,6 +905,7 @@ void	runtime·goexit(void);
 void	runtime·asmcgocall(void (*fn)(void*), void*);
 int32	runtime·asmcgocall_errno(void (*fn)(void*), void*);
 void	runtime·entersyscall(void);
+void	runtime·reentersyscall(uintptr, uintptr);
 void	runtime·entersyscallblock(void);
 void	runtime·exitsyscall(void);
 G*	runtime·newproc1(FuncVal*, byte*, int32, int32, void*);
@@ -1024,8 +1067,6 @@ void	runtime·panicdivide(void);
  */
 void	runtime·printany(Eface);
 void	runtime·newTypeAssertionError(String*, String*, String*, String*, Eface*);
-void	runtime·newErrorString(String, Eface*);
-void	runtime·newErrorCString(int8*, Eface*);
 void	runtime·fadd64c(uint64, uint64, uint64*);
 void	runtime·fsub64c(uint64, uint64, uint64*);
 void	runtime·fmul64c(uint64, uint64, uint64*);

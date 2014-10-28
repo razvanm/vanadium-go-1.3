@@ -98,9 +98,7 @@ ok:
 	MOVQ	$runtime·main·f(SB), BP		// entry
 	PUSHQ	BP
 	PUSHQ	$0			// arg size
-	ARGSIZE(16)
 	CALL	runtime·newproc(SB)
-	ARGSIZE(-1)
 	POPQ	AX
 	POPQ	AX
 
@@ -183,7 +181,6 @@ TEXT runtime·mcall(SB), NOSPLIT, $0-8
 	MOVQ	SI, g(CX)	// g = m->g0
 	MOVQ	(g_sched+gobuf_sp)(SI), SP	// sp = m->g0->sched.sp
 	PUSHQ	AX
-	ARGSIZE(8)
 	MOVQ	DI, DX
 	MOVQ	0(DI), DI
 	CALL	DI
@@ -197,7 +194,7 @@ TEXT runtime·mcall(SB), NOSPLIT, $0-8
 // lives at the bottom of the G stack from the one that lives
 // at the top of the M stack because the one at the top of
 // the M stack terminates the stack walk (see topofstack()).
-TEXT runtime·switchtoM(SB), NOSPLIT, $0-8
+TEXT runtime·switchtoM(SB), NOSPLIT, $0-0
 	RET
 
 // func onM_signalok(fn func())
@@ -255,7 +252,6 @@ oncurg:
 	MOVQ	BX, SP
 
 	// call target function
-	ARGSIZE(0)
 	MOVQ	DI, DX
 	MOVQ	0(DI), DI
 	CALL	DI
@@ -343,11 +339,11 @@ TEXT runtime·morestack_noctxt(SB),NOSPLIT,$0
 #define DISPATCH(NAME,MAXSIZE)		\
 	CMPQ	CX, $MAXSIZE;		\
 	JA	3(PC);			\
-	MOVQ	$NAME(SB), AX;	\
+	MOVQ	$NAME(SB), AX;		\
 	JMP	AX
 // Note: can't just "JMP NAME(SB)" - bad inlining results.
 
-TEXT runtime·reflectcall(SB), NOSPLIT, $0-24
+TEXT ·reflectcall(SB), NOSPLIT, $0-24
 	MOVLQZX argsize+16(FP), CX
 	DISPATCH(runtime·call16, 16)
 	DISPATCH(runtime·call32, 32)
@@ -379,21 +375,9 @@ TEXT runtime·reflectcall(SB), NOSPLIT, $0-24
 	MOVQ	$runtime·badreflectcall(SB), AX
 	JMP	AX
 
-// Argument map for the callXX frames.  Each has one stack map.
-DATA gcargs_reflectcall<>+0x00(SB)/4, $1  // 1 stackmap
-DATA gcargs_reflectcall<>+0x04(SB)/4, $6  // 3 words
-DATA gcargs_reflectcall<>+0x08(SB)/1, $(const_BitsPointer+(const_BitsPointer<<2)+(const_BitsScalar<<4))
-GLOBL gcargs_reflectcall<>(SB),RODATA,$12
-
-// callXX frames have no locals
-DATA gclocals_reflectcall<>+0x00(SB)/4, $1  // 1 stackmap
-DATA gclocals_reflectcall<>+0x04(SB)/4, $0  // 0 locals
-GLOBL gclocals_reflectcall<>(SB),RODATA,$8
-
 #define CALLFN(NAME,MAXSIZE)			\
 TEXT NAME(SB), WRAPPER, $MAXSIZE-24;		\
-	FUNCDATA $FUNCDATA_ArgsPointerMaps,gcargs_reflectcall<>(SB);	\
-	FUNCDATA $FUNCDATA_LocalsPointerMaps,gclocals_reflectcall<>(SB);\
+	NO_LOCAL_POINTERS;			\
 	/* copy arguments to stack */		\
 	MOVQ	argptr+8(FP), SI;		\
 	MOVLQZX argsize+16(FP), CX;		\
@@ -414,33 +398,33 @@ TEXT NAME(SB), WRAPPER, $MAXSIZE-24;		\
 	REP;MOVSB;				\
 	RET
 
-CALLFN(runtime·call16, 16)
-CALLFN(runtime·call32, 32)
-CALLFN(runtime·call64, 64)
-CALLFN(runtime·call128, 128)
-CALLFN(runtime·call256, 256)
-CALLFN(runtime·call512, 512)
-CALLFN(runtime·call1024, 1024)
-CALLFN(runtime·call2048, 2048)
-CALLFN(runtime·call4096, 4096)
-CALLFN(runtime·call8192, 8192)
-CALLFN(runtime·call16384, 16384)
-CALLFN(runtime·call32768, 32768)
-CALLFN(runtime·call65536, 65536)
-CALLFN(runtime·call131072, 131072)
-CALLFN(runtime·call262144, 262144)
-CALLFN(runtime·call524288, 524288)
-CALLFN(runtime·call1048576, 1048576)
-CALLFN(runtime·call2097152, 2097152)
-CALLFN(runtime·call4194304, 4194304)
-CALLFN(runtime·call8388608, 8388608)
-CALLFN(runtime·call16777216, 16777216)
-CALLFN(runtime·call33554432, 33554432)
-CALLFN(runtime·call67108864, 67108864)
-CALLFN(runtime·call134217728, 134217728)
-CALLFN(runtime·call268435456, 268435456)
-CALLFN(runtime·call536870912, 536870912)
-CALLFN(runtime·call1073741824, 1073741824)
+CALLFN(·call16, 16)
+CALLFN(·call32, 32)
+CALLFN(·call64, 64)
+CALLFN(·call128, 128)
+CALLFN(·call256, 256)
+CALLFN(·call512, 512)
+CALLFN(·call1024, 1024)
+CALLFN(·call2048, 2048)
+CALLFN(·call4096, 4096)
+CALLFN(·call8192, 8192)
+CALLFN(·call16384, 16384)
+CALLFN(·call32768, 32768)
+CALLFN(·call65536, 65536)
+CALLFN(·call131072, 131072)
+CALLFN(·call262144, 262144)
+CALLFN(·call524288, 524288)
+CALLFN(·call1048576, 1048576)
+CALLFN(·call2097152, 2097152)
+CALLFN(·call4194304, 4194304)
+CALLFN(·call8388608, 8388608)
+CALLFN(·call16777216, 16777216)
+CALLFN(·call33554432, 33554432)
+CALLFN(·call67108864, 67108864)
+CALLFN(·call134217728, 134217728)
+CALLFN(·call268435456, 268435456)
+CALLFN(·call536870912, 536870912)
+CALLFN(·call1073741824, 1073741824)
 
 // bool cas(int32 *val, int32 old, int32 new)
 // Atomically:
@@ -494,6 +478,9 @@ TEXT runtime·atomicloaduintptr(SB), NOSPLIT, $0-16
 
 TEXT runtime·atomicloaduint(SB), NOSPLIT, $0-16
 	JMP	runtime·atomicload64(SB)
+
+TEXT runtime·atomicstoreuintptr(SB), NOSPLIT, $0-16
+	JMP	runtime·atomicstore64(SB)
 
 // bool casp(void **val, void *old, void *new)
 // Atomically:
@@ -627,13 +614,13 @@ TEXT gosave<>(SB),NOSPLIT,$0
 // Call fn(arg) on the scheduler stack,
 // aligned appropriately for the gcc ABI.
 // See cgocall.c for more details.
-TEXT runtime·asmcgocall(SB),NOSPLIT,$0-16
+TEXT ·asmcgocall(SB),NOSPLIT,$0-16
 	MOVQ	fn+0(FP), AX
 	MOVQ	arg+8(FP), BX
 	CALL	asmcgocall<>(SB)
 	RET
 
-TEXT runtime·asmcgocall_errno(SB),NOSPLIT,$0-20
+TEXT ·asmcgocall_errno(SB),NOSPLIT,$0-20
 	MOVQ	fn+0(FP), AX
 	MOVQ	arg+8(FP), BX
 	CALL	asmcgocall<>(SB)
@@ -670,7 +657,9 @@ nosave:
 	SUBQ	$64, SP
 	ANDQ	$~15, SP	// alignment for gcc ABI
 	MOVQ	DI, 48(SP)	// save g
-	MOVQ	DX, 40(SP)	// save SP
+	MOVQ	(g_stack+stack_hi)(DI), DI
+	SUBQ	DX, DI
+	MOVQ	DI, 40(SP)	// save depth in stack (can't just save SP, as stack might be copied during a callback)
 	MOVQ	BX, DI		// DI = first argument in AMD64 ABI
 	MOVQ	BX, CX		// CX = first argument in Win64
 	CALL	AX
@@ -678,8 +667,10 @@ nosave:
 	// Restore registers, g, stack pointer.
 	get_tls(CX)
 	MOVQ	48(SP), DI
+	MOVQ	(g_stack+stack_hi)(DI), SI
+	SUBQ	40(SP), SI
 	MOVQ	DI, g(CX)
-	MOVQ	40(SP), SP
+	MOVQ	SI, SP
 	RET
 
 // cgocallback(void (*fn)(void*), void *frame, uintptr framesize)
@@ -698,7 +689,9 @@ TEXT runtime·cgocallback(SB),NOSPLIT,$24-24
 
 // cgocallback_gofunc(FuncVal*, void *frame, uintptr framesize)
 // See cgocall.c for more details.
-TEXT runtime·cgocallback_gofunc(SB),NOSPLIT,$8-24
+TEXT ·cgocallback_gofunc(SB),NOSPLIT,$8-24
+	NO_LOCAL_POINTERS
+
 	// If g is nil, Go did not create the current thread.
 	// Call needm to obtain one m for temporary use.
 	// In this case, we're running on the thread stack, so there's
@@ -861,15 +854,6 @@ TEXT runtime·cputicks(SB),NOSPLIT,$0-0
 	ADDQ	DX, AX
 	MOVQ	AX, ret+0(FP)
 	RET
-
-TEXT runtime·gocputicks(SB),NOSPLIT,$0-8
-	RDTSC
-	SHLQ    $32, DX
-	ADDQ    DX, AX
-	MOVQ    AX, ret+0(FP)
-	RET
-
-GLOBL runtime·tls0(SB), $64
 
 // hash function using AES hardware instructions
 TEXT runtime·aeshash(SB),NOSPLIT,$0-32
@@ -2219,4 +2203,15 @@ TEXT runtime·fastrand1(SB), NOSPLIT, $0-4
 
 TEXT runtime·return0(SB), NOSPLIT, $0
 	MOVL	$0, AX
+	RET
+
+
+// Called from cgo wrappers, this function returns g->m->curg.stack.hi.
+// Must obey the gcc calling convention.
+TEXT _cgo_topofstack(SB),NOSPLIT,$0
+	get_tls(CX)
+	MOVQ	g(CX), AX
+	MOVQ	g_m(AX), AX
+	MOVQ	m_curg(AX), AX
+	MOVQ	(g_stack+stack_hi)(AX), AX
 	RET

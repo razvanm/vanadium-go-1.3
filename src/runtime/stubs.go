@@ -119,6 +119,8 @@ func deferproc_m()
 func goexit_m()
 func startpanic_m()
 func dopanic_m()
+func readmemstats_m()
+func writeheapdump_m()
 
 // memclr clears n bytes starting at ptr.
 // in memclr_*.s
@@ -130,7 +132,6 @@ func memclr(ptr unsafe.Pointer, n uintptr)
 //go:noescape
 func memmove(to unsafe.Pointer, from unsafe.Pointer, n uintptr)
 
-func gosched()
 func starttheworld()
 func stoptheworld()
 func newextram()
@@ -147,10 +148,6 @@ func fastrand1() uint32
 //go:noescape
 func memeq(a, b unsafe.Pointer, size uintptr) bool
 
-// Code pointers for the nohash/noequal algorithms. Used for producing better error messages.
-var nohashcode uintptr
-var noequalcode uintptr
-
 // noescape hides a pointer from escape analysis.  noescape is
 // the identity function but escape analysis doesn't think the
 // output depends on the input.  noescape is inlined and currently
@@ -163,6 +160,7 @@ func noescape(p unsafe.Pointer) unsafe.Pointer {
 }
 
 func entersyscall()
+func reentersyscall(pc uintptr, sp unsafe.Pointer)
 func entersyscallblock()
 func exitsyscall()
 
@@ -182,7 +180,11 @@ func exit(code int32)
 func breakpoint()
 func nanotime() int64
 func usleep(usec uint32)
+
+// careful: cputicks is not guaranteed to be monotonic!  In particular, we have
+// noticed drift between cpus on certain os/arch combinations.  See issue 8976.
 func cputicks() int64
+
 func mmap(addr unsafe.Pointer, n uintptr, prot, flags, fd int32, off uint32) unsafe.Pointer
 func munmap(addr unsafe.Pointer, n uintptr)
 func madvise(addr unsafe.Pointer, n uintptr, flags int32)
@@ -254,3 +256,33 @@ func return0()
 
 // thunk to call time.now.
 func timenow() (sec int64, nsec int32)
+
+// in asm_*.s
+// not called directly; definitions here supply type information for traceback.
+func call16(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call32(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call64(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call128(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call256(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call512(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call1024(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call2048(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call4096(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call8192(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call16384(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call32768(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call65536(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call131072(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call262144(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call524288(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call1048576(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call2097152(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call4194304(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call8388608(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call16777216(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call33554432(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call67108864(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call134217728(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call268435456(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call536870912(fn, arg unsafe.Pointer, n, retoffset uint32)
+func call1073741824(fn, arg unsafe.Pointer, n, retoffset uint32)

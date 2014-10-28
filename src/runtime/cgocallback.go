@@ -21,7 +21,10 @@ import "unsafe"
 // Either we need to add types or we need to stop using it.
 
 func _cgo_allocate_internal(len uintptr) unsafe.Pointer {
-	ret := mallocgc(len, conservative, 0)
+	if len == 0 {
+		len = 1
+	}
+	ret := unsafe.Pointer(&make([]unsafe.Pointer, (len+ptrSize-1)/ptrSize)[0])
 	c := new(cgomal)
 	c.alloc = ret
 	gp := getg()

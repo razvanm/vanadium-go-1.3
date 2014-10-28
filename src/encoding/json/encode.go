@@ -93,6 +93,8 @@ import (
 // as described in the next paragraph.
 // An anonymous struct field with a name given in its JSON tag is treated as
 // having that name, rather than being anonymous.
+// An anonymous struct field of interface type is treated the same as having
+// that type as its name, rather than being anonymous.
 //
 // The Go visibility rules for struct fields are amended for JSON when
 // deciding which field to marshal or unmarshal. If there are
@@ -803,6 +805,9 @@ func (e *encodeState) string(s string) (int, error) {
 			case '\r':
 				e.WriteByte('\\')
 				e.WriteByte('r')
+			case '\t':
+				e.WriteByte('\\')
+				e.WriteByte('t')
 			default:
 				// This encodes bytes < 0x20 except for \n and \r,
 				// as well as <, > and &. The latter are escaped because they
@@ -876,9 +881,12 @@ func (e *encodeState) stringBytes(s []byte) (int, error) {
 			case '\r':
 				e.WriteByte('\\')
 				e.WriteByte('r')
+			case '\t':
+				e.WriteByte('\\')
+				e.WriteByte('t')
 			default:
 				// This encodes bytes < 0x20 except for \n and \r,
-				// as well as < and >. The latter are escaped because they
+				// as well as <, >, and &. The latter are escaped because they
 				// can lead to security holes when user-controlled strings
 				// are rendered into JSON and served to some browsers.
 				e.WriteString(`\u00`)

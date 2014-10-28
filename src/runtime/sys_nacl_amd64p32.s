@@ -220,7 +220,7 @@ TEXT runtime·write(SB),NOSPLIT,$0
 	JNE	write_irt
 	// If using fake time and writing to stdout or stderr,
 	// emit playback header before actual data.
-	MOVQ runtime·timens(SB), AX
+	MOVQ runtime·faketime(SB), AX
 	CMPQ AX, $0
 	JEQ write
 	MOVL 0(NFP), DI	 // fd
@@ -635,7 +635,7 @@ mmap_done:
 	RET
 
 TEXT time·now(SB),NOSPLIT,$0
-	MOVQ runtime·timens(SB), AX
+	MOVQ runtime·faketime(SB), AX
 	CMPQ AX, $0
 	JEQ realtime
 	MOVQ $0, DX
@@ -689,7 +689,7 @@ clock_gettime_done:
 	RET
 
 TEXT runtime·nanotime(SB),NOSPLIT,$0
-	MOVQ	runtime·timens(SB), AX
+	MOVQ	runtime·faketime(SB), AX
 	CMPQ	AX, $0
 	JEQ	3(PC)
 	MOVQ	AX, ret+0(FP)

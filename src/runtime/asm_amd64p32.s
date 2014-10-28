@@ -75,9 +75,7 @@ ok:
 	MOVL	$runtime·main·f(SB), AX	// entry
 	MOVL	$0, 0(SP)
 	MOVL	AX, 4(SP)
-	ARGSIZE(8)
 	CALL	runtime·newproc(SB)
-	ARGSIZE(-1)
 
 	// start this M
 	CALL	runtime·mstart(SB)
@@ -158,7 +156,6 @@ TEXT runtime·mcall(SB), NOSPLIT, $0-4
 	MOVL	SI, g(CX)	// g = m->g0
 	MOVL	(g_sched+gobuf_sp)(SI), SP	// sp = m->g0->sched.sp
 	PUSHQ	AX
-	ARGSIZE(8)
 	MOVL	DI, DX
 	MOVL	0(DI), DI
 	CALL	DI
@@ -172,7 +169,7 @@ TEXT runtime·mcall(SB), NOSPLIT, $0-4
 // lives at the bottom of the G stack from the one that lives
 // at the top of the M stack because the one at the top of
 // the M stack terminates the stack walk (see topofstack()).
-TEXT runtime·switchtoM(SB), NOSPLIT, $0-4
+TEXT runtime·switchtoM(SB), NOSPLIT, $0-0
 	RET
 
 // func onM_signalok(fn func())
@@ -225,7 +222,6 @@ oncurg:
 	MOVL	(g_sched+gobuf_sp)(DX), SP
 
 	// call target function
-	ARGSIZE(0)
 	MOVL	DI, DX
 	MOVL	0(DI), DI
 	CALL	DI
@@ -314,11 +310,11 @@ TEXT runtime·morestack_noctxt(SB),NOSPLIT,$0
 #define DISPATCH(NAME,MAXSIZE)		\
 	CMPL	CX, $MAXSIZE;		\
 	JA	3(PC);			\
-	MOVL	$NAME(SB), AX;	\
+	MOVL	$NAME(SB), AX;		\
 	JMP	AX
 // Note: can't just "JMP NAME(SB)" - bad inlining results.
 
-TEXT runtime·reflectcall(SB), NOSPLIT, $0-16
+TEXT ·reflectcall(SB), NOSPLIT, $0-16
 	MOVLQZX argsize+8(FP), CX
 	DISPATCH(runtime·call16, 16)
 	DISPATCH(runtime·call32, 32)
@@ -350,22 +346,9 @@ TEXT runtime·reflectcall(SB), NOSPLIT, $0-16
 	MOVL	$runtime·badreflectcall(SB), AX
 	JMP	AX
 
-// Argument map for the callXX frames.  Each has one stack map.
-DATA gcargs_reflectcall<>+0x00(SB)/4, $1  // 1 stackmap
-DATA gcargs_reflectcall<>+0x04(SB)/4, $10  // 5 words
-DATA gcargs_reflectcall<>+0x08(SB)/1, $(const_BitsPointer+(const_BitsPointer<<2)+(const_BitsScalar<<4)+(const_BitsScalar<<6))
-DATA gcargs_reflectcall<>+0x09(SB)/1, $(const_BitsPointer)
-GLOBL gcargs_reflectcall<>(SB),RODATA,$12
-
-// callXX frames have no locals
-DATA gclocals_reflectcall<>+0x00(SB)/4, $1  // 1 stackmap
-DATA gclocals_reflectcall<>+0x04(SB)/4, $0  // 0 locals
-GLOBL gclocals_reflectcall<>(SB),RODATA,$8
-
 #define CALLFN(NAME,MAXSIZE)			\
 TEXT NAME(SB), WRAPPER, $MAXSIZE-16;		\
-	FUNCDATA $FUNCDATA_ArgsPointerMaps,gcargs_reflectcall<>(SB);	\
-	FUNCDATA $FUNCDATA_LocalsPointerMaps,gclocals_reflectcall<>(SB);\
+	NO_LOCAL_POINTERS;			\
 	/* copy arguments to stack */		\
 	MOVL	argptr+4(FP), SI;		\
 	MOVL	argsize+8(FP), CX;		\
@@ -373,8 +356,8 @@ TEXT NAME(SB), WRAPPER, $MAXSIZE-16;		\
 	REP;MOVSB;				\
 	/* call function */			\
 	MOVL	f+0(FP), DX;			\
-	MOVL	(DX), AX;				\
-	CALL	AX; \
+	MOVL	(DX), AX;			\
+	CALL	AX;				\
 	/* copy return values back */		\
 	MOVL	argptr+4(FP), DI;		\
 	MOVL	argsize+8(FP), CX;		\
@@ -386,33 +369,33 @@ TEXT NAME(SB), WRAPPER, $MAXSIZE-16;		\
 	REP;MOVSB;				\
 	RET
 
-CALLFN(runtime·call16, 16)
-CALLFN(runtime·call32, 32)
-CALLFN(runtime·call64, 64)
-CALLFN(runtime·call128, 128)
-CALLFN(runtime·call256, 256)
-CALLFN(runtime·call512, 512)
-CALLFN(runtime·call1024, 1024)
-CALLFN(runtime·call2048, 2048)
-CALLFN(runtime·call4096, 4096)
-CALLFN(runtime·call8192, 8192)
-CALLFN(runtime·call16384, 16384)
-CALLFN(runtime·call32768, 32768)
-CALLFN(runtime·call65536, 65536)
-CALLFN(runtime·call131072, 131072)
-CALLFN(runtime·call262144, 262144)
-CALLFN(runtime·call524288, 524288)
-CALLFN(runtime·call1048576, 1048576)
-CALLFN(runtime·call2097152, 2097152)
-CALLFN(runtime·call4194304, 4194304)
-CALLFN(runtime·call8388608, 8388608)
-CALLFN(runtime·call16777216, 16777216)
-CALLFN(runtime·call33554432, 33554432)
-CALLFN(runtime·call67108864, 67108864)
-CALLFN(runtime·call134217728, 134217728)
-CALLFN(runtime·call268435456, 268435456)
-CALLFN(runtime·call536870912, 536870912)
-CALLFN(runtime·call1073741824, 1073741824)
+CALLFN(·call16, 16)
+CALLFN(·call32, 32)
+CALLFN(·call64, 64)
+CALLFN(·call128, 128)
+CALLFN(·call256, 256)
+CALLFN(·call512, 512)
+CALLFN(·call1024, 1024)
+CALLFN(·call2048, 2048)
+CALLFN(·call4096, 4096)
+CALLFN(·call8192, 8192)
+CALLFN(·call16384, 16384)
+CALLFN(·call32768, 32768)
+CALLFN(·call65536, 65536)
+CALLFN(·call131072, 131072)
+CALLFN(·call262144, 262144)
+CALLFN(·call524288, 524288)
+CALLFN(·call1048576, 1048576)
+CALLFN(·call2097152, 2097152)
+CALLFN(·call4194304, 4194304)
+CALLFN(·call8388608, 8388608)
+CALLFN(·call16777216, 16777216)
+CALLFN(·call33554432, 33554432)
+CALLFN(·call67108864, 67108864)
+CALLFN(·call134217728, 134217728)
+CALLFN(·call268435456, 268435456)
+CALLFN(·call536870912, 536870912)
+CALLFN(·call1073741824, 1073741824)
 
 // bool cas(int32 *val, int32 old, int32 new)
 // Atomically:
@@ -443,6 +426,9 @@ TEXT runtime·atomicloaduintptr(SB), NOSPLIT, $0-12
 
 TEXT runtime·atomicloaduint(SB), NOSPLIT, $0-12
 	JMP	runtime·atomicload(SB)
+
+TEXT runtime·atomicstoreuintptr(SB), NOSPLIT, $0-12
+	JMP	runtime·atomicstore(SB)
 
 // bool	runtime·cas64(uint64 *val, uint64 old, uint64 new)
 // Atomically:
@@ -670,15 +656,6 @@ TEXT runtime·cputicks(SB),NOSPLIT,$0-0
 	ADDQ	DX, AX
 	MOVQ	AX, ret+0(FP)
 	RET
-
-TEXT runtime·gocputicks(SB),NOSPLIT,$0-8
-	RDTSC
-	SHLQ    $32, DX
-	ADDQ    DX, AX
-	MOVQ    AX, ret+0(FP)
-	RET
-
-GLOBL runtime·tls0(SB), $64
 
 // hash function using AES hardware instructions
 // For now, our one amd64p32 system (NaCl) does not

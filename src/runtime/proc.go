@@ -39,6 +39,12 @@ func main() {
 	// to preserve the lock.
 	lockOSThread()
 
+	if g.m != &m0 {
+		gothrow("runtime.main not on m0")
+	}
+
+	runtime_init() // must be before defer
+
 	// Defer unlock so that runtime.Goexit during init does the unlock too.
 	needUnlock := true
 	defer func() {
@@ -47,11 +53,6 @@ func main() {
 		}
 	}()
 
-	if g.m != &m0 {
-		gothrow("runtime.main not on m0")
-	}
-
-	runtime_init()
 	memstats.enablegc = true // now that runtime is initialized, GC is okay
 
 	main_init()
@@ -104,6 +105,8 @@ func forcegchelper() {
 	}
 }
 
+//go:nosplit
+
 // Gosched yields the processor, allowing other goroutines to run.  It does not
 // suspend the current goroutine, so execution resumes automatically.
 func Gosched() {
@@ -145,6 +148,9 @@ func acquireSudog() *sudog {
 	c := gomcache()
 	s := c.sudogcache
 	if s != nil {
+		if s.elem != nil {
+			gothrow("acquireSudog: found s.elem != nil in cache")
+		}
 		c.sudogcache = s.next
 		return s
 	}
@@ -165,6 +171,16 @@ func acquireSudog() *sudog {
 
 //go:nosplit
 func releaseSudog(s *sudog) {
+	if s.elem != nil {
+		gothrow("runtime: sudog with non-nil elem")
+	}
+	if s.selectdone != nil {
+		gothrow("runtime: sudog with non-nil selectdone")
+	}
+	gp := getg()
+	if gp.param != nil {
+		gothrow("runtime: releaseSudog with non-nil gp.param")
+	}
 	c := gomcache()
 	s.next = c.sudogcache
 	c.sudogcache = s
@@ -193,4 +209,28 @@ func badreflectcall() {
 func lockedOSThread() bool {
 	gp := getg()
 	return gp.lockedm != nil && gp.m.lockedg != nil
+}
+
+func newP() *p {
+	return new(p)
+}
+
+func newM() *m {
+	return new(m)
+}
+
+func newG() *g {
+	return new(g)
+}
+
+func allgadd(gp *g) {
+	if readgstatus(gp) == _Gidle {
+		gothrow("allgadd: bad status Gidle")
+	}
+
+	lock(&allglock)
+	allgs = append(allgs, gp)
+	allg = &allgs[0]
+	allglen = uintptr(len(allgs))
+	unlock(&allglock)
 }

@@ -11,49 +11,41 @@ import (
 const (
 	debugMalloc = false
 
-	flagNoScan = 1 << 0 // GC doesn't have to scan object
-	flagNoZero = 1 << 1 // don't zero memory
+	flagNoScan = _FlagNoScan
+	flagNoZero = _FlagNoZero
 
-	maxTinySize   = 16
-	tinySizeClass = 2
-	maxSmallSize  = 32 << 10
+	maxTinySize   = _TinySize
+	tinySizeClass = _TinySizeClass
+	maxSmallSize  = _MaxSmallSize
 
-	pageShift = 13
-	pageSize  = 1 << pageShift
-	pageMask  = pageSize - 1
+	pageShift = _PageShift
+	pageSize  = _PageSize
+	pageMask  = _PageMask
 
-	bitsPerPointer  = 2
-	bitsMask        = 1<<bitsPerPointer - 1
-	pointersPerByte = 8 / bitsPerPointer
-	bitPtrMask      = bitsMask << 2
-	maxGCMask       = 64
-	bitsDead        = 0
-	bitsPointer     = 2
+	bitsPerPointer  = _BitsPerPointer
+	bitsMask        = _BitsMask
+	pointersPerByte = _PointersPerByte
+	maxGCMask       = _MaxGCMask
+	bitsDead        = _BitsDead
+	bitsPointer     = _BitsPointer
 
-	bitBoundary = 1
-	bitMarked   = 2
-	bitMask     = bitBoundary | bitMarked
+	mSpanInUse = _MSpanInUse
 
-	mSpanInUse = 0
-
-	concurrentSweep = true
+	concurrentSweep = _ConcurrentSweep != 0
 )
 
 // Page number (address>>pageShift)
 type pageID uintptr
 
-// All zero-sized allocations return a pointer to this byte.
-var zeroObject byte
-
-// Maximum possible heap size.
-var maxMem uintptr
+// base address for all 0-byte allocations
+var zerobase uintptr
 
 // Allocate an object of size bytes.
 // Small objects are allocated from the per-P cache's free lists.
 // Large objects (> 32 kB) are allocated straight from the heap.
 func mallocgc(size uintptr, typ *_type, flags int) unsafe.Pointer {
 	if size == 0 {
-		return unsafe.Pointer(&zeroObject)
+		return unsafe.Pointer(&zerobase)
 	}
 	size0 := size
 
@@ -111,7 +103,6 @@ func mallocgc(size uintptr, typ *_type, flags int) unsafe.Pointer {
 			// standalone escaping variables. On a json benchmark
 			// the allocator reduces number of allocations by ~12% and
 			// reduces heap size by ~20%.
-
 			tinysize := uintptr(c.tinysize)
 			if size <= tinysize {
 				tiny := unsafe.Pointer(c.tiny)
@@ -129,6 +120,7 @@ func mallocgc(size uintptr, typ *_type, flags int) unsafe.Pointer {
 					x = tiny
 					c.tiny = (*byte)(add(x, size))
 					c.tinysize -= uintptr(size1)
+					c.local_tinyallocs++
 					if debugMalloc {
 						mp := acquirem()
 						if mp.mallocing == 0 {
@@ -217,6 +209,16 @@ func mallocgc(size uintptr, typ *_type, flags int) unsafe.Pointer {
 		goto marked
 	}
 
+	// If allocating a defer+arg block, now that we've picked a malloc size
+	// large enough to hold everything, cut the "asked for" size down to
+	// just the defer header, so that the GC bitmap will record the arg block
+	// as containing nothing at all (as if it were unused space at the end of
+	// a malloc block caused by size rounding).
+	// The defer arg areas are scanned as part of scanstack.
+	if typ == deferType {
+		size0 = unsafe.Sizeof(_defer{})
+	}
+
 	// From here till marked label marking the object as allocated
 	// and storing type info in the GC bitmap.
 	{
@@ -268,7 +270,7 @@ func mallocgc(size uintptr, typ *_type, flags int) unsafe.Pointer {
 			}
 			ptrmask = (*uint8)(add(unsafe.Pointer(ptrmask), 1)) // skip the unroll flag byte
 		} else {
-			ptrmask = (*uint8)(unsafe.Pointer(&typ.gc[0])) // embed mask
+			ptrmask = (*uint8)(unsafe.Pointer(typ.gc[0])) // pointer to unrolled mask
 		}
 		if size == 2*ptrSize {
 			*xbits = *ptrmask | bitBoundary
@@ -357,7 +359,7 @@ func newarray(typ *_type, n uintptr) unsafe.Pointer {
 	if typ.kind&kindNoPointers != 0 {
 		flags |= flagNoScan
 	}
-	if int(n) < 0 || (typ.size > 0 && n > maxMem/uintptr(typ.size)) {
+	if int(n) < 0 || (typ.size > 0 && n > maxmem/uintptr(typ.size)) {
 		panic("runtime: allocation size out of range")
 	}
 	return mallocgc(uintptr(typ.size)*n, typ, flags)
@@ -477,7 +479,7 @@ func gogc(force int32) {
 	// now that gc is done, kick off finalizer thread if needed
 	if !concurrentSweep {
 		// give the queued finalizers, if any, a chance to run
-		gosched()
+		Gosched()
 	}
 }
 
@@ -485,6 +487,10 @@ func gogc(force int32) {
 func GC() {
 	gogc(2)
 }
+
+// linker-provided
+var noptrdata struct{}
+var enoptrbss struct{}
 
 // SetFinalizer sets the finalizer associated with x to f.
 // When the garbage collector finds an unreachable block
@@ -525,6 +531,10 @@ func GC() {
 // It is not guaranteed that a finalizer will run if the size of *x is
 // zero bytes.
 //
+// It is not guaranteed that a finalizer will run for objects allocated
+// in initializers for package-level variables. Such objects may be
+// linker-allocated, not heap-allocated.
+//
 // A single goroutine runs all finalizers for a program, sequentially.
 // If a finalizer must run for a long time, it should do so by starting
 // a new goroutine.
@@ -542,24 +552,25 @@ func SetFinalizer(obj interface{}, finalizer interface{}) {
 		gothrow("nil elem type!")
 	}
 
-	// As an implementation detail we do not run finalizers for zero-sized objects,
-	// because we use &runtime·zerobase for all such allocations.
-	if ot.elem.size == 0 {
-		return
-	}
-
 	// find the containing object
 	_, base, _ := findObject(e.data)
 
-	// The following check is required for cases when a user passes a pointer to composite
-	// literal, but compiler makes it a pointer to global. For example:
-	//	var Foo = &Object{}
-	//	func main() {
-	//		runtime.SetFinalizer(Foo, nil)
-	//	}
-	// See issue 7656.
 	if base == nil {
-		return
+		// 0-length objects are okay.
+		if e.data == unsafe.Pointer(&zerobase) {
+			return
+		}
+
+		// Global initializers might be linker-allocated.
+		//	var Foo = &Object{}
+		//	func main() {
+		//		runtime.SetFinalizer(Foo, nil)
+		//	}
+		// The segments are, in order: text, rodata, noptrdata, data, bss, noptrbss.
+		if uintptr(unsafe.Pointer(&noptrdata)) <= uintptr(e.data) && uintptr(e.data) < uintptr(unsafe.Pointer(&enoptrbss)) {
+			return
+		}
+		gothrow("runtime.SetFinalizer: pointer not in allocated block")
 	}
 
 	if e.data != base {

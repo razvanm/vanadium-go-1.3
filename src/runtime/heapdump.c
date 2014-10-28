@@ -7,7 +7,7 @@
 // finalizers, etc.) to a file.
 
 // The format of the dumped file is described at
-// http://code.google.com/p/go-wiki/wiki/heapdump13
+// http://code.google.com/p/go-wiki/wiki/heapdump14
 
 #include "runtime.h"
 #include "arch_GOARCH.h"
@@ -27,10 +27,8 @@ extern byte runtime·ebss[];
 enum {
 	FieldKindEol = 0,
 	FieldKindPtr = 1,
-	FieldKindString = 2,
-	FieldKindSlice = 3,
-	FieldKindIface = 4,
-	FieldKindEface = 5,
+	FieldKindIface = 2,
+	FieldKindEface = 3,
 
 	TagEOF = 0,
 	TagObject = 1,
@@ -59,6 +57,8 @@ static BitVector makeheapobjbv(byte *p, uintptr size);
 
 // fd to write the dump to.
 static uintptr	dumpfd;
+
+#pragma dataflag NOPTR /* tmpbuf not a heap pointer at least */
 static byte	*tmpbuf;
 static uintptr	tmpbufsize;
 
@@ -109,6 +109,7 @@ typedef struct TypeCacheBucket TypeCacheBucket;
 struct TypeCacheBucket {
 	Type *t[TypeCacheAssoc];
 };
+#pragma dataflag NOPTR /* only initialized and used while world is stopped */
 static TypeCacheBucket typecache[TypeCacheBuckets];
 
 // dump a uint64 in a varint format parseable by encoding/binary
@@ -197,7 +198,6 @@ dumptype(Type *t)
 		write(t->x->name->str, t->x->name->len);
 	}
 	dumpbool((t->kind & KindDirectIface) == 0 || (t->kind & KindNoPointers) == 0);
-	dumpfields((BitVector){0, nil});
 }
 
 // dump an object
@@ -207,9 +207,8 @@ dumpobj(byte *obj, uintptr size, BitVector bv)
 	dumpbvtypes(&bv, obj);
 	dumpint(TagObject);
 	dumpint((uintptr)obj);
-	dumpint(0); // Type*
-	dumpint(0); // kind
 	dumpmemrange(obj, size);
+	dumpfields(bv);
 }
 
 static void
@@ -250,8 +249,9 @@ dumpbv(BitVector *bv, uintptr offset)
 	uintptr i;
 
 	for(i = 0; i < bv->n; i += BitsPerPointer) {
-		switch(bv->data[i/32] >> i%32 & 3) {
+		switch(bv->bytedata[i/8] >> i%8 & 3) {
 		case BitsDead:
+			return;
 		case BitsScalar:
 			break;
 		case BitsPointer:
@@ -259,7 +259,7 @@ dumpbv(BitVector *bv, uintptr offset)
 			dumpint(offset + i / BitsPerPointer * PtrSize);
 			break;
 		case BitsMultiWord:
-			switch(bv->data[(i+BitsPerPointer)/32] >> (i+BitsPerPointer)%32 & 3) {
+			switch(bv->bytedata[(i+BitsPerPointer)/8] >> (i+BitsPerPointer)%8 & 3) {
 			default:
 				runtime·throw("unexpected garbage collection bits");
 			case BitsIface:
@@ -432,7 +432,7 @@ dumpgoroutine(G *gp)
 		dumpint((uintptr)gp);
 		dumpint((uintptr)p->arg.type);
 		dumpint((uintptr)p->arg.data);
-		dumpint((uintptr)p->defer);
+		dumpint(0); // was p->defer, no longer recorded
 		dumpint((uintptr)p->link);
 	}
 }
@@ -486,16 +486,18 @@ dumproots(void)
 	byte *p;
 
 	// data segment
+	dumpbvtypes(&runtime·gcdatamask, runtime·data);
 	dumpint(TagData);
 	dumpint((uintptr)runtime·data);
 	dumpmemrange(runtime·data, runtime·edata - runtime·data);
 	dumpfields(runtime·gcdatamask);
 
 	// bss segment
+	dumpbvtypes(&runtime·gcbssmask, runtime·bss);
 	dumpint(TagBss);
 	dumpint((uintptr)runtime·bss);
 	dumpmemrange(runtime·bss, runtime·ebss - runtime·bss);
-	dumpfields(runtime·gcdatamask);
+	dumpfields(runtime·gcbssmask);
 
 	// MSpan.types
 	allspans = runtime·mheap.allspans;
@@ -575,10 +577,29 @@ itab_callback(Itab *tab)
 {
 	Type *t;
 
-	dumpint(TagItab);
-	dumpint((uintptr)tab);
 	t = tab->type;
-	dumpbool((t->kind & KindDirectIface) == 0 || (t->kind & KindNoPointers) == 0);
+	// Dump a map from itab* to the type of its data field.
+	// We want this map so we can deduce types of interface referents.
+	if((t->kind & KindDirectIface) == 0) {
+		// indirect - data slot is a pointer to t.
+		dumptype(t->ptrto);
+		dumpint(TagItab);
+		dumpint((uintptr)tab);
+		dumpint((uintptr)t->ptrto);
+	} else if((t->kind & KindNoPointers) == 0) {
+		// t is pointer-like - data slot is a t.
+		dumptype(t);
+		dumpint(TagItab);
+		dumpint((uintptr)tab);
+		dumpint((uintptr)t);
+	} else {
+		// Data slot is a scalar.  Dump type just for fun.
+		// With pointer-only interfaces, this shouldn't happen.
+		dumptype(t);
+		dumpint(TagItab);
+		dumpint((uintptr)tab);
+		dumpint((uintptr)t);
+	}
 }
 
 static void
@@ -723,7 +744,7 @@ mdump(void)
 	}
 
 	runtime·memclr((byte*)&typecache[0], sizeof(typecache));
-	hdr = (byte*)"go1.3 heap dump\n";
+	hdr = (byte*)"go1.4 heap dump\n";
 	write(hdr, runtime·findnull(hdr));
 	dumpparams();
 	dumpitabs();
@@ -737,33 +758,16 @@ mdump(void)
 	flush();
 }
 
-static void writeheapdump_m(void);
-
-#pragma textflag NOSPLIT
 void
-runtime∕debug·WriteHeapDump(uintptr fd)
-{
-	void (*fn)(void);
-	
-	g->m->scalararg[0] = fd;
-	fn = writeheapdump_m;
-	runtime·onM(&fn);
-}
-
-static void
-writeheapdump_m(void)
+runtime·writeheapdump_m(void)
 {
 	uintptr fd;
 	
 	fd = g->m->scalararg[0];
 	g->m->scalararg[0] = 0;
 
-	// Stop the world.
 	runtime·casgstatus(g->m->curg, Grunning, Gwaiting);
 	g->waitreason = runtime·gostringnocopy((byte*)"dumping heap");
-	runtime·semacquire(&runtime·worldsema, false);
-	g->m->gcing = 1;
-	runtime·stoptheworld();
 
 	// Update stats so we can dump them.
 	// As a side effect, flushes all the MCaches so the MSpan.freelist
@@ -784,13 +788,7 @@ writeheapdump_m(void)
 		tmpbufsize = 0;
 	}
 
-	// Start up the world again.
-	g->m->gcing = 0;
-	g->m->locks++;
-	runtime·semrelease(&runtime·worldsema);
-	runtime·starttheworld();
 	runtime·casgstatus(g->m->curg, Gwaiting, Grunning);
-	g->m->locks--;
 }
 
 // dumpint() the kind & offset of each field in an object.
@@ -813,9 +811,9 @@ dumpbvtypes(BitVector *bv, byte *base)
 	uintptr i;
 
 	for(i = 0; i < bv->n; i += BitsPerPointer) {
-		if((bv->data[i/32] >> i%32 & 3) != BitsMultiWord)
+		if((bv->bytedata[i/8] >> i%8 & 3) != BitsMultiWord)
 			continue;
-		switch(bv->data[(i+BitsPerPointer)/32] >> (i+BitsPerPointer)%32 & 3) {
+		switch(bv->bytedata[(i+BitsPerPointer)/8] >> (i+BitsPerPointer)%8 & 3) {
 		default:
 			runtime·throw("unexpected garbage collection bits");
 		case BitsIface:
@@ -860,5 +858,5 @@ makeheapobjbv(byte *p, uintptr size)
 		tmpbuf[i*BitsPerPointer/8] &= ~(BitsMask<<((i*BitsPerPointer)%8));
 		tmpbuf[i*BitsPerPointer/8] |= bits<<((i*BitsPerPointer)%8);
 	}
-	return (BitVector){i*BitsPerPointer, (uint32*)tmpbuf};
+	return (BitVector){i*BitsPerPointer, tmpbuf};
 }

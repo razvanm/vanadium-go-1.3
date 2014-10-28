@@ -21,15 +21,6 @@ func gc_itab_ptr(ret *interface{}) {
 	*ret = (*itab)(nil)
 }
 
-// Type used for "conservative" allocations in C code.
-type notype [8]*byte
-
-// Called from C. Returns the Go type used for C allocations w/o type.
-func gc_notype_ptr(ret *interface{}) {
-	var x notype
-	*ret = x
-}
-
 func gc_unixnanotime(now *int64) {
 	sec, nsec := timenow()
 	*now = sec*1e9 + int64(nsec)
@@ -69,18 +60,6 @@ func clearpools() {
 	}
 }
 
-// State of background sweep.
-// Protected by gclock.
-// Must match mgc0.c.
-var sweep struct {
-	g           *g
-	parked      bool
-	spanidx     uint32 // background sweeper position
-	nbgsweep    uint32
-	npausesweep uint32
-}
-
-var gclock mutex // also in mgc0.c
 func gosweepone() uintptr
 func gosweepdone() bool
 
@@ -89,7 +68,7 @@ func bgsweep() {
 	for {
 		for gosweepone() != ^uintptr(0) {
 			sweep.nbgsweep++
-			gosched()
+			Gosched()
 		}
 		lock(&gclock)
 		if !gosweepdone() {
@@ -128,6 +107,27 @@ func writebarrierslice(dst *[3]uintptr, src [3]uintptr) {
 func writebarrieriface(dst *[2]uintptr, src [2]uintptr) {
 	dst[0] = src[0]
 	dst[1] = src[1]
+}
+
+//go:nosplit
+func writebarrierfat2(dst *[2]uintptr, _ *byte, src [2]uintptr) {
+	dst[0] = src[0]
+	dst[1] = src[1]
+}
+
+//go:nosplit
+func writebarrierfat3(dst *[3]uintptr, _ *byte, src [3]uintptr) {
+	dst[0] = src[0]
+	dst[1] = src[1]
+	dst[2] = src[2]
+}
+
+//go:nosplit
+func writebarrierfat4(dst *[4]uintptr, _ *byte, src [4]uintptr) {
+	dst[0] = src[0]
+	dst[1] = src[1]
+	dst[2] = src[2]
+	dst[3] = src[3]
 }
 
 //go:nosplit
