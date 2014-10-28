@@ -600,29 +600,33 @@ osyield_done:
 
 TEXT runtime·mmap(SB),NOSPLIT,$0
 	CALL	runtime·nacl_entersyscall(SB)
-	SUBL	$12, SP
+	SUBL	$16, SP
 	MOVL	0(NFP), DI  // addr
 	MOVL	4(NFP), SI  // n
 	MOVL	8(NFP), DX  // prot
 	MOVL	12(NFP), CX  // flags
 	MOVL	16(NFP), R8  // fd
-	MOVL	20(NFP), AX  // off
-	MOVQ	AX, 0(SP)
-	MOVL	SP, R9	// &off
+	MOVL	20(NFP), R9  // off
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	mmap_irt
+	MOVQ	R9, 0(SP)
+	LEAL	SP, R9	// &off
 	NACL_SYSCALL(SYS_mmap)
+	CMPL	AX, $-4095
+	JNA	mmap_done
+	NEGL	AX
 	JMP	mmap_done
 mmap_irt:
-	MOVL	DI, 8(SP)  // &addr
-	LEAL	8(SP), DI
+	MOVQ	DI, 8(SP)  // &addr
+	LEAQ	8(SP), DI
 	MOVL	runtime·nacl_irt_memory_v0_3+(IRT_MEMORY_MMAP*4)(SB), AX
 	CALL	AX
-mmap_done:
-	ADDL	$12, SP
-	CMPL	AX, $-4095
-	JNA	2(PC)
 	NEGL	AX
+	TESTL	AX, AX
+	JNE	mmap_done
+	MOVL	8(SP), AX
+mmap_done:
+	ADDL	$16, SP
 	CALL	runtime·nacl_exitsyscall(SB)
 	MOVL	AX, ret+24(FP)
 	RET
