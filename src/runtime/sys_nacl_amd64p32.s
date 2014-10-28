@@ -506,7 +506,7 @@ TEXT runtime·nacl_cond_broadcast(SB),NOSPLIT,$0
 	CALL	runtime·nacl_entersyscall(SB)
 	MOVL	0(NFP), DI  // cond
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
-	JNE	cond_signal_irt
+	JNE	cond_broadcast_irt
 	NACL_SYSCALL(SYS_cond_broadcast)
 	JMP	cond_broadcast_done
 cond_broadcast_irt:
@@ -610,7 +610,7 @@ TEXT runtime·mmap(SB),NOSPLIT,$0
 	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	mmap_irt
 	MOVQ	R9, 0(SP)
-	LEAL	SP, R9	// &off
+	LEAQ	0(SP), R9	// &off
 	NACL_SYSCALL(SYS_mmap)
 	CMPL	AX, $-4095
 	JNA	mmap_done
