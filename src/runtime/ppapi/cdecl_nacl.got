@@ -1,0 +1,56 @@
+// Copyright 2014 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+package ppapi
+
+// Type definitions.
+{% for ty in types.values() -%}
+{% if ty.builtin -%}
+// type {{ty.name}} {{ty.kind}}
+{% elif ty.kind == 'struct' -%}
+type {{ty.name}} [{{ty.size}}]byte
+{% elif ty.kind == 'void' -%}
+// type {{ty.name}} void
+{% elif ty.kind == '*' -%}
+type {{ty.name}} uintptr
+{% else -%}
+type {{ty.name}} {{ty.kind}}
+{% endif -%}
+{% endfor %}
+
+type TimeTicks pp_TimeTicks
+
+// Enumerations.
+const (
+	PP_OK Error = 0
+	
+	{% for c, ty, v in consts -%}
+	{{c}} {{ty}} = {{v}}
+	{% endfor %}
+
+	PP_IMAGEDATAFORMAT_BGRA_PREMUL ImageDataFormat = 0
+	PP_IMAGEDATAFORMAT_RGBA_PREMUL ImageDataFormat = 1
+)
+
+// Function declarations.
+{% for func in functions -%}
+func {{func.name}}({%- for arg in func.args -%}
+	{% if not loop.first %}, {% endif -%}
+	{{arg.name}} {{arg.type.name}}
+	{%- endfor -%}){% if func.goresult != 'void' %} {{func.goresult}}{% endif %}
+{% endfor -%}
+
+// gostring returns a string object containing the contents of the
+// null-terminated UTF-8 C string.
+func gostring(buf *byte) string
+
+// gostringn returns a string object containing the contents of the
+// UTF-8 C string with a specified length.
+func gostringn(s *byte, i int) string
+
+// free releases a value allocated by malloc.
+func free(p *byte)
+
+// ppapi_start starts the main loop.
+func ppapi_start()

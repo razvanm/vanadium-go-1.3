@@ -2734,11 +2734,19 @@ mfound:
 	}
 }
 
+// static uchar naclret[] = {
+// 	0x5d, // POPL BP
+// 	// 0x8b, 0x7d, 0x00, // MOVL (BP), DI - catch return to invalid address, for debugging
+// 	0x83, 0xe5, 0xe0,	// ANDL $~31, BP
+// 	0xff, 0xe5, // JMP BP
+// };
+
+// Use CX as the temporary, since it is caller-save.
 static uchar naclret[] = {
-	0x5d, // POPL BP
-	// 0x8b, 0x7d, 0x00, // MOVL (BP), DI - catch return to invalid address, for debugging
-	0x83, 0xe5, 0xe0,	// ANDL $~31, BP
-	0xff, 0xe5, // JMP BP
+	0x59, // POPL CX
+	// 0x8b, 0x39, // MOVL (CX), DI - catch return to invalid address, for debugging
+	0x83, 0xe1, 0xe0,	// ANDL $~31, CX
+	0xff, 0xe1, // JMP CX
 };
 
 static void

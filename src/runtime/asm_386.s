@@ -665,6 +665,7 @@ TEXT asmcgocall<>(SB),NOSPLIT,$0-0
 	CMPL	SI, DI
 	JEQ	4(PC)
 	CALL	gosave<>(SB)
+	get_tls(CX)
 	MOVL	SI, g(CX)
 	MOVL	(g_sched+gobuf_sp)(SI), SP
 
