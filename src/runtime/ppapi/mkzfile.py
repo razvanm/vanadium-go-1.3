@@ -72,6 +72,10 @@ sizes = {
     '*': 4,
     }
 
+# align aligns an address to the next larger boundary.
+def align(addr, n):
+  return (addr + n - 1) & ~(n - 1)
+
 # sizeof returns a pair of the kind name and number of bytes needed to represent
 # a value of that kind.
 def sizeof(kind):
@@ -254,6 +258,8 @@ class Processor:
       text = text.decode('utf-8')
       tmpl = Template(text)
       tmpl.globals['framesize'] = self.framesize
+      tmpl.globals['max'] = max
+      tmpl.globals['align'] = align
       text = tmpl.render(**state)
       print text.encode('utf-8')
 
