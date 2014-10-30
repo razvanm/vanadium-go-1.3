@@ -68,8 +68,8 @@
 // the Javascript console, and how to debug NaCl applications using gdb.
 package ppapi
 
-// Init is the main entry point to starts PPAPI.  Never returns.  Call this
-// function at most one.
+// Init is the main entry point to start PPAPI.  Never returns.  Call this
+// function at most once.
 func Init(factory func(inst Instance) InstanceHandlers) {
 	instanceFactory = factory
 	ppapi_start()

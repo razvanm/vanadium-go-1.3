@@ -1,0 +1,7 @@
+{
+  "program": {
+    "x86-32": {
+      "url": "mandel_x86_32.nexe"
+    }
+  }
+}

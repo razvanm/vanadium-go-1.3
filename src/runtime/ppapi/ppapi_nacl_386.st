@@ -122,9 +122,8 @@ TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$20
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.
-TEXT ppapi·start(SB),NOSPLIT,$4
-	LEAL	ppapi·pp_start_functions(SB), AX
-	MOVL	AX, 0(SP)
+TEXT ppapi·start(SB),NOSPLIT,$0
+	LEAL	ppapi·pp_start_functions(SB), DI
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX
 	RET

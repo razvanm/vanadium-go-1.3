@@ -393,7 +393,7 @@ mutex_create_irt:
 	CALL	AX
 	NEGL	AX
 	JNZ	mutex_create_irt_done
-	MOVL	4(SP), AX
+	MOVL	0(SP), AX
 mutex_create_irt_done:
 	ADDL	$4, SP
 mutex_create_done:
@@ -464,7 +464,7 @@ cond_create_irt:
 	CALL	AX
 	NEGL	AX
 	JNZ	cond_create_irt_done
-	MOVL	4(SP), AX
+	MOVL	0(SP), AX
 cond_create_irt_done:
 	ADDL	$4, SP
 cond_create_done:

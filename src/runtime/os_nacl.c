@@ -174,7 +174,7 @@ semasleep(void)
 		if(ns < 0) {
 			ret = runtime·nacl_cond_wait(g->m->waitsema, g->m->waitsemalock);
 			if(ret < 0) {
-				//runtime·printf("nacl_cond_wait: error %d\n", -ret);
+				runtime·printf("nacl_cond_wait: error %d\n", -ret);
 				runtime·throw("semasleep");
 			}
 		} else {
@@ -189,7 +189,7 @@ semasleep(void)
 				return;
 			}
 			if(ret < 0) {
-				//runtime·printf("nacl_cond_timed_wait_abs: error %d\n", -ret);
+				runtime·printf("nacl_cond_timed_wait_abs: error %d\n", -ret);
 				runtime·throw("semasleep");
 			}
 		}

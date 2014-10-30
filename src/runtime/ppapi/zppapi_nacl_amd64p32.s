@@ -378,12 +378,10 @@
 
 // Callbacks are invoked through cgocallback.
 TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 20(SP)
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
+	MOVQ	BX, 20(SP)
+	MOVQ	R12, 28(SP)
+	MOVQ	R13, 36(SP)
+	MOVQ	R14, 44(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	LEAL	·ppp_graphics3d_context_lost(SB), AX
@@ -393,22 +391,18 @@ TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
 	MOVL	$8, 8(SP)
 	MOVL	$0, 16(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	20(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	16(SP), AX
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
+	MOVQ	20(SP), BX
+	MOVQ	28(SP), R12
+	MOVQ	36(SP), R13
+	MOVQ	44(SP), R14
 	RET
 
 TEXT ppapi·ppp_handle_input_event(SB),NOSPLIT,$64
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 24(SP)
-	MOVQ	BX, 32(SP)
-	MOVQ	R12, 40(SP)
-	MOVQ	R13, 48(SP)
-	MOVQ	R14, 56(SP)
+	MOVQ	BX, 24(SP)
+	MOVQ	R12, 32(SP)
+	MOVQ	R13, 40(SP)
+	MOVQ	R14, 48(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	MOVL	arg4+4(FP), AX
@@ -420,22 +414,18 @@ TEXT ppapi·ppp_handle_input_event(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	24(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	20(SP), AX
-	MOVQ	32(SP), BX
-	MOVQ	40(SP), R12
-	MOVQ	48(SP), R13
-	MOVQ	56(SP), R14
+	MOVQ	24(SP), BX
+	MOVQ	32(SP), R12
+	MOVQ	40(SP), R13
+	MOVQ	48(SP), R14
 	RET
 
-TEXT ppapi·ppp_did_create(SB),NOSPLIT,$80
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 32(SP)
-	MOVQ	BX, 40(SP)
-	MOVQ	R12, 48(SP)
-	MOVQ	R13, 56(SP)
-	MOVQ	R14, 64(SP)
+TEXT ppapi·ppp_did_create(SB),NOSPLIT,$64
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	MOVL	arg4+4(FP), AX
@@ -451,22 +441,18 @@ TEXT ppapi·ppp_did_create(SB),NOSPLIT,$80
 	MOVL	$20, 8(SP)
 	MOVL	$0, 28(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	32(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	28(SP), AX
-	MOVQ	40(SP), BX
-	MOVQ	48(SP), R12
-	MOVQ	56(SP), R13
-	MOVQ	64(SP), R14
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
 	RET
 
 TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 20(SP)
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
+	MOVQ	BX, 20(SP)
+	MOVQ	R12, 28(SP)
+	MOVQ	R13, 36(SP)
+	MOVQ	R14, 44(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	LEAL	·ppp_did_destroy(SB), AX
@@ -476,22 +462,18 @@ TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
 	MOVL	$8, 8(SP)
 	MOVL	$0, 16(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	20(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	16(SP), AX
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
+	MOVQ	20(SP), BX
+	MOVQ	28(SP), R12
+	MOVQ	36(SP), R13
+	MOVQ	44(SP), R14
 	RET
 
 TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 24(SP)
-	MOVQ	BX, 32(SP)
-	MOVQ	R12, 40(SP)
-	MOVQ	R13, 48(SP)
-	MOVQ	R14, 56(SP)
+	MOVQ	BX, 24(SP)
+	MOVQ	R12, 32(SP)
+	MOVQ	R13, 40(SP)
+	MOVQ	R14, 48(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	MOVL	arg4+4(FP), AX
@@ -503,22 +485,18 @@ TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	24(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	20(SP), AX
-	MOVQ	32(SP), BX
-	MOVQ	40(SP), R12
-	MOVQ	48(SP), R13
-	MOVQ	56(SP), R14
+	MOVQ	24(SP), BX
+	MOVQ	32(SP), R12
+	MOVQ	40(SP), R13
+	MOVQ	48(SP), R14
 	RET
 
 TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 24(SP)
-	MOVQ	BX, 32(SP)
-	MOVQ	R12, 40(SP)
-	MOVQ	R13, 48(SP)
-	MOVQ	R14, 56(SP)
+	MOVQ	BX, 24(SP)
+	MOVQ	R12, 32(SP)
+	MOVQ	R13, 40(SP)
+	MOVQ	R14, 48(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	MOVL	arg4+4(FP), AX
@@ -530,22 +508,18 @@ TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	24(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	20(SP), AX
-	MOVQ	32(SP), BX
-	MOVQ	40(SP), R12
-	MOVQ	48(SP), R13
-	MOVQ	56(SP), R14
+	MOVQ	24(SP), BX
+	MOVQ	32(SP), R12
+	MOVQ	40(SP), R13
+	MOVQ	48(SP), R14
 	RET
 
 TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 24(SP)
-	MOVQ	BX, 32(SP)
-	MOVQ	R12, 40(SP)
-	MOVQ	R13, 48(SP)
-	MOVQ	R14, 56(SP)
+	MOVQ	BX, 24(SP)
+	MOVQ	R12, 32(SP)
+	MOVQ	R13, 40(SP)
+	MOVQ	R14, 48(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	MOVL	arg4+4(FP), AX
@@ -557,22 +531,18 @@ TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	24(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	20(SP), AX
-	MOVQ	32(SP), BX
-	MOVQ	40(SP), R12
-	MOVQ	48(SP), R13
-	MOVQ	56(SP), R14
+	MOVQ	24(SP), BX
+	MOVQ	32(SP), R12
+	MOVQ	40(SP), R13
+	MOVQ	48(SP), R14
 	RET
 
 TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 36(SP)
-	MOVQ	BX, 44(SP)
-	MOVQ	R12, 52(SP)
-	MOVQ	R13, 60(SP)
-	MOVQ	R14, 68(SP)
+	MOVQ	BX, 36(SP)
+	MOVQ	R12, 44(SP)
+	MOVQ	R13, 52(SP)
+	MOVQ	R14, 60(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	MOVL	arg4+4(FP), AX
@@ -590,22 +560,18 @@ TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
 	MOVL	$24, 8(SP)
 	MOVL	$0, 32(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	36(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	32(SP), AX
-	MOVQ	44(SP), BX
-	MOVQ	52(SP), R12
-	MOVQ	60(SP), R13
-	MOVQ	68(SP), R14
+	MOVQ	36(SP), BX
+	MOVQ	44(SP), R12
+	MOVQ	52(SP), R13
+	MOVQ	60(SP), R14
 	RET
 
 TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 20(SP)
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
+	MOVQ	BX, 20(SP)
+	MOVQ	R12, 28(SP)
+	MOVQ	R13, 36(SP)
+	MOVQ	R14, 44(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	LEAL	·ppp_mouse_lock_lost(SB), AX
@@ -615,22 +581,18 @@ TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
 	MOVL	$8, 8(SP)
 	MOVL	$0, 16(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	20(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	16(SP), AX
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
+	MOVQ	20(SP), BX
+	MOVQ	28(SP), R12
+	MOVQ	36(SP), R13
+	MOVQ	44(SP), R14
 	RET
 
-TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$80
-	LEAQ	0(BP), AX  // BP is not allowed except in LEA instructions, so bounce through AX.
-	MOVQ	AX, 28(SP)
-	MOVQ	BX, 36(SP)
-	MOVQ	R12, 44(SP)
-	MOVQ	R13, 52(SP)
-	MOVQ	R14, 60(SP)
+TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$64
+	MOVQ	BX, 28(SP)
+	MOVQ	R12, 36(SP)
+	MOVQ	R13, 44(SP)
+	MOVQ	R14, 52(SP)
 	MOVL	arg0+0(FP), AX
 	MOVL	AX, 12(SP)
 	MOVL	arg4+4(FP), AX
@@ -644,13 +606,11 @@ TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$80
 	MOVL	$16, 8(SP)
 	MOVL	$0, 24(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVQ	28(SP), AX
-	LEAQ	0(AX), BP
 	MOVL	24(SP), AX
-	MOVQ	36(SP), BX
-	MOVQ	44(SP), R12
-	MOVQ	52(SP), R13
-	MOVQ	60(SP), R14
+	MOVQ	28(SP), BX
+	MOVQ	36(SP), R12
+	MOVQ	44(SP), R13
+	MOVQ	52(SP), R14
 	RET
 
 
@@ -5164,22 +5124,20 @@ TEXT ppapi·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$0
 
 // ppapi·ppp_initialize_module_handler is called once at initialization
 // initialization time.  Called from the C stack.
-TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$44
-	MOVQ	BP, 4(SP)
-	MOVQ	BX, 12(SP)
-	MOVQ	R12, 20(SP)
-	MOVQ	R13, 28(SP)
-	MOVQ	R14, 36(SP)
+TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$36
+	MOVQ	BX, 4(SP)
+	MOVQ	R12, 12(SP)
+	MOVQ	R13, 20(SP)
+	MOVQ	R14, 28(SP)
 	MOVL	module_id+0(FP), AX
 	MOVL	AX, ppapi·module_id(SB)
 	MOVL	get_browser_interface+4(FP), AX
 	MOVL	AX, 0(SP)
 	CALL	ppapi·ppp_initialize_module(SB)
-	MOVQ	4(SP), BP
-	MOVQ	12(SP), BX
-	MOVQ	20(SP), R12
-	MOVQ	28(SP), R13
-	MOVQ	36(SP), R14
+	MOVQ	4(SP), BX
+	MOVQ	12(SP), R12
+	MOVQ	20(SP), R13
+	MOVQ	28(SP), R14
 	RET
 
 // ppapi·ppp_shutdown_module_handler my or may not be called when the
@@ -5189,20 +5147,18 @@ TEXT ppapi·ppp_shutdown_module_handler(SB),NOSPLIT,$0
 
 // ppapi·ppp_get_interface_handler is called by the browser to get
 // callback functions.  Called from the C stack.
-TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$44
-	MOVQ	BP, 4(SP)
-	MOVQ	BX, 12(SP)
-	MOVQ	R12, 20(SP)
-	MOVQ	R13, 28(SP)
-	MOVQ	R14, 36(SP)
+TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$36
+	MOVQ	BX, 4(SP)
+	MOVQ	R12, 12(SP)
+	MOVQ	R13, 20(SP)
+	MOVQ	R14, 28(SP)
 	MOVL	interface_name+0(FP), AX
 	MOVL	AX, 0(SP)
 	CALL	ppapi·ppp_get_interface(SB)
-	MOVQ	4(SP), BP
-	MOVQ	12(SP), BX
-	MOVQ	20(SP), R12
-	MOVQ	28(SP), R13
-	MOVQ	36(SP), R14
+	MOVQ	4(SP), BX
+	MOVQ	12(SP), R12
+	MOVQ	20(SP), R13
+	MOVQ	28(SP), R14
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.
@@ -5210,4 +5166,13 @@ TEXT ppapi·start(SB),NOSPLIT,$0
 	LEAL	ppapi·pp_start_functions(SB), DI
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX
+	RET
+
+TEXT ·ppapi_start(SB),NOSPLIT,$8
+	LEAL	ppapi·start(SB), AX
+	MOVL	AX, 0(SP)
+	MOVL	$0, 4(SP)
+	CALL	runtime·cgocall(SB)
+	// Not reached
+	INT	$3
 	RET

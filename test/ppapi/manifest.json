@@ -1,0 +1,9 @@
+{
+  "name": "PPAPI Network Test",
+  "version": "0.1",
+  "description": "Go PPAPI Network Test",
+  "permissions": [
+    "experimental",
+    {"socket": ["resolve-host", "tcp-connect:*.*", "tcp-listen:*.*"]}
+  ],
+}

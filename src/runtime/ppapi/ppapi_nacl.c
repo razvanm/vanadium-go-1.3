@@ -27,6 +27,7 @@ struct PPPInterface {
 // ppapi·module_id is the module identifier for the process instance.
 int32 ppapi·module_id;
 
+#pragma dataflag NOPTR
 struct PPBInterface ppapi·ppb_interfaces[] = {
 	{ "PPB_Audio;1.1" },
 	{ "PPB_AudioBuffer;0.1" },
@@ -96,16 +97,19 @@ void ppapi·ppp_mouse_lock_lost(int32 instance);
 void *ppapi·get_array_output_buffer(void *data, uint32 count, uint32 size);
 
 // PPP_Graphics3D callbacks.
+#pragma dataflag NOPTR
 static PPBFunction ppapi·ppp_graphics_3d[] = {
 	(PPBFunction) ppapi·ppp_graphics3d_context_lost,
 };
 
 // PPP_InputEvent callbacks.
+#pragma dataflag NOPTR
 static PPBFunction ppapi·ppp_input_event[] = {
 	(PPBFunction) ppapi·ppp_handle_input_event,
 };
 
 // PPP_Instance callbacks.
+#pragma dataflag NOPTR
 static PPBFunction ppapi·ppp_instance[] = {
 	(PPBFunction) ppapi·ppp_did_create,
 	(PPBFunction) ppapi·ppp_did_destroy,
@@ -115,24 +119,28 @@ static PPBFunction ppapi·ppp_instance[] = {
 };
 
 // PPP_Messaging callbacks.
+#pragma dataflag NOPTR
 static PPBFunction ppapi·ppp_messaging[] = {
 	(PPBFunction) ppapi·ppp_handle_message,
 };
 
 // PPP_MouseLock callbacks.
+#pragma dataflag NOPTR
 static PPBFunction ppapi·ppp_mouse_lock[] = {
 	(PPBFunction) ppapi·ppp_mouse_lock_lost,
 };
 
+#pragma dataflag NOPTR
 static struct PPPInterface ppapi·ppp_interfaces[] = {
 	{ "PPP_Graphics_3D;1.0", ppapi·ppp_graphics_3d },
 	{ "PPP_InputEvent;0.1",  ppapi·ppp_input_event },
-	{ "PPP_Instance;1.1",      ppapi·ppp_instance },
+	{ "PPP_Instance;1.1",    ppapi·ppp_instance },
 	{ "PPP_Messaging;1.0",   ppapi·ppp_messaging },
 	{ "PPP_MouseLock;1.0",   ppapi·ppp_mouse_lock },
 	{ 0 },
 };
 
+#pragma dataflag NOPTR
 PPBFunction ppapi·pp_start_functions[] = {
 	(PPBFunction) ppapi·ppp_initialize_module_handler,
 	(PPBFunction) ppapi·ppp_shutdown_module_handler,
@@ -170,10 +178,4 @@ void ·gostringn(byte *p, intgo l, String s) {
 
 void ·free(int8 *p) {
 	runtime·cfree(p);
-}
-
-void ·ppapi_start() {
-	runtime·cgocall(ppapi·start, nil);
-	// Not reached.
-	*(uint32 *)345 = 1;
 }
