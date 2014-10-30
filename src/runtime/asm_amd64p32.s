@@ -11,7 +11,7 @@ TEXT runtime·rt0_go(SB),NOSPLIT,$0
 	MOVL	argc+0(FP), AX
 	MOVL	argv+4(FP), BX
 	MOVL	SP, CX
-	SUBL	$128, SP		// plenty of scratch
+	SUBL	$128, CX		// plenty of scratch
 	ANDL	$~15, CX
 	MOVL	CX, SP
 
@@ -36,7 +36,21 @@ TEXT runtime·rt0_go(SB),NOSPLIT,$0
 	MOVL	CX, runtime·cpuid_ecx(SB)
 	MOVL	DX, runtime·cpuid_edx(SB)
 nocpuinfo:	
-	
+		
+	// if there is an _cgo_init, call it.
+	MOVL	_cgo_init(SB), AX
+	TESTL	AX, AX
+	JZ	needtls
+	// g0 already in DI
+	LEAL	setg_gcc<>(SB), SI
+	CALL	AX
+
+	// update stackguard after _cgo_init
+	MOVL	$runtime·g0(SB), CX
+	MOVL	(g_stack+stack_lo)(CX), AX
+	ADDL	$const_StackGuard, AX
+	MOVL	AX, g_stackguard0(CX)
+	MOVL	AX, g_stackguard1(CX)
 needtls:
 	LEAL	runtime·tls0(SB), DI
 	CALL	runtime·settls(SB)
@@ -569,16 +583,78 @@ TEXT runtime·jmpdefer(SB), NOSPLIT, $0-8
 	MOVL	0(DX), BX
 	JMP	BX	// but first run the deferred function
 
+// Save state of caller into g->sched. Smashes R8, R9, SI.
+TEXT gosave<>(SB),NOSPLIT,$0
+	get_tls(R8)
+	MOVL	g(R8), R8
+	MOVL	0(SP), R9
+	MOVL	R9, (g_sched+gobuf_pc)(R8)
+	LEAL	8(SP), R9
+	MOVL	R9, (g_sched+gobuf_sp)(R8)
+	MOVL	$0, (g_sched+gobuf_ret)(R8)
+	MOVL	$0, (g_sched+gobuf_ctxt)(R8)
+	RET
+
 // asmcgocall(void(*fn)(void*), void *arg)
-// Not implemented.
 TEXT runtime·asmcgocall(SB),NOSPLIT,$0-8
-	MOVL	0, AX
+	MOVL	fn+0(FP), AX
+	MOVL	arg+4(FP), BX
+	CALL	asmcgocall<>(SB)
 	RET
 
 // asmcgocall(void(*fn)(void*), void *arg)
 // Not implemented.
 TEXT runtime·asmcgocall_errno(SB),NOSPLIT,$0-12
-	MOVL	0, AX
+	MOVL	fn+0(FP), AX
+	MOVL	arg+4(FP), BX
+	CALL	asmcgocall<>(SB)
+	MOVL	AX, ret+8(FP)
+	RET
+
+// asmcgocall common code. fn in AX, arg in BX. returns errno in AX.
+TEXT asmcgocall<>(SB),NOSPLIT,$0-0
+	MOVL	SP, DX
+
+	// Figure out if we need to switch to m->g0 stack.
+	// We get called to create new OS threads too, and those
+	// come in on the m->g0 stack already.
+	get_tls(CX)
+	MOVL	g(CX), R8
+	MOVL	g_m(R8), R8
+	MOVL	m_g0(R8), SI
+	MOVL	g(CX), DI
+	CMPL	SI, DI
+	JEQ	nosave
+	MOVL	m_gsignal(R8), SI
+	CMPL	SI, DI
+	JEQ	nosave
+	
+	MOVL	m_g0(R8), R10
+	CALL	gosave<>(SB)
+	MOVL	R10, g(CX)
+	MOVL	(g_sched+gobuf_sp)(R10), SP
+nosave:
+
+	// Now on a scheduling stack (a pthread-created stack).
+	// Make sure we have enough room for 4 stack-backed fast-call
+	// registers as per windows amd64 calling convention.
+	SUBL	$64, SP
+	ANDL	$~15, SP	// alignment for gcc ABI
+	MOVL	DI, 44(SP)	// save g
+	MOVL	(g_stack+stack_hi)(DI), DI
+	SUBL	DX, DI
+	MOVL	DI, 40(SP)	// save depth in stack (can't just save SP, as stack might be copied during a callback)
+	MOVL	BX, DI		// DI = first argument in AMD64 ABI
+	MOVL	BX, CX		// CX = first argument in Win64
+	CALL	AX
+
+	// Restore registers, g, stack pointer.
+	get_tls(CX)
+	MOVL	48(SP), DI
+	MOVL	(g_stack+stack_hi)(DI), SI
+	SUBL	40(SP), SI
+	MOVL	DI, g(CX)
+	MOVL	SI, SP
 	RET
 
 // cgocallback(void (*fn)(void*), void *frame, uintptr framesize)
@@ -591,6 +667,12 @@ TEXT runtime·cgocallback(SB),NOSPLIT,$0-12
 // Not implemented.
 TEXT runtime·setg(SB), NOSPLIT, $0-4
 	MOVL	0, AX
+	RET
+
+// void setg_gcc(G*); set g called from gcc.
+TEXT setg_gcc<>(SB),NOSPLIT,$0
+	get_tls(AX)
+	MOVL	DI, g(AX)
 	RET
 
 // check that SP is in range [g->stack.lo, g->stack.hi)
