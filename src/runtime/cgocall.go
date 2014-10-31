@@ -230,12 +230,16 @@ func cgocallbackg1() {
 	case "amd64":
 		// On amd64, stack frame is one word, plus caller PC.
 		cb = (*args)(unsafe.Pointer(sp + 2*ptrSize))
+	case "amd64p32":
+		// On amd64p32, stack frame is one word, plus caller PC doubleword.
+		cb = (*args)(unsafe.Pointer(sp + 4*ptrSize))
 	case "386":
 		// On 386, stack frame is three words, plus caller PC.
 		cb = (*args)(unsafe.Pointer(sp + 4*ptrSize))
 	}
 
 	// Invoke callback.
+	print("AAAAAAAA: ", cb.argsize, "\n")
 	reflectcall(unsafe.Pointer(cb.fn), unsafe.Pointer(cb.arg), uint32(cb.argsize), 0)
 
 	if raceenabled {
@@ -258,7 +262,7 @@ func unwindm(restore *bool) {
 	switch GOARCH {
 	default:
 		gothrow("unwindm not implemented")
-	case "386", "amd64":
+	case "386", "amd64", "amd64p32":
 		sched.sp = *(*uintptr)(unsafe.Pointer(sched.sp))
 	case "arm":
 		sched.sp = *(*uintptr)(unsafe.Pointer(sched.sp + 4))

@@ -166,16 +166,19 @@ void *ppapi·ppp_get_interface(int8 *interface_name) {
 	return 0;
 }
 
+#pragma textflag NOSPLIT
 void ·gostring(byte *p, String s) {
 	s = runtime·gostring(p);
 	FLUSH(&s);
 }
 
+#pragma textflag NOSPLIT
 void ·gostringn(byte *p, intgo l, String s) {
 	s = runtime·gostringn(p, l);
 	FLUSH(&s);
 }
 
+#pragma textflag NOSPLIT
 void ·free(int8 *p) {
 	runtime·cfree(p);
 }

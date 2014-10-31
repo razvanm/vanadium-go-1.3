@@ -33,16 +33,34 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+48,16)}}
 	MOVQ	R12, {{fsize+24}}(SP)
 	MOVQ	R13, {{fsize+32}}(SP)
 	MOVQ	R14, {{fsize+40}}(SP)
-	{% for aoff in range(0, fsize, 4) -%}
-	MOVL	arg{{aoff}}+{{aoff}}(FP), AX
-	MOVL	AX, {{aoff+12}}(SP)
+	{% if fsize > 0 -%}
+	MOVL	DI, 12(SP)
+	{% endif -%}
+	{% if fsize > 4 -%}
+	MOVL	SI, 16(SP)
+	{% endif -%}
+	{% if fsize > 8 -%}
+	MOVL	DX, 20(SP)
+	{% endif -%}
+	{% if fsize > 12 -%}
+	MOVL	CX, 24(SP)
+	{% endif -%}
+	{% if fsize > 16 -%}
+	MOVL	R8, 28(SP)
+	{% endif -%}
+	{% if fsize > 20 -%}
+	MOVL	R0, 32(SP)
+	{% endif -%}
+	{% for aoff in range(32, fsize, 4) -%}
+	MOVL	arg{{aoff/4}}+{{aoff-32}}(FP), AX
+	MOVL	AX, {{aoff}}(SP)
 	{% endfor -%}
+	MOVL	$0, {{fsize+12}}(SP)
 	LEAL	·{{func.name}}(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	${{fsize+4}}, 8(SP)
-	MOVL	$0, {{fsize+12}}(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	{{fsize+12}}(SP), AX
 	MOVQ	{{fsize+16}}(SP), BX

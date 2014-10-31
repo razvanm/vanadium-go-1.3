@@ -382,14 +382,13 @@ TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
 	MOVQ	R12, 28(SP)
 	MOVQ	R13, 36(SP)
 	MOVQ	R14, 44(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
+	MOVL	DI, 12(SP)
+	MOVL	$0, 16(SP)
 	LEAL	·ppp_graphics3d_context_lost(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$8, 8(SP)
-	MOVL	$0, 16(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	16(SP), AX
 	MOVQ	20(SP), BX
@@ -403,16 +402,14 @@ TEXT ppapi·ppp_handle_input_event(SB),NOSPLIT,$64
 	MOVQ	R12, 32(SP)
 	MOVQ	R13, 40(SP)
 	MOVQ	R14, 48(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg4+4(FP), AX
-	MOVL	AX, 16(SP)
+	MOVL	DI, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	$0, 20(SP)
 	LEAL	·ppp_handle_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$12, 8(SP)
-	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
 	MOVQ	24(SP), BX
@@ -426,20 +423,16 @@ TEXT ppapi·ppp_did_create(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg4+4(FP), AX
-	MOVL	AX, 16(SP)
-	MOVL	arg8+8(FP), AX
-	MOVL	AX, 20(SP)
-	MOVL	arg12+12(FP), AX
-	MOVL	AX, 24(SP)
+	MOVL	DI, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	DX, 20(SP)
+	MOVL	CX, 24(SP)
+	MOVL	$0, 28(SP)
 	LEAL	·ppp_did_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$20, 8(SP)
-	MOVL	$0, 28(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	28(SP), AX
 	MOVQ	32(SP), BX
@@ -453,14 +446,13 @@ TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
 	MOVQ	R12, 28(SP)
 	MOVQ	R13, 36(SP)
 	MOVQ	R14, 44(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
+	MOVL	DI, 12(SP)
+	MOVL	$0, 16(SP)
 	LEAL	·ppp_did_destroy(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$8, 8(SP)
-	MOVL	$0, 16(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	16(SP), AX
 	MOVQ	20(SP), BX
@@ -474,16 +466,14 @@ TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
 	MOVQ	R12, 32(SP)
 	MOVQ	R13, 40(SP)
 	MOVQ	R14, 48(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg4+4(FP), AX
-	MOVL	AX, 16(SP)
+	MOVL	DI, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	$0, 20(SP)
 	LEAL	·ppp_did_change_view(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$12, 8(SP)
-	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
 	MOVQ	24(SP), BX
@@ -497,16 +487,14 @@ TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
 	MOVQ	R12, 32(SP)
 	MOVQ	R13, 40(SP)
 	MOVQ	R14, 48(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg4+4(FP), AX
-	MOVL	AX, 16(SP)
+	MOVL	DI, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	$0, 20(SP)
 	LEAL	·ppp_did_change_focus(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$12, 8(SP)
-	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
 	MOVQ	24(SP), BX
@@ -520,16 +508,14 @@ TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
 	MOVQ	R12, 32(SP)
 	MOVQ	R13, 40(SP)
 	MOVQ	R14, 48(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg4+4(FP), AX
-	MOVL	AX, 16(SP)
+	MOVL	DI, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	$0, 20(SP)
 	LEAL	·ppp_handle_document_load(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$12, 8(SP)
-	MOVL	$0, 20(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
 	MOVQ	24(SP), BX
@@ -543,22 +529,17 @@ TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
 	MOVQ	R12, 44(SP)
 	MOVQ	R13, 52(SP)
 	MOVQ	R14, 60(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg4+4(FP), AX
-	MOVL	AX, 16(SP)
-	MOVL	arg8+8(FP), AX
-	MOVL	AX, 20(SP)
-	MOVL	arg12+12(FP), AX
-	MOVL	AX, 24(SP)
-	MOVL	arg16+16(FP), AX
-	MOVL	AX, 28(SP)
+	MOVL	DI, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	DX, 20(SP)
+	MOVL	CX, 24(SP)
+	MOVL	R8, 28(SP)
+	MOVL	$0, 32(SP)
 	LEAL	·ppp_handle_message(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$24, 8(SP)
-	MOVL	$0, 32(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	32(SP), AX
 	MOVQ	36(SP), BX
@@ -572,14 +553,13 @@ TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
 	MOVQ	R12, 28(SP)
 	MOVQ	R13, 36(SP)
 	MOVQ	R14, 44(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
+	MOVL	DI, 12(SP)
+	MOVL	$0, 16(SP)
 	LEAL	·ppp_mouse_lock_lost(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$8, 8(SP)
-	MOVL	$0, 16(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	16(SP), AX
 	MOVQ	20(SP), BX
@@ -593,18 +573,15 @@ TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$64
 	MOVQ	R12, 36(SP)
 	MOVQ	R13, 44(SP)
 	MOVQ	R14, 52(SP)
-	MOVL	arg0+0(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg4+4(FP), AX
-	MOVL	AX, 16(SP)
-	MOVL	arg8+8(FP), AX
-	MOVL	AX, 20(SP)
+	MOVL	DI, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	DX, 20(SP)
+	MOVL	$0, 24(SP)
 	LEAL	·get_array_output_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	12(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$16, 8(SP)
-	MOVL	$0, 24(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	24(SP), AX
 	MOVQ	28(SP), BX

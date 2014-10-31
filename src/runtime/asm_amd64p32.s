@@ -640,15 +640,17 @@ nosave:
 	// registers as per windows amd64 calling convention.
 	SUBL	$64, SP
 	ANDL	$~15, SP	// alignment for gcc ABI
-	MOVL	BP, 48(SP)
-	MOVL	SP, BP		// NaCl requires a valid framepointer
+	LEAL	0(BP), R9
+	MOVL	R9, 48(SP)
+	LEAL	0(SP), BP		// NaCl requires a valid framepointer
 	MOVL	DI, 44(SP)	// save g
 	MOVL	(g_stack+stack_hi)(DI), DI
 	SUBL	DX, DI
 	MOVL	DI, 40(SP)	// save depth in stack (can't just save SP, as stack might be copied during a callback)
 	MOVL	BX, DI		// DI = first argument in AMD64 ABI
 	CALL	AX
-	MOVL	48(SP), BP
+	MOVL	48(SP), R9
+	LEAL	0(R9), BP
 
 	// Restore registers, g, stack pointer.
 	get_tls(CX)
@@ -660,15 +662,126 @@ nosave:
 	RET
 
 // cgocallback(void (*fn)(void*), void *frame, uintptr framesize)
-// Not implemented.
-TEXT runtime·cgocallback(SB),NOSPLIT,$0-12
-	MOVL	0, AX
+// Turn the fn into a Go func (by taking its address) and call
+// cgocallback_gofunc.  Called from the C stack using Go calling
+// conventions.
+TEXT runtime·cgocallback(SB),NOSPLIT,$12-12
+	LEAL	fn+0(FP), AX
+	MOVL	AX, 0(SP)
+	MOVL	frame+4(FP), AX
+	MOVL	AX, 4(SP)
+	MOVL	framesize+8(FP), AX
+	MOVL	AX, 8(SP)
+	// restore TLS register at time of execution,
+	// in case it's been smashed.
+	LEAL	runtime·gettls(SB), AX
+	CALL	AX
+	LEAL	runtime·cgocallback_gofunc(SB), AX
+	CALL	AX
+	RET
+
+// cgocallback_gofunc(FuncVal*, void *frame, uintptr framesize)
+// See cgocall.c for more details.
+TEXT ·cgocallback_gofunc(SB),NOSPLIT,$8-12
+	NO_LOCAL_POINTERS
+
+	// If g is nil, Go did not create the current thread.
+	// Call needm to obtain one m for temporary use.
+	// In this case, we're running on the thread stack, so there's
+	// lots of space, but the linker doesn't know. Hide the call from
+	// the linker analysis by using an indirect call through AX.
+	get_tls(CX)
+	
+	MOVL	$0, R9
+	CMPL	CX, $0
+	JEQ	2(PC) // TODO
+	
+	MOVL	g(CX), R9
+	CMPL	R9, $0
+	JEQ	needm
+	MOVL	g_m(R9), R9
+	MOVL	R9, R8 // holds oldm until end of function
+	JMP	havem
+needm:
+	MOVL	$0, 0(SP)
+	LEAL	runtime·needm(SB), AX
+	CALL	AX
+	MOVL	0(SP), R8
+	get_tls(CX)
+	MOVL	g(CX), R9
+	MOVL	g_m(R9), R9
+
+havem:
+	// Now there's a valid m, and we're running on its m->g0.
+	// Save current m->g0->sched.sp on stack and then set it to SP.
+	// Save current sp in m->g0->sched.sp in preparation for
+	// switch back to m->curg stack.
+	// NOTE: unwindm knows that the saved g->sched.sp is at 0(SP).
+	MOVL	m_g0(R9), SI
+	MOVL	(g_sched+gobuf_sp)(SI), AX
+	MOVL	AX, 0(SP)
+	MOVL	SP, (g_sched+gobuf_sp)(SI)
+
+	// Switch to m->curg stack and call runtime.cgocallbackg.
+	// Because we are taking over the execution of m->curg
+	// but *not* resuming what had been running, we need to
+	// save that information (m->curg->sched) so we can restore it.
+	// We can restore m->curg->sched.sp easily, because calling
+	// runtime.cgocallbackg leaves SP unchanged upon return.
+	// To save m->curg->sched.pc, we push it onto the stack.
+	// This has the added benefit that it looks to the traceback
+	// routine like cgocallbackg is going to return to that
+	// PC (because the frame we allocate below has the same
+	// size as cgocallback_gofunc's frame declared above)
+	// so that the traceback will seamlessly trace back into
+	// the earlier calls.
+	//
+	// In the new goroutine, 0(SP) holds the saved R8.
+	// 4(SP) and 8(SP) are unused.
+	MOVL	m_curg(R9), SI
+	MOVL	SI, g(CX)
+	MOVL	(g_sched+gobuf_sp)(SI), DI  // prepare stack as DI
+	MOVL	(g_sched+gobuf_pc)(SI), R9
+	MOVL	R9, -4(DI)
+	LEAL	-(4+12)(DI), SP
+	MOVL	R8, 0(SP)
+	CALL	runtime·cgocallbackg(SB)
+	MOVL	0(SP), R8
+
+	// Restore g->sched (== m->curg->sched) from saved values.
+	get_tls(CX)
+	MOVL	g(CX), SI
+	MOVL	12(SP), R9
+	MOVL	R9, (g_sched+gobuf_pc)(SI)
+	LEAL	(4+12)(SP), DI
+	MOVL	DI, (g_sched+gobuf_sp)(SI)
+
+	// Switch back to m->g0's stack and restore m->g0->sched.sp.
+	// (Unlike m->curg, the g0 goroutine never uses sched.pc,
+	// so we do not have to restore it.)
+	MOVL	g(CX), R9
+	MOVL	g_m(R9), R9
+	MOVL	m_g0(R9), SI
+	MOVL	SI, g(CX)
+	MOVL	(g_sched+gobuf_sp)(SI), SP
+	MOVL	0(SP), AX
+	MOVL	AX, (g_sched+gobuf_sp)(SI)
+	
+	// If the m on entry was nil, we called needm above to borrow an m
+	// for the duration of the call. Since the call is over, return it with dropm.
+	CMPL	R8, $0
+	JNE 	3(PC)
+	LEAL	runtime·dropm(SB), AX
+	CALL	AX
+
+	// Done!
 	RET
 
 // void setg(G*); set g. for use by needm.
-// Not implemented.
-TEXT runtime·setg(SB), NOSPLIT, $0-4
-	MOVL	0, AX
+TEXT runtime·setg(SB), NOSPLIT, $0-8
+	MOVL	gg+0(FP), BX
+	get_tls(CX)
+	MOVL	BX, g(CX)
 	RET
 
 // void setg_gcc(G*); set g called from gcc.

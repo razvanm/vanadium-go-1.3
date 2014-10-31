@@ -111,6 +111,28 @@ nex_return:
 
 TEXT runtime·settls(SB),NOSPLIT,$0
 	MOVL	DI, TLS // really BP
+	CMPL	runtime·nacl_irt_is_enabled(SB), $0
+	ADDL	$8, DI
+	JNE	settls_irt
+	NACL_SYSCALL(SYS_tls_init)
+	JMP	settls_done
+settls_irt:	
+	MOVL	runtime·nacl_irt_tls_v0_1+(IRT_TLS_INIT*4)(SB), AX
+	CALL	AX
+settls_done:	
+	RET
+
+TEXT runtime·gettls(SB),NOSPLIT,$0
+	CMPL	runtime·nacl_irt_is_enabled(SB), $0
+	JNE	gettls_irt
+	NACL_SYSCALL(SYS_tls_get)
+	JMP	gettls_done
+gettls_irt:	
+	MOVL	runtime·nacl_irt_tls_v0_1+(IRT_TLS_GET*4)(SB), AX
+	CALL	AX
+gettls_done:
+	SUBL	$8, AX
+	MOVL	AX, TLS
 	RET
 
 TEXT runtime·exit(SB),NOSPLIT,$0
