@@ -1,2 +1,3 @@
 #!/bin/sh
-$NACL_SDK/pepper_35/toolchain/mac_x86_newlib/bin/i686-nacl-gdb "$@"
+VERSION=37
+$NACL_SDK/pepper_${VERSION}/toolchain/mac_x86_newlib/bin/x86_64-nacl-gdb "$@"
