@@ -682,7 +682,7 @@ scanframe(Stkframe *frame, void *unused)
 		// Frame is dead.
 		return true;
 	}
-	if(Debug > 1)
+ 	if(Debug > 1)
 		runtime·printf("scanframe %s\n", runtime·funcname(f));
 	if(targetpc != f->entry)
 		targetpc--;

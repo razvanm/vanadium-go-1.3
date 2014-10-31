@@ -64,7 +64,8 @@ TEXT ·{{func.name}}(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(max(0, fsize-24), 16)}}
+// Called on the C stack.  Align stack to 16.
+TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(max(0, fsize-24), 16)+8}}
 	{% if fsize > 0 -%}
 	MOVL	arg0+0(FP), DI
 	{% endif -%}
@@ -89,6 +90,7 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(max(0, fsize-24), 16)}}
 	{% endfor -%}
 	MOVL	ppapi·ppb_interfaces+({{func.interface}}*8+4)(SB), AX
 	MOVL	({{func.index}}*4)(AX), AX
+	LEAL	0(SP), BP
 	CALL	AX
 	{% if func.structReturn -%}
 	SUBL	$4, SP	// Adjust SP due to struct return.
@@ -99,37 +101,40 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(max(0, fsize-24), 16)}}
 {% endfor %}
 
 // ppapi·ppp_initialize_module_handler is called once at initialization
-// initialization time.  Called from the C stack.
-TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$36
-	MOVQ	BX, 4(SP)
-	MOVQ	R12, 12(SP)
-	MOVQ	R13, 20(SP)
-	MOVQ	R14, 28(SP)
-	MOVL	module_id+0(FP), AX
-	MOVL	AX, ppapi·module_id(SB)
-	MOVL	get_browser_interface+4(FP), AX
-	MOVL	AX, 0(SP)
-	CALL	ppapi·ppp_initialize_module(SB)
-	MOVQ	4(SP), BX
-	MOVQ	12(SP), R12
-	MOVQ	20(SP), R13
-	MOVQ	28(SP), R14
+// initialization time.  Called on the C stack.
+TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$24
+	MOVQ	R13, 0(SP)
+	MOVQ	R14, 8(SP)
+	MOVL	DI, ppapi·module_id(SB)  // module_id
+	MOVL	SI, R14  // get_interface
+	LEAL	ppapi·ppb_interfaces(SB), R13
+initialize_module_loop:	
+	MOVL	0(R13), DI  // name
+	TESTL	DI, DI
+	JZ	initialize_module_done
+	CALL	R14
+	MOVL	AX, 4(R13)  // ppb
+	ADDL	$8, R13
+	JMP	initialize_module_loop
+initialize_module_done:	
+	MOVQ	0(SP), R13
+	MOVQ	8(SP), R14
+	XORL	AX, AX
 	RET
 
 // ppapi·ppp_shutdown_module_handler my or may not be called when the
-// module is closed.  Ignore the callback.  Called from the C stack.
+// module is closed.  Ignore the callback.  Called on the C stack.
 TEXT ppapi·ppp_shutdown_module_handler(SB),NOSPLIT,$0
 	RET
 
 // ppapi·ppp_get_interface_handler is called by the browser to get
-// callback functions.  Called from the C stack.
-TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$36
+// callback functions.  Called on the C stack.
+TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$40
 	MOVQ	BX, 4(SP)
 	MOVQ	R12, 12(SP)
 	MOVQ	R13, 20(SP)
 	MOVQ	R14, 28(SP)
-	MOVL	interface_name+0(FP), AX
-	MOVL	AX, 0(SP)
+	MOVL	DI, 0(SP)  // interface_name
 	CALL	ppapi·ppp_get_interface(SB)
 	MOVQ	4(SP), BX
 	MOVQ	12(SP), R12
@@ -138,7 +143,9 @@ TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$36
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.
-TEXT ppapi·start(SB),NOSPLIT,$0
+// Called on the C stack.
+TEXT ppapi·start(SB),NOSPLIT,$8
+	MOVL	SP, BP
 	LEAL	ppapi·pp_start_functions(SB), DI
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX

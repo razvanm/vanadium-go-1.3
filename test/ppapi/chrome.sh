@@ -1,2 +1,2 @@
 #!/bin/sh
-"/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome" --user-data-dir=$HOME/spool
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --user-data-dir=$PWD/.chrome --disable-hang-monitor

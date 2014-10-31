@@ -640,13 +640,15 @@ nosave:
 	// registers as per windows amd64 calling convention.
 	SUBL	$64, SP
 	ANDL	$~15, SP	// alignment for gcc ABI
+	MOVL	BP, 48(SP)
+	MOVL	SP, BP		// NaCl requires a valid framepointer
 	MOVL	DI, 44(SP)	// save g
 	MOVL	(g_stack+stack_hi)(DI), DI
 	SUBL	DX, DI
 	MOVL	DI, 40(SP)	// save depth in stack (can't just save SP, as stack might be copied during a callback)
 	MOVL	BX, DI		// DI = first argument in AMD64 ABI
-	MOVL	BX, CX		// CX = first argument in Win64
 	CALL	AX
+	MOVL	48(SP), BP
 
 	// Restore registers, g, stack pointer.
 	get_tls(CX)
