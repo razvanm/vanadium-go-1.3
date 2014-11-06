@@ -292,6 +292,9 @@ func gentraceback(pc0 uintptr, sp0 uintptr, lr0 uintptr, gp *g, skip int, pcbuf 
 			(*[1 << 20]uintptr)(unsafe.Pointer(pcbuf))[n] = frame.pc
 		}
 		if callback != nil {
+			print("AAAAAAAA: sp=", hex(frame.sp), ", fp=", hex(frame.fp),
+				", varp=", hex(frame.varp), ", argp=", hex(frame.argp),
+				", arglen=", frame.arglen, "\n")
 			if !callback((*stkframe)(noescape(unsafe.Pointer(&frame))), v) {
 				return n
 			}

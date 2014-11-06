@@ -589,7 +589,7 @@ TEXT gosave<>(SB),NOSPLIT,$0
 	MOVL	g(R8), R8
 	MOVL	0(SP), R9
 	MOVL	R9, (g_sched+gobuf_pc)(R8)
-	LEAL	8(SP), R9
+	LEAL	16(SP), R9
 	MOVL	R9, (g_sched+gobuf_sp)(R8)
 	MOVL	$0, (g_sched+gobuf_ret)(R8)
 	MOVL	$0, (g_sched+gobuf_ctxt)(R8)
@@ -603,7 +603,6 @@ TEXT runtime·asmcgocall(SB),NOSPLIT,$0-8
 	RET
 
 // asmcgocall(void(*fn)(void*), void *arg)
-// Not implemented.
 TEXT runtime·asmcgocall_errno(SB),NOSPLIT,$0-12
 	MOVL	fn+0(FP), AX
 	MOVL	arg+4(FP), BX
@@ -642,7 +641,7 @@ nosave:
 	ANDL	$~15, SP	// alignment for gcc ABI
 	LEAL	0(BP), R9
 	MOVL	R9, 48(SP)
-	LEAL	0(SP), BP		// NaCl requires a valid framepointer
+	LEAL	0(SP), BP	// NaCl requires a valid framepointer
 	MOVL	DI, 44(SP)	// save g
 	MOVL	(g_stack+stack_hi)(DI), DI
 	SUBL	DX, DI
@@ -676,7 +675,7 @@ TEXT runtime·cgocallback(SB),NOSPLIT,$12-12
 	// in case it's been smashed.
 	LEAL	runtime·gettls(SB), AX
 	CALL	AX
-	LEAL	runtime·cgocallback_gofunc(SB), AX
+	LEAL	·cgocallback_gofunc(SB), AX
 	CALL	AX
 	RET
 
@@ -691,11 +690,6 @@ TEXT ·cgocallback_gofunc(SB),NOSPLIT,$8-12
 	// lots of space, but the linker doesn't know. Hide the call from
 	// the linker analysis by using an indirect call through AX.
 	get_tls(CX)
-	
-	MOVL	$0, R9
-	CMPL	CX, $0
-	JEQ	2(PC) // TODO
-	
 	MOVL	g(CX), R9
 	CMPL	R9, $0
 	JEQ	needm
@@ -737,23 +731,23 @@ havem:
 	// the earlier calls.
 	//
 	// In the new goroutine, 0(SP) holds the saved R8.
-	// 4(SP) and 8(SP) are unused.
 	MOVL	m_curg(R9), SI
 	MOVL	SI, g(CX)
 	MOVL	(g_sched+gobuf_sp)(SI), DI  // prepare stack as DI
 	MOVL	(g_sched+gobuf_pc)(SI), R9
-	MOVL	R9, -4(DI)
-	LEAL	-(4+12)(DI), SP
-	MOVL	R8, 0(SP)
+	MOVQ	R9, -(8+16)(DI)
+	LEAL	-(8+8+16)(DI), SP
+	MOVQ	$0, 16(SP)
+	MOVQ	$0, 24(SP)
 	CALL	runtime·cgocallbackg(SB)
-	MOVL	0(SP), R8
+	MOVQ	0(SP), R8
 
 	// Restore g->sched (== m->curg->sched) from saved values.
 	get_tls(CX)
 	MOVL	g(CX), SI
-	MOVL	12(SP), R9
+	MOVQ	8(SP), R9
 	MOVL	R9, (g_sched+gobuf_pc)(SI)
-	LEAL	(4+12)(SP), DI
+	LEAL	(8+8+16)(SP), DI
 	MOVL	DI, (g_sched+gobuf_sp)(SI)
 
 	// Switch back to m->g0's stack and restore m->g0->sched.sp.

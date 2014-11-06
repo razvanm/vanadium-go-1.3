@@ -140,7 +140,7 @@ initialize_module_done:
 	XORL	AX, AX
 	RET
 
-// ppapi·ppp_shutdown_module_handler my or may not be called when the
+// ppapi·ppp_shutdown_module_handler may or may not be called when the
 // module is closed.  Ignore the callback.  Called on the C stack.
 TEXT ppapi·ppp_shutdown_module_handler(SB),NOSPLIT,$0
 	RET
@@ -163,7 +163,7 @@ TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$40
 // ppapi·start is called to start PPAPI.  Never returns.
 // Called on the C stack.
 TEXT ppapi·start(SB),NOSPLIT,$8
-	MOVL	SP, BP
+	LEAL	0(SP), BP
 	LEAL	ppapi·pp_start_functions(SB), DI
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX
