@@ -589,7 +589,7 @@ TEXT gosave<>(SB),NOSPLIT,$0
 	MOVL	g(R8), R8
 	MOVL	0(SP), R9
 	MOVL	R9, (g_sched+gobuf_pc)(R8)
-	LEAL	16(SP), R9
+	LEAL	8(SP), R9
 	MOVL	R9, (g_sched+gobuf_sp)(R8)
 	MOVL	$0, (g_sched+gobuf_ret)(R8)
 	MOVL	$0, (g_sched+gobuf_ctxt)(R8)
@@ -735,10 +735,8 @@ havem:
 	MOVL	SI, g(CX)
 	MOVL	(g_sched+gobuf_sp)(SI), DI  // prepare stack as DI
 	MOVL	(g_sched+gobuf_pc)(SI), R9
-	MOVQ	R9, -(8+16)(DI)
-	LEAL	-(8+8+16)(DI), SP
-	MOVQ	$0, 16(SP)
-	MOVQ	$0, 24(SP)
+	MOVQ	R9, -8(DI)
+	LEAL	-(8+8)(DI), SP
 	CALL	runtime·cgocallbackg(SB)
 	MOVQ	0(SP), R8
 
@@ -747,7 +745,7 @@ havem:
 	MOVL	g(CX), SI
 	MOVQ	8(SP), R9
 	MOVL	R9, (g_sched+gobuf_pc)(SI)
-	LEAL	(8+8+16)(SP), DI
+	LEAL	(8+8)(SP), DI
 	MOVL	DI, (g_sched+gobuf_sp)(SI)
 
 	// Switch back to m->g0's stack and restore m->g0->sched.sp.
