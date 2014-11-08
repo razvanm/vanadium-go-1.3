@@ -6,6 +6,8 @@ package ppapi
 
 import (
 	"sync"
+	"log"
+	"unsafe"
 )
 
 var (
@@ -212,12 +214,15 @@ func removeInstanceHandlers(id pp_Instance) InstanceHandlers {
 
 // Called from C.
 func ppp_did_create(id pp_Instance, argc int32, argn, argv *[1 << 16]*byte) pp_Bool {
-	b := make([]byte, 1 << 16)
-	_ = append(b, []byte{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}...)
 	inst := createInstanceHandlers(id)
 	args := make(map[string]string)
 	for i := int32(0); i < argc; i++ {
-		args[gostring(argn[i])] = gostring(argv[i])
+		log.Printf("AAAAAAAA2a: %d %p %p %p %p", i, argn, argv, argn[i], argv[i])
+		log.Printf("AAAAAAAA2b: %v", (*[16]byte)(unsafe.Pointer(argn[i])))
+		key := gostring(argn[i])
+		value := gostring(argv[i])
+		log.Printf("AAAAAAAA6: %p %p %p", args, key, value)
+		args[key] = value
 	}
 	ok := inst.DidCreate(args)
 	return toPPBool(ok)

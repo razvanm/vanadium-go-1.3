@@ -370,6 +370,7 @@
 #include "../zasm_nacl_amd64p32.h"
 #include "../../cmd/ld/textflag.h"
 #include "../irt_nacl.h"
+#include "../funcdata.h"
 #include "ppapi_GOOS.h"
 
 // doreturn(ty) expands to the instruction sequence for saving the return
@@ -5644,7 +5645,8 @@ TEXT ppapi·start(SB),NOSPLIT,$8
 	CALL	AX
 	RET
 
-TEXT ·ppapi_start(SB),NOSPLIT,$8
+TEXT ·ppapi_start(SB),NOSPLIT,$8-0
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·start(SB), AX
 	MOVL	AX, 0(SP)
 	MOVL	$0, 4(SP)

@@ -604,6 +604,7 @@ TEXT runtime·asmcgocall(SB),NOSPLIT,$0-8
 
 // asmcgocall(void(*fn)(void*), void *arg)
 TEXT runtime·asmcgocall_errno(SB),NOSPLIT,$0-12
+	GO_ARGS
 	MOVL	fn+0(FP), AX
 	MOVL	arg+4(FP), BX
 	CALL	asmcgocall<>(SB)
@@ -611,7 +612,11 @@ TEXT runtime·asmcgocall_errno(SB),NOSPLIT,$0-12
 	RET
 
 // asmcgocall common code. fn in AX, arg in BX. returns errno in AX.
-TEXT asmcgocall<>(SB),NOSPLIT,$0-0
+TEXT asmcgocall<>(SB),NOSPLIT,$16-0
+	NO_LOCAL_POINTERS
+	MOVQ	$0, 0(SP)
+	MOVQ	$0, 8(SP)
+	
 	MOVL	SP, DX
 
 	// Figure out if we need to switch to m->g0 stack.
@@ -737,6 +742,7 @@ havem:
 	MOVL	(g_sched+gobuf_pc)(SI), R9
 	MOVQ	R9, -8(DI)
 	LEAL	-(8+8)(DI), SP
+	MOVQ	R8, 0(SP)
 	CALL	runtime·cgocallbackg(SB)
 	MOVQ	0(SP), R8
 
