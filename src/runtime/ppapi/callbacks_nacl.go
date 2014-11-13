@@ -6,8 +6,6 @@ package ppapi
 
 import (
 	"sync"
-	"log"
-	"unsafe"
 )
 
 var (
@@ -217,11 +215,8 @@ func ppp_did_create(id pp_Instance, argc int32, argn, argv *[1 << 16]*byte) pp_B
 	inst := createInstanceHandlers(id)
 	args := make(map[string]string)
 	for i := int32(0); i < argc; i++ {
-		log.Printf("AAAAAAAA2a: %d %p %p %p %p", i, argn, argv, argn[i], argv[i])
-		log.Printf("AAAAAAAA2b: %v", (*[16]byte)(unsafe.Pointer(argn[i])))
 		key := gostring(argn[i])
 		value := gostring(argv[i])
-		log.Printf("AAAAAAAA6: %p %p %p", args, key, value)
 		args[key] = value
 	}
 	ok := inst.DidCreate(args)

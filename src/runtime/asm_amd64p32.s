@@ -658,7 +658,7 @@ nosave:
 
 	// Restore registers, g, stack pointer.
 	get_tls(CX)
-	MOVL	48(SP), DI
+	MOVL	44(SP), DI
 	MOVL	(g_stack+stack_hi)(DI), SI
 	SUBL	40(SP), SI
 	MOVL	DI, g(CX)

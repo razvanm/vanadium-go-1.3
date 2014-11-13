@@ -260,12 +260,10 @@ func findnull(*byte) int
 
 func gostring(p *byte) string {
 	l := findnull(p)
-	print("AAAAAAAA3: ", l, "\n")
 	if l == 0 {
 		return ""
 	}
 	s, b := rawstring(l)
-	print("AAAAAAAA4\n")
 	memmove(unsafe.Pointer(&b[0]), unsafe.Pointer(p), uintptr(l))
 	return s
 }

@@ -9,22 +9,86 @@
 #include "../funcdata.h"
 #include "ppapi_GOOS.h"
 
-// doreturn(ty) expands to the instruction sequence for saving the return
+{% if False %}
+// amd64return(ty) expands to the instruction sequence for saving the return
 // value into the caller's stack frame.
-{% macro doreturn(resultType, off) -%}
-	{% set kind = resultType.kind -%}
-	{% if kind == 'int32' or kind == '*' -%}
-	MOVL	AX, rval+{{off}}(FP)
-	{%- elif kind == 'int64' -%}
-	MOVQ	AX, rval+{{off}}(FP)
+{% endif %}
+{% macro amd64return(resultType, name, off, fp) -%}
+	{%- set kind = resultType.kind -%}
+	{%- set size = resultType.size -%}
+	{%- if size == 0 -%}
+	// No return value
 	{%- elif kind == 'float32' -%}
-	FMOVLP	F0, rval+{{off}}(FP)
+	MOVSS	X0, {{name}}{{off}}({{fp}})
 	{%- elif kind == 'float64' -%}
-	FMOVDP	F0, rval+{{off}}(FP)
+	MOVSD	X0, {{name}}{{off}}({{fp}})
+	{%- elif size == 4 -%}
+	MOVL	AX, {{name}}{{off}}({{fp}})
+	{%- elif size == 8 -%}
+	MOVQ	AX, {{name}}{{off}}({{fp}})
+	{%- elif size == 12 -%}
+	MOVQ	AX, {{name}}{{off}}({{fp}})  // (sizeof {{size}})
+	MOVL	DX, {{name}}{{off+8}}({{fp}})
+	{%- elif size == 16 -%}
+	MOVQ	AX, {{name}}{{off}}({{fp}})  // (sizeof {{size}})
+	MOVQ	DX, {{name}}{{off+8}}({{fp}})
 	{%- else -%}
-	// No return value.
+	Bogus return value of size {{size}}
 	{%- endif %}
-{%- endmacro %}
+{%- endmacro -%}
+
+{% if False %}
+// amd64args sets up the arguments, converting from the Go calling convention,
+// where everything is passed on the stack, to the gcc calling convention, where:
+//   - integer args are passed in registers DI, SI, DX, CX, R8, R9.
+//   - float args are passed in registers X0, ..., X5.
+//   - structs smaller than 16 bytes are passed in registers.
+//   - everything else is passed on the stack.
+//
+// AX refers to the caller stack frame.
+// SP refers the the callee stack frame.
+// Destroys DX.
+{% endif %}
+{% macro amd64args(args) -%}
+  {%- set regs = ['DI', 'SI', 'DX', 'CX', 'R8', 'R9'] -%}
+  {%- set fregs = ['X0', 'X1', 'X2', 'X3', 'X4', 'X5'] -%}
+  {%- set ain = 0 -%}
+  {%- set soff = 0 -%}
+  {%- for arg in args -%}
+    {%- set ty = arg.type -%}
+    {%- set kind = ty.kind -%}
+    {%- set size = ty.size -%}
+    {%- if kind == 'float32' and fregs.__len__() >= 1 %}
+	MOVSS	{{ain}}(AX), {{fregs[0]}}  // {{arg.name}}
+	{%- set fregs = fregs[1:] -%}
+    {%- elif kind == 'float64' and fregs.__len__() >= 1 %}
+	MOVSD	{{ain}}(AX), {{fregs[0]}}  // {{arg.name}}
+	{%- set fregs = fregs[1:] -%}
+    {%- elif size == 4 and regs.__len__() >= 1 %}
+	MOVL	{{ain}}(AX), {{regs[0]}}  // {{arg.name}}
+	{%- set regs = regs[1:] -%}
+    {%- elif size == 8 and regs.__len__() >= 1 %}
+	MOVQ	{{ain}}(AX), {{regs[0]}}  // {{arg.name}}
+	{%- set regs = regs[1:] -%}
+    {%- elif size == 12 and regs.__len__() >= 2 %}
+	MOVQ	{{ain}}(AX), {{regs[0]}}  // {{arg.name}} (sizeof {{size}})
+	MOVL	{{ain+8}}(AX), {{regs[1]}}
+	{%- set regs = regs[2:] -%}
+    {%- elif size == 16 and regs.__len__() >= 2 %}
+	MOVQ	{{ain}}(AX), {{regs[0]}}  // {{arg.name}} (sizeof {{size}})
+	MOVQ	{{ain+8}}(AX), {{regs[1]}}
+	{%- set regs = regs[2:] -%}
+    {%- else %}
+	// {{arg.name}} (sizeof {{size}})
+      {%- for aoff in range(0, size, 4) %}
+	MOVL	{{ain+aoff}}(AX), DX
+	MOVL	DX, {{soff+aoff}}(SP)
+      {%- endfor -%}
+      {%- set soff = soff + size -%}
+    {%- endif -%}
+    {%- set ain = ain + size -%}
+  {%- endfor -%}
+{%- endmacro -%}
 
 // Callbacks are invoked through cgocallback.
 {% for func in callbacks -%}
@@ -75,7 +139,9 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+48,16)}}
 // PPAPI calls are invoked using cgocall.
 {% for func in functions -%}
 {% set fsize = framesize(func) -%}
+{% set asize = align(fsize, 16)+8 -%}
 TEXT ·{{func.name}}(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·{{func.name}}(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -83,40 +149,34 @@ TEXT ·{{func.name}}(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(max(0, fsize-24), 16)+8}}
-	{% if fsize > 0 -%}
-	MOVL	arg0+0(FP), DI
-	{% endif -%}
-	{% if fsize > 4 -%}
-	MOVL	arg1+4(FP), SI
-	{% endif -%}
-	{% if fsize > 8 -%}
-	MOVL	arg2+8(FP), DX
-	{% endif -%}
-	{% if fsize > 12 -%}
-	MOVL	arg3+12(FP), CX
-	{% endif -%}
-	{% if fsize > 16 -%}
-	MOVL	arg4+16(FP), R8
-	{% endif -%}
-	{% if fsize > 20 -%}
-	MOVL	arg5+20(FP), R9
-	{% endif -%}
-	{% for aoff in range(24, fsize, 4) -%}
-	MOVL	arg{{aoff}}+{{aoff}}(FP), AX
-	MOVL	AX, {{aoff-24}}(SP)
-	{% endfor -%}
+// Called on the C stack.
+{% if func.structReturn and func.result.size <= 16 -%}
+TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{asize}}
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, {{asize-4}}(SP)
+	ADDL	$4, AX
+	{{- amd64args(func.args[1:]) }}
 	MOVL	ppapi·ppb_interfaces+({{func.interface}}*8+4)(SB), AX
 	MOVL	({{func.index}}*4)(AX), AX
-	LEAL	0(SP), BP
+	CALL	AX
+	MOVL	{{asize-4}}(SP), DI
+	{{ amd64return(func.result, '', 0, 'DI') }}
+	RET
+{% else -%}
+TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{asize}}
+	MOVL	DI, AX
+	{{- amd64args(func.args) }}
+	MOVL	ppapi·ppb_interfaces+({{func.interface}}*8+4)(SB), AX
+	MOVL	({{func.index}}*4)(AX), AX
 	CALL	AX
 	{% if func.structReturn -%}
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	{% endif -%}
-	{{ doreturn(func.result, fsize) }}
+	// Struct returned as *return_struct (sizeof {{func.result.size}}).
+	{%- else -%}
+	{{ amd64return(func.result, 'rval+', fsize, 'FP') }}
+	{%- endif %}
 	RET
-
+{% endif %}
 {% endfor %}
 
 // ppapi·ppp_initialize_module_handler is called once at initialization
@@ -127,7 +187,7 @@ TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$24
 	MOVL	DI, ppapi·module_id(SB)  // module_id
 	MOVL	SI, R14  // get_interface
 	LEAL	ppapi·ppb_interfaces(SB), R13
-initialize_module_loop:	
+initialize_module_loop:
 	MOVL	0(R13), DI  // name
 	TESTL	DI, DI
 	JZ	initialize_module_done
@@ -135,7 +195,7 @@ initialize_module_loop:
 	MOVL	AX, 4(R13)  // ppb
 	ADDL	$8, R13
 	JMP	initialize_module_loop
-initialize_module_done:	
+initialize_module_done:
 	MOVQ	0(SP), R13
 	MOVQ	8(SP), R14
 	XORL	AX, AX
@@ -179,3 +239,13 @@ TEXT ·ppapi_start(SB),NOSPLIT,$8-0
 	// Not reached
 	INT	$3
 	RET
+
+// Tunnel some functions from runtime.
+TEXT ·gostring(SB),NOSPLIT,$0
+	JMP	runtime·gostring(SB)
+
+TEXT ·gostringn(SB),NOSPLIT,$0
+	JMP	runtime·gostringn(SB)
+
+TEXT ·free(SB),NOSPLIT,$0
+	JMP	runtime·cfree(SB)

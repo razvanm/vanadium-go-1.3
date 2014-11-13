@@ -373,8 +373,6 @@
 #include "../funcdata.h"
 #include "ppapi_GOOS.h"
 
-// doreturn(ty) expands to the instruction sequence for saving the return
-// value into the caller's stack frame.
 
 
 // Callbacks are invoked through cgocallback.
@@ -595,6 +593,7 @@ TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$64
 
 // PPAPI calls are invoked using cgocall.
 TEXT ·ppb_audio_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audio_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -602,20 +601,21 @@ TEXT ·ppb_audio_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audio_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_audio_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // config
+	MOVL	8(AX), DX  // callback
+	MOVL	12(AX), CX  // user_data
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_audio_is_audio(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audio_is_audio(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -623,17 +623,18 @@ TEXT ·ppb_audio_is_audio(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audio_is_audio(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audio_is_audio(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audio_get_current_config(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audio_get_current_config(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -641,17 +642,18 @@ TEXT ·ppb_audio_get_current_config(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audio_get_current_config(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audio_get_current_config(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audio_start_playback(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audio_start_playback(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -659,17 +661,18 @@ TEXT ·ppb_audio_start_playback(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audio_start_playback(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audio_start_playback(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audio_stop_playback(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audio_stop_playback(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -677,17 +680,18 @@ TEXT ·ppb_audio_stop_playback(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audio_stop_playback(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audio_stop_playback(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_is_audio_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -695,17 +699,18 @@ TEXT ·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_get_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -713,17 +718,18 @@ TEXT ·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVDP	F0, rval+4(FP)
+	MOVSD	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_set_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -731,17 +737,18 @@ TEXT ·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_get_sample_rate(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -749,17 +756,18 @@ TEXT ·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_get_sample_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -767,17 +775,18 @@ TEXT ·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_get_number_of_channels(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -785,17 +794,18 @@ TEXT ·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_get_number_of_samples(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -803,17 +813,18 @@ TEXT ·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_get_data_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -821,17 +832,18 @@ TEXT ·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audiobuffer_get_data_buffer_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -839,17 +851,18 @@ TEXT ·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audioconfig_create_stereo_16bit(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -857,19 +870,20 @@ TEXT ·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // sample_rate
+	MOVL	8(AX), DX  // sample_frame_count
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audioconfig_recommend_sample_frame_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -877,19 +891,20 @@ TEXT ·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // sample_rate
+	MOVL	8(AX), DX  // requested_sample_frame_count
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audioconfig_is_audio_config(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -897,17 +912,18 @@ TEXT ·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audioconfig_get_sample_rate(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -915,17 +931,18 @@ TEXT ·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audioconfig_get_sample_frame_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -933,17 +950,18 @@ TEXT ·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_audioconfig_recommend_sample_rate(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -951,17 +969,18 @@ TEXT ·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_console_log(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_console_log(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -969,22 +988,21 @@ TEXT ·ppb_console_log(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_console_log(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_console_log(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // level
+	MOVQ	8(AX), DX  // value (sizeof 16)
+	MOVQ	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_CONSOLE*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_console_log_with_source(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_console_log_with_source(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -992,30 +1010,23 @@ TEXT ·ppb_console_log_with_source(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_console_log_with_source(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
-	MOVL	arg36+36(FP), AX
-	MOVL	AX, 12(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_console_log_with_source(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // level
+	MOVQ	8(AX), DX  // source (sizeof 16)
+	MOVQ	16(AX), CX
+	MOVQ	24(AX), R8  // value (sizeof 16)
+	MOVQ	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_CONSOLE*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_core_add_ref_resource(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_core_add_ref_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1023,17 +1034,18 @@ TEXT ·ppb_core_add_ref_resource(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_core_add_ref_resource(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_core_add_ref_resource(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_core_release_resource(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_core_release_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1041,17 +1053,18 @@ TEXT ·ppb_core_release_resource(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_core_release_resource(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_core_release_resource(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_core_get_time(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_core_get_time(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1059,17 +1072,18 @@ TEXT ·ppb_core_get_time(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_core_get_time(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_core_get_time(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVDP	F0, rval+4(FP)
+	MOVSD	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_core_get_time_ticks(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_core_get_time_ticks(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1077,17 +1091,18 @@ TEXT ·ppb_core_get_time_ticks(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_core_get_time_ticks(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_core_get_time_ticks(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVDP	F0, rval+4(FP)
+	MOVSD	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_fileio_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1095,17 +1110,18 @@ TEXT ·ppb_fileio_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_fileio_is_file_io(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_is_file_io(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1113,17 +1129,18 @@ TEXT ·ppb_fileio_is_file_io(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_is_file_io(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_is_file_io(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_fileio_open(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_open(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1131,22 +1148,22 @@ TEXT ·ppb_fileio_open(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_open(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_open(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
+	MOVL	4(AX), SI  // file_ref
+	MOVL	8(AX), DX  // open_flags
+	MOVQ	12(AX), CX  // cb (sizeof 12)
+	MOVL	20(AX), R8
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_fileio_query(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_query(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1154,21 +1171,21 @@ TEXT ·ppb_fileio_query(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_query(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_query(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
+	MOVL	4(AX), SI  // info
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_fileio_touch(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_touch(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1176,26 +1193,22 @@ TEXT ·ppb_fileio_touch(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
+	MOVSD	4(AX), X0  // last_access_time
+	MOVSD	12(AX), X1  // last_modified_time
+	MOVQ	20(AX), SI  // cb (sizeof 12)
+	MOVL	28(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+32(FP)
 	RET
 
 TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_read(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1203,26 +1216,23 @@ TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
+	MOVQ	4(AX), SI  // offset
+	MOVL	12(AX), DX  // buf
+	MOVL	16(AX), CX  // bytes_to_write
+	MOVQ	20(AX), R8  // cb (sizeof 12)
+	MOVL	28(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+32(FP)
 	RET
 
 TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_write(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1230,26 +1240,23 @@ TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
+	MOVQ	4(AX), SI  // offset
+	MOVL	12(AX), DX  // buf
+	MOVL	16(AX), CX  // bytes_to_write
+	MOVQ	20(AX), R8  // cb (sizeof 12)
+	MOVL	28(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+32(FP)
 	RET
 
 TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_set_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1257,22 +1264,21 @@ TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
+	MOVQ	4(AX), SI  // length
+	MOVQ	12(AX), DX  // cb (sizeof 12)
+	MOVL	20(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_fileio_flush(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_flush(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1280,20 +1286,20 @@ TEXT ·ppb_fileio_flush(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_flush(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_flush(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
+	MOVQ	4(AX), SI  // cb (sizeof 12)
+	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_fileio_close(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileio_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1301,17 +1307,18 @@ TEXT ·ppb_fileio_close(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileio_close(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_fileio_close(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_io
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_fileref_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1319,18 +1326,19 @@ TEXT ·ppb_fileref_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // fs
+	MOVL	4(AX), SI  // path
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_fileref_is_file_ref(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_is_file_ref(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1338,17 +1346,18 @@ TEXT ·ppb_fileref_is_file_ref(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_is_file_ref(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_is_file_ref(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_fileref_get_file_system_type(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_get_file_system_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1356,17 +1365,18 @@ TEXT ·ppb_fileref_get_file_system_type(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_get_file_system_type(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_get_file_system_type(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_ref
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_fileref_get_name(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_get_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1374,19 +1384,23 @@ TEXT ·ppb_fileref_get_name(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_get_name(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_get_name(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // file_ref
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_fileref_get_path(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_get_path(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1394,19 +1408,23 @@ TEXT ·ppb_fileref_get_path(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_get_path(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_get_path(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // file_ref
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_fileref_get_parent(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_get_parent(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1414,17 +1432,18 @@ TEXT ·ppb_fileref_get_parent(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_get_parent(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_get_parent(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_ref
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_fileref_make_directory(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_make_directory(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1432,21 +1451,21 @@ TEXT ·ppb_fileref_make_directory(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_make_directory(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_make_directory(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // dir_ref
+	MOVL	4(AX), SI  // mkdir_flags
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_fileref_touch(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_touch(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1454,26 +1473,22 @@ TEXT ·ppb_fileref_touch(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_ref
+	MOVSD	4(AX), X0  // atime
+	MOVSD	12(AX), X1  // mtime
+	MOVQ	20(AX), SI  // cb (sizeof 12)
+	MOVL	28(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+32(FP)
 	RET
 
 TEXT ·ppb_fileref_delete(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_delete(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1481,20 +1496,20 @@ TEXT ·ppb_fileref_delete(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_delete(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_delete(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_ref
+	MOVQ	4(AX), SI  // cb (sizeof 12)
+	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_fileref_rename(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_rename(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1502,21 +1517,21 @@ TEXT ·ppb_fileref_rename(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_rename(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_rename(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_ref
+	MOVL	4(AX), SI  // new_file_ref
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_fileref_query(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_query(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1524,21 +1539,21 @@ TEXT ·ppb_fileref_query(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_query(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_query(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_ref
+	MOVL	4(AX), SI  // info
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(10*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_fileref_read_directory_entries(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fileref_read_directory_entries(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1546,22 +1561,21 @@ TEXT ·ppb_fileref_read_directory_entries(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fileref_read_directory_entries(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_fileref_read_directory_entries(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // file_ref
+	MOVQ	4(AX), SI  // output
+	MOVQ	12(AX), DX  // cb (sizeof 12)
+	MOVL	20(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(11*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_filesystem_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_filesystem_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1569,18 +1583,19 @@ TEXT ·ppb_filesystem_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_filesystem_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_filesystem_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // ty
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_filesystem_is_file_system(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_filesystem_is_file_system(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1588,17 +1603,18 @@ TEXT ·ppb_filesystem_is_file_system(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_filesystem_is_file_system(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_filesystem_is_file_system(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_filesystem_open(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_filesystem_open(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1606,22 +1622,21 @@ TEXT ·ppb_filesystem_open(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVQ	4(AX), SI  // expected_size
+	MOVQ	12(AX), DX  // cb (sizeof 12)
+	MOVL	20(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_filesystem_get_type(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_filesystem_get_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1629,17 +1644,18 @@ TEXT ·ppb_filesystem_get_type(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_filesystem_get_type(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_filesystem_get_type(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fullscreen_is_fullscreen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1647,17 +1663,18 @@ TEXT ·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_FULLSCREEN*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fullscreen_set_fullscreen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1665,18 +1682,19 @@ TEXT ·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // fullscreen
 	MOVL	ppapi·ppb_interfaces+(PPB_FULLSCREEN*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_fullscreen_get_screen_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1684,18 +1702,19 @@ TEXT ·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // size
 	MOVL	ppapi·ppb_interfaces+(PPB_FULLSCREEN*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_gamepad_sample(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_gamepad_sample(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1703,18 +1722,19 @@ TEXT ·ppb_gamepad_sample(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_gamepad_sample(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_gamepad_sample(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // data
 	MOVL	ppapi·ppb_interfaces+(PPB_GAMEPAD*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_graphics2d_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1722,19 +1742,20 @@ TEXT ·ppb_graphics2d_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // size
+	MOVL	8(AX), DX  // is_always_opaque
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_is_graphics2d(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1742,17 +1763,18 @@ TEXT ·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_graphics2d_describe(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_describe(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1760,19 +1782,20 @@ TEXT ·ppb_graphics2d_describe(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_describe(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_describe(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // size
+	MOVL	8(AX), DX  // is_always_opaque
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_paint_image_data(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1780,20 +1803,21 @@ TEXT ·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // image_data
+	MOVL	8(AX), DX  // top_left
+	MOVL	12(AX), CX  // src_rect
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_graphics2d_scroll(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_scroll(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1801,19 +1825,20 @@ TEXT ·ppb_graphics2d_scroll(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_scroll(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_scroll(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // clip_rect
+	MOVL	8(AX), DX  // amount
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_graphics2d_replace_contents(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_replace_contents(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1821,18 +1846,19 @@ TEXT ·ppb_graphics2d_replace_contents(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_replace_contents(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_replace_contents(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_graphics2d_flush(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_flush(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1840,20 +1866,20 @@ TEXT ·ppb_graphics2d_flush(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_flush(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_flush(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVQ	4(AX), SI  // cb (sizeof 12)
+	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_graphics2d_set_scale(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_set_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1861,18 +1887,19 @@ TEXT ·ppb_graphics2d_set_scale(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_set_scale(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_set_scale(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVSS	4(AX), X0  // scale
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_graphics2d_get_scale(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics2d_get_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1880,17 +1907,18 @@ TEXT ·ppb_graphics2d_get_scale(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics2d_get_scale(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics2d_get_scale(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVLP	F0, rval+4(FP)
+	MOVSS	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics3d_get_attrib_max_value(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1898,19 +1926,20 @@ TEXT ·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // attr
+	MOVL	8(AX), DX  // value
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_graphics3d_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics3d_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1918,19 +1947,20 @@ TEXT ·ppb_graphics3d_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics3d_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics3d_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // share_context
+	MOVL	8(AX), DX  // attrib_list
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics3d_is_graphics3d(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1938,17 +1968,18 @@ TEXT ·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_graphics3d_get_attribs(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics3d_get_attribs(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1956,18 +1987,19 @@ TEXT ·ppb_graphics3d_get_attribs(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics3d_get_attribs(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics3d_get_attribs(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // attrib_list
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_graphics3d_set_attribs(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics3d_set_attribs(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1975,18 +2007,19 @@ TEXT ·ppb_graphics3d_set_attribs(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics3d_set_attribs(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics3d_set_attribs(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // attrib_list
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_graphics3d_get_error(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics3d_get_error(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1994,17 +2027,18 @@ TEXT ·ppb_graphics3d_get_error(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics3d_get_error(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_graphics3d_get_error(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_graphics3d_resize_buffers(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2012,19 +2046,20 @@ TEXT ·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // width
+	MOVL	8(AX), DX  // height
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_hostresolver_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_hostresolver_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2032,17 +2067,18 @@ TEXT ·ppb_hostresolver_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_hostresolver_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_hostresolver_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_hostresolver_is_host_resolver(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2050,17 +2086,18 @@ TEXT ·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_hostresolver_resolve(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_hostresolver_resolve(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2068,24 +2105,23 @@ TEXT ·ppb_hostresolver_resolve(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_hostresolver_resolve(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_hostresolver_resolve(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resolver
+	MOVL	4(AX), SI  // host
+	MOVL	8(AX), DX  // port
+	MOVL	12(AX), CX  // hint
+	MOVQ	16(AX), R8  // cb (sizeof 12)
+	MOVL	24(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+28(FP)
 	RET
 
 TEXT ·ppb_hostresolver_get_canonical_name(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_hostresolver_get_canonical_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2093,19 +2129,23 @@ TEXT ·ppb_hostresolver_get_canonical_name(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_hostresolver_get_canonical_name(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_hostresolver_get_canonical_name(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // resolver
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_hostresolver_get_net_address_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2113,17 +2153,18 @@ TEXT ·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resolver
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_hostresolver_get_net_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_hostresolver_get_net_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2131,18 +2172,19 @@ TEXT ·ppb_hostresolver_get_net_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_hostresolver_get_net_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_hostresolver_get_net_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resolver
+	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_imagedata_get_native_image_data_format(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2150,16 +2192,17 @@ TEXT ·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
+// Called on the C stack.
 TEXT ppapi·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
+	MOVL	DI, AX
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+0(FP)
 	RET
 
 TEXT ·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_imagedata_is_image_data_supported(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2167,17 +2210,18 @@ TEXT ·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // format
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_imagedata_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_imagedata_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2185,20 +2229,21 @@ TEXT ·ppb_imagedata_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_imagedata_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_imagedata_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // format
+	MOVL	8(AX), DX  // size
+	MOVL	12(AX), CX  // init_to_zero
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_imagedata_is_image_data(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_imagedata_is_image_data(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2206,17 +2251,18 @@ TEXT ·ppb_imagedata_is_image_data(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_imagedata_is_image_data(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_imagedata_is_image_data(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_imagedata_describe(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_imagedata_describe(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2224,18 +2270,19 @@ TEXT ·ppb_imagedata_describe(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_imagedata_describe(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_imagedata_describe(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // image_data
+	MOVL	4(AX), SI  // desc
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_imagedata_map(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_imagedata_map(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2243,17 +2290,18 @@ TEXT ·ppb_imagedata_map(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_imagedata_map(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_imagedata_map(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_imagedata_unmap(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_imagedata_unmap(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2261,17 +2309,18 @@ TEXT ·ppb_imagedata_unmap(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_imagedata_unmap(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_imagedata_unmap(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_inputevent_request_input_events(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_inputevent_request_input_events(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2279,18 +2328,19 @@ TEXT ·ppb_inputevent_request_input_events(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_inputevent_request_input_events(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_inputevent_request_input_events(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // event_classes
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_inputevent_request_filtering_input_events(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2298,18 +2348,19 @@ TEXT ·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // event_classes
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_inputevent_clear_input_event_request(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2317,18 +2368,19 @@ TEXT ·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // event_classes
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_inputevent_is_input_event(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_inputevent_is_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2336,17 +2388,18 @@ TEXT ·ppb_inputevent_is_input_event(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_inputevent_is_input_event(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_inputevent_is_input_event(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_inputevent_get_type(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_inputevent_get_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2354,17 +2407,18 @@ TEXT ·ppb_inputevent_get_type(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_inputevent_get_type(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_inputevent_get_type(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_inputevent_get_time_stamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2372,17 +2426,18 @@ TEXT ·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVDP	F0, rval+4(FP)
+	MOVSD	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_inputevent_get_modifiers(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_inputevent_get_modifiers(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2390,17 +2445,18 @@ TEXT ·ppb_inputevent_get_modifiers(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_inputevent_get_modifiers(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_inputevent_get_modifiers(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_instance_bind_graphics(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_instance_bind_graphics(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2408,18 +2464,19 @@ TEXT ·ppb_instance_bind_graphics(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_instance_bind_graphics(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_instance_bind_graphics(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // device
 	MOVL	ppapi·ppb_interfaces+(PPB_INSTANCE*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_instance_is_full_frame(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_instance_is_full_frame(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2427,17 +2484,18 @@ TEXT ·ppb_instance_is_full_frame(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_instance_is_full_frame(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_instance_is_full_frame(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_INSTANCE*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_keyboardinputevent_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_keyboardinputevent_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2445,38 +2503,33 @@ TEXT ·ppb_keyboardinputevent_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_keyboardinputevent_create(SB),NOSPLIT,$40
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
-	MOVL	arg36+36(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg40+40(FP), AX
-	MOVL	AX, 16(SP)
-	MOVL	arg44+44(FP), AX
-	MOVL	AX, 20(SP)
-	MOVL	arg48+48(FP), AX
-	MOVL	AX, 24(SP)
-	MOVL	arg52+52(FP), AX
-	MOVL	AX, 28(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_keyboardinputevent_create(SB),NOSPLIT,$72
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // ty
+	MOVSD	8(AX), X0  // ticks
+	MOVL	16(AX), DX  // modifiers
+	MOVL	20(AX), CX  // key_code
+	MOVQ	24(AX), R8  // text (sizeof 16)
+	MOVQ	32(AX), R9
+	// code (sizeof 16)
+	MOVL	40(AX), DX
+	MOVL	DX, 0(SP)
+	MOVL	44(AX), DX
+	MOVL	DX, 4(SP)
+	MOVL	48(AX), DX
+	MOVL	DX, 8(SP)
+	MOVL	52(AX), DX
+	MOVL	DX, 12(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+56(FP)
 	RET
 
 TEXT ·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_keyboardinputevent_is_keyboard_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2484,17 +2537,18 @@ TEXT ·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_keyboardinputevent_get_key_code(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2502,17 +2556,18 @@ TEXT ·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_keyboardinputevent_get_character_text(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_keyboardinputevent_get_character_text(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2520,19 +2575,23 @@ TEXT ·ppb_keyboardinputevent_get_character_text(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_keyboardinputevent_get_character_text(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_keyboardinputevent_get_character_text(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_keyboardinputevent_get_code(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_keyboardinputevent_get_code(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2540,19 +2599,23 @@ TEXT ·ppb_keyboardinputevent_get_code(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_keyboardinputevent_get_code(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_keyboardinputevent_get_code(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2560,17 +2623,18 @@ TEXT ·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_configure(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2578,21 +2642,21 @@ TEXT ·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // audio_track
+	MOVL	4(AX), SI  // attribs
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_get_attrib(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2600,19 +2664,20 @@ TEXT ·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // audio_track
+	MOVL	4(AX), SI  // attrib
+	MOVL	8(AX), DX  // value
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_get_id(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_get_id(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2620,19 +2685,23 @@ TEXT ·ppb_mediastreamaudiotrack_get_id(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_get_id(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_get_id(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // audio_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_has_ended(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2640,17 +2709,18 @@ TEXT ·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // audio_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_get_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2658,21 +2728,21 @@ TEXT ·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // audio_track
+	MOVL	4(AX), SI  // buffer
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_recycle_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2680,18 +2750,19 @@ TEXT ·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // audio_track
+	MOVL	4(AX), SI  // buffer
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2699,17 +2770,18 @@ TEXT ·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // audio_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_is_media_stream_video_track(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2717,17 +2789,18 @@ TEXT ·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_configure(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2735,21 +2808,21 @@ TEXT ·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // video_track
+	MOVL	4(AX), SI  // attribs
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_get_attrib(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2757,19 +2830,20 @@ TEXT ·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // video_track
+	MOVL	4(AX), SI  // attrib
+	MOVL	8(AX), DX  // value
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_get_id(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_get_id(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2777,19 +2851,23 @@ TEXT ·ppb_mediastreamvideotrack_get_id(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_get_id(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_get_id(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // video_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_has_ended(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2797,17 +2875,18 @@ TEXT ·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // video_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_get_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2815,21 +2894,21 @@ TEXT ·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // video_track
+	MOVL	4(AX), SI  // buffer
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_recycle_frame(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2837,18 +2916,19 @@ TEXT ·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // video_track
+	MOVL	4(AX), SI  // buffer
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mediastreamvideotrack_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2856,17 +2936,18 @@ TEXT ·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // video_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_messaging_post_message(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_messaging_post_message(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2874,21 +2955,20 @@ TEXT ·ppb_messaging_post_message(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_messaging_post_message(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_messaging_post_message(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVQ	4(AX), SI  // msg (sizeof 16)
+	MOVQ	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_MESSAGING*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouse_cursor_set_cursor(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2896,20 +2976,21 @@ TEXT ·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // ty
+	MOVL	8(AX), DX  // image
+	MOVL	12(AX), CX  // hot_spot
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_CURSOR*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_mouseinputevent_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouseinputevent_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2917,28 +2998,27 @@ TEXT ·ppb_mouseinputevent_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouseinputevent_create(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_mouseinputevent_create(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // ty
+	MOVSD	8(AX), X0  // ticks
+	MOVL	16(AX), DX  // modifiers
+	MOVL	20(AX), CX  // button
+	MOVL	24(AX), R8  // position
+	MOVL	28(AX), R9  // clicks
+	// movement (sizeof 4)
+	MOVL	32(AX), DX
+	MOVL	DX, 0(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+36(FP)
 	RET
 
 TEXT ·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouseinputevent_is_mouse_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2946,17 +3026,18 @@ TEXT ·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_mouseinputevent_get_button(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouseinputevent_get_button(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2964,17 +3045,18 @@ TEXT ·ppb_mouseinputevent_get_button(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouseinputevent_get_button(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mouseinputevent_get_button(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_mouseinputevent_get_position(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouseinputevent_get_position(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2982,19 +3064,22 @@ TEXT ·ppb_mouseinputevent_get_position(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouseinputevent_get_position(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_mouseinputevent_get_position(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)
 	RET
 
 TEXT ·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouseinputevent_get_click_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3002,17 +3087,18 @@ TEXT ·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_mouseinputevent_get_movement(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouseinputevent_get_movement(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3020,19 +3106,22 @@ TEXT ·ppb_mouseinputevent_get_movement(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouseinputevent_get_movement(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_mouseinputevent_get_movement(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)
 	RET
 
 TEXT ·ppb_mouselock_lock_mouse(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouselock_lock_mouse(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3040,20 +3129,20 @@ TEXT ·ppb_mouselock_lock_mouse(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouselock_lock_mouse(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_mouselock_lock_mouse(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVQ	4(AX), SI  // cb (sizeof 12)
+	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_LOCK*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_mouselock_unlock_mouse(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3061,17 +3150,18 @@ TEXT ·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_LOCK*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_netaddress_create_from_ipv4_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3079,18 +3169,19 @@ TEXT ·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // addr
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_netaddress_create_from_ipv6_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3098,18 +3189,19 @@ TEXT ·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // addr
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_netaddress_is_net_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_netaddress_is_net_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3117,17 +3209,18 @@ TEXT ·ppb_netaddress_is_net_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_netaddress_is_net_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_netaddress_is_net_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_netaddress_get_family(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_netaddress_get_family(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3135,17 +3228,18 @@ TEXT ·ppb_netaddress_get_family(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_netaddress_get_family(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_netaddress_get_family(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // addr
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_netaddress_describe_as_string(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_netaddress_describe_as_string(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3153,20 +3247,24 @@ TEXT ·ppb_netaddress_describe_as_string(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_netaddress_describe_as_string(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_netaddress_describe_as_string(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // addr
+	MOVL	4(AX), SI  // include_port
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_netaddress_describe_as_ipv4_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3174,18 +3272,19 @@ TEXT ·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // addr
+	MOVL	4(AX), SI  // ipv4
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_netaddress_describe_as_ipv6_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3193,18 +3292,19 @@ TEXT ·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // addr
+	MOVL	4(AX), SI  // ipv6
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_networklist_is_network_list(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_is_network_list(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3212,17 +3312,18 @@ TEXT ·ppb_networklist_is_network_list(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_is_network_list(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_is_network_list(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_networklist_get_count(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_get_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3230,17 +3331,18 @@ TEXT ·ppb_networklist_get_count(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_get_count(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_get_count(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_networklist_get_name(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_get_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3248,20 +3350,24 @@ TEXT ·ppb_networklist_get_name(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_get_name(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_get_name(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_networklist_get_type(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_get_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3269,18 +3375,19 @@ TEXT ·ppb_networklist_get_type(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_get_type(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_get_type(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resourc
+	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_networklist_get_state(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_get_state(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3288,18 +3395,19 @@ TEXT ·ppb_networklist_get_state(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_get_state(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_get_state(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_get_ip_addresses(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3307,19 +3415,20 @@ TEXT ·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // index
+	MOVL	8(AX), DX  // output
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_networklist_get_display_name(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_get_display_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3327,20 +3436,24 @@ TEXT ·ppb_networklist_get_display_name(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_get_display_name(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_get_display_name(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_networklist_get_mtu(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networklist_get_mtu(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3348,18 +3461,19 @@ TEXT ·ppb_networklist_get_mtu(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networklist_get_mtu(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_networklist_get_mtu(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_network_monitor_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_network_monitor_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3367,17 +3481,18 @@ TEXT ·ppb_network_monitor_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_network_monitor_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_network_monitor_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_MONITOR*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_network_monitor_update_network_list(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_network_monitor_update_network_list(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3385,21 +3500,21 @@ TEXT ·ppb_network_monitor_update_network_list(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_network_monitor_update_network_list(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_network_monitor_update_network_list(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // monitor
+	MOVL	4(AX), SI  // network_list
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_MONITOR*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_network_monitor_is_network_monitor(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3407,17 +3522,18 @@ TEXT ·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_MONITOR*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_networkproxy_get_proxy_for_url(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3425,28 +3541,23 @@ TEXT ·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVQ	4(AX), SI  // url (sizeof 16)
+	MOVQ	12(AX), DX
+	MOVL	20(AX), CX  // proxy_string
+	MOVQ	24(AX), R8  // cb (sizeof 12)
+	MOVL	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_PROXY*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+36(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3454,17 +3565,18 @@ TEXT ·ppb_tcpsocket_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_is_tcp_socket(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3472,17 +3584,18 @@ TEXT ·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_bind(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_bind(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3490,21 +3603,21 @@ TEXT ·ppb_tcpsocket_bind(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_bind(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_bind(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // addr
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_connect(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_connect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3512,21 +3625,21 @@ TEXT ·ppb_tcpsocket_connect(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_connect(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_connect(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // addr
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_get_local_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3534,17 +3647,18 @@ TEXT ·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_get_remote_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3552,17 +3666,18 @@ TEXT ·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_read(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_read(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3570,22 +3685,22 @@ TEXT ·ppb_tcpsocket_read(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_read(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_read(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // buf
+	MOVL	8(AX), DX  // bytes_to_read
+	MOVQ	12(AX), CX  // cb (sizeof 12)
+	MOVL	20(AX), R8
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_write(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_write(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3593,22 +3708,22 @@ TEXT ·ppb_tcpsocket_write(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_write(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_write(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // buf
+	MOVL	8(AX), DX  // bytes_to_write
+	MOVQ	12(AX), CX  // cb (sizeof 12)
+	MOVL	20(AX), R8
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_listen(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_listen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3616,21 +3731,21 @@ TEXT ·ppb_tcpsocket_listen(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_listen(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_listen(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // backlog
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_accept(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_accept(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3638,21 +3753,21 @@ TEXT ·ppb_tcpsocket_accept(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_accept(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_accept(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // accepted
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_tcpsocket_close(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3660,17 +3775,18 @@ TEXT ·ppb_tcpsocket_close(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_close(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_close(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(10*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_tcpsocket_set_option(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_tcpsocket_set_option(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3678,28 +3794,23 @@ TEXT ·ppb_tcpsocket_set_option(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_tcpsocket_set_option(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_tcpsocket_set_option(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // name
+	MOVQ	8(AX), DX  // value (sizeof 16)
+	MOVQ	16(AX), CX
+	MOVQ	24(AX), R8  // cb (sizeof 12)
+	MOVL	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(11*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+36(FP)
 	RET
 
 TEXT ·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_textinputcontroller_set_text_input_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3707,18 +3818,19 @@ TEXT ·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // ty
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_textinputcontroller_update_caret_position(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3726,18 +3838,19 @@ TEXT ·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // caret
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_textinputcontroller_cancel_composition_text(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3745,17 +3858,18 @@ TEXT ·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_textinputcontroller_update_surrounding_text(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3763,24 +3877,22 @@ TEXT ·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVQ	4(AX), SI  // text (sizeof 16)
+	MOVQ	12(AX), DX
+	MOVL	20(AX), CX  // caret
+	MOVL	24(AX), R8  // anchor
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_touchinput_event_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_touchinput_event_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3788,21 +3900,21 @@ TEXT ·ppb_touchinput_event_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_touchinput_event_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_touchinput_event_create(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVL	4(AX), SI  // ty
+	MOVSD	8(AX), X0  // time_stamp
+	MOVL	16(AX), DX  // modifiers
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_touchinput_event_add_touch_point(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3810,19 +3922,20 @@ TEXT ·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
+	MOVL	4(AX), SI  // list
+	MOVL	8(AX), DX  // point
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_touchinput_event_is_touch_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3830,17 +3943,18 @@ TEXT ·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_touchinput_event_get_touch_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3848,18 +3962,19 @@ TEXT ·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // list
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_touchinput_event_get_touch_by_index(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3867,21 +3982,21 @@ TEXT ·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // return_struct
+	MOVL	4(AX), SI  // resource
+	MOVL	8(AX), DX  // list
+	MOVL	12(AX), CX  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	// Struct returned as *return_struct (sizeof 28).
 	RET
 
 TEXT ·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_touchinput_event_get_touch_by_id(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3889,21 +4004,21 @@ TEXT ·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // return_struct
+	MOVL	4(AX), SI  // resource
+	MOVL	8(AX), DX  // list
+	MOVL	12(AX), CX  // id
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	// Struct returned as *return_struct (sizeof 28).
 	RET
 
 TEXT ·ppb_udpsocket_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3911,17 +4026,18 @@ TEXT ·ppb_udpsocket_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_is_udp_socket(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3929,17 +4045,18 @@ TEXT ·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_udpsocket_bind(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_bind(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3947,21 +4064,21 @@ TEXT ·ppb_udpsocket_bind(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_bind(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_bind(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // addr
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_get_bound_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3969,17 +4086,18 @@ TEXT ·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_udpsocket_recvfrom(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_recvfrom(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3987,24 +4105,23 @@ TEXT ·ppb_udpsocket_recvfrom(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_recvfrom(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_recvfrom(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // buf
+	MOVL	8(AX), DX  // num_bytes
+	MOVL	12(AX), CX  // addr
+	MOVQ	16(AX), R8  // cb (sizeof 12)
+	MOVL	24(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+28(FP)
 	RET
 
 TEXT ·ppb_udpsocket_sendto(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_sendto(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4012,24 +4129,23 @@ TEXT ·ppb_udpsocket_sendto(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_sendto(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_sendto(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // buf
+	MOVL	8(AX), DX  // num_bytes
+	MOVL	12(AX), CX  // addr
+	MOVQ	16(AX), R8  // cb (sizeof 12)
+	MOVL	24(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+28(FP)
 	RET
 
 TEXT ·ppb_udpsocket_close(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4037,17 +4153,18 @@ TEXT ·ppb_udpsocket_close(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_close(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_close(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_udpsocket_set_option(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_udpsocket_set_option(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4055,28 +4172,23 @@ TEXT ·ppb_udpsocket_set_option(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_udpsocket_set_option(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_udpsocket_set_option(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // opt
+	MOVQ	8(AX), DX  // value (sizeof 16)
+	MOVQ	16(AX), CX
+	MOVQ	24(AX), R8  // cb (sizeof 12)
+	MOVL	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+36(FP)
 	RET
 
 TEXT ·ppb_urlloader_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4084,17 +4196,18 @@ TEXT ·ppb_urlloader_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_urlloader_is_url_loader(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_is_url_loader(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4102,17 +4215,18 @@ TEXT ·ppb_urlloader_is_url_loader(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_is_url_loader(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_is_url_loader(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_urlloader_open(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_open(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4120,21 +4234,21 @@ TEXT ·ppb_urlloader_open(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_open(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_open(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
+	MOVL	4(AX), SI  // request
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_urlloader_follow_redirect(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_follow_redirect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4142,20 +4256,20 @@ TEXT ·ppb_urlloader_follow_redirect(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_follow_redirect(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_follow_redirect(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
+	MOVQ	4(AX), SI  // cb (sizeof 12)
+	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_get_upload_progress(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4163,19 +4277,20 @@ TEXT ·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
+	MOVL	4(AX), SI  // bytes_sent
+	MOVL	8(AX), DX  // total_bytes
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_urlloader_get_download_progress(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_get_download_progress(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4183,19 +4298,20 @@ TEXT ·ppb_urlloader_get_download_progress(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_get_download_progress(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_get_download_progress(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
+	MOVL	4(AX), SI  // bytes_received
+	MOVL	8(AX), DX  // total_bytes
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_urlloader_get_response_info(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_get_response_info(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4203,17 +4319,18 @@ TEXT ·ppb_urlloader_get_response_info(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_get_response_info(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_get_response_info(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_urlloader_read_response_body(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_read_response_body(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4221,22 +4338,22 @@ TEXT ·ppb_urlloader_read_response_body(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_read_response_body(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_read_response_body(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
+	MOVL	4(AX), SI  // buf
+	MOVL	8(AX), DX  // bytes_to_read
+	MOVQ	12(AX), CX  // cb (sizeof 12)
+	MOVL	20(AX), R8
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_finish_streaming_to_file(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4244,20 +4361,20 @@ TEXT ·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
+	MOVQ	4(AX), SI  // cb (sizeof 12)
+	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_urlloader_close(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlloader_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4265,17 +4382,18 @@ TEXT ·ppb_urlloader_close(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlloader_close(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlloader_close(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // loader
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_urlrequestinfo_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlrequestinfo_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4283,17 +4401,18 @@ TEXT ·ppb_urlrequestinfo_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlrequestinfo_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlrequestinfo_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlrequestinfo_is_url_request_info(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4301,17 +4420,18 @@ TEXT ·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlrequestinfo_set_property(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4319,22 +4439,21 @@ TEXT ·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // request
+	MOVL	4(AX), SI  // property
+	MOVQ	8(AX), DX  // value (sizeof 16)
+	MOVQ	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+24(FP)
 	RET
 
 TEXT ·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlrequestinfo_append_data_to_body(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4342,19 +4461,20 @@ TEXT ·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // request
+	MOVL	4(AX), SI  // data
+	MOVL	8(AX), DX  // len
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+12(FP)
 	RET
 
 TEXT ·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlrequestinfo_append_file_to_body(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4362,26 +4482,22 @@ TEXT ·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // request
+	MOVL	4(AX), SI  // file_ref
+	MOVQ	8(AX), DX  // off
+	MOVQ	16(AX), CX  // len
+	MOVSD	24(AX), X0  // expected_mtime
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+32(FP)
 	RET
 
 TEXT ·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlresponseinfo_is_url_response_info(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4389,17 +4505,18 @@ TEXT ·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_RESPONSE_INFO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_urlresponseinfo_get_property(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlresponseinfo_get_property(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4407,20 +4524,24 @@ TEXT ·ppb_urlresponseinfo_get_property(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlresponseinfo_get_property(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_urlresponseinfo_get_property(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // response
+	MOVL	4(AX), SI  // property
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_RESPONSE_INFO*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_urlresponseinfo_get_body_as_file_ref(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4428,17 +4549,18 @@ TEXT ·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // response
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_RESPONSE_INFO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_var_add_ref(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_var_add_ref(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4446,20 +4568,19 @@ TEXT ·ppb_var_add_ref(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_var_add_ref(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_var_add_ref(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // v (sizeof 16)
+	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_var_release(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_var_release(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4467,20 +4588,19 @@ TEXT ·ppb_var_release(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_var_release(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_var_release(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // v (sizeof 16)
+	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_var_from_utf8(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_var_from_utf8(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4488,20 +4608,24 @@ TEXT ·ppb_var_from_utf8(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_var_from_utf8(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_var_from_utf8(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // data
+	MOVL	4(AX), SI  // len
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_var_to_utf8(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_var_to_utf8(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4509,21 +4633,20 @@ TEXT ·ppb_var_to_utf8(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_var_to_utf8(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_var_to_utf8(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // v (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVL	16(AX), DX  // len
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_var_to_resource(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_var_to_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4531,20 +4654,19 @@ TEXT ·ppb_var_to_resource(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_var_to_resource(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_var_to_resource(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // v (sizeof 16)
+	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_var_from_resource(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_var_from_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4552,19 +4674,23 @@ TEXT ·ppb_var_from_resource(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_var_from_resource(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_var_from_resource(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_vararray_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararray_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4572,18 +4698,22 @@ TEXT ·ppb_vararray_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararray_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_vararray_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_vararray_get(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararray_get(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4591,23 +4721,25 @@ TEXT ·ppb_vararray_get(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararray_get(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
+// Called on the C stack.
+TEXT ppapi·ppb_vararray_get(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 36(SP)
+	ADDL	$4, AX
+	MOVQ	0(AX), DI  // array (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVL	16(AX), DX  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	36(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_vararray_set(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararray_set(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4615,28 +4747,22 @@ TEXT ·ppb_vararray_set(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararray_set(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_vararray_set(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // array (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVL	16(AX), DX  // index
+	MOVQ	20(AX), CX  // v (sizeof 16)
+	MOVQ	28(AX), R8
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+36(FP)
 	RET
 
 TEXT ·ppb_vararray_get_length(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararray_get_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4644,20 +4770,19 @@ TEXT ·ppb_vararray_get_length(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararray_get_length(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_vararray_get_length(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // array (sizeof 16)
+	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_vararray_set_length(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararray_set_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4665,21 +4790,20 @@ TEXT ·ppb_vararray_set_length(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararray_set_length(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_vararray_set_length(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // array (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVL	16(AX), DX  // len
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_vararraybuffer_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararraybuffer_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4687,19 +4811,23 @@ TEXT ·ppb_vararraybuffer_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararraybuffer_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_vararraybuffer_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // size_in_bytes
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY_BUFFER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararraybuffer_byte_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4707,21 +4835,20 @@ TEXT ·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // array (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVL	16(AX), DX  // byte_length
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY_BUFFER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_vararraybuffer_map(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararraybuffer_map(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4729,20 +4856,19 @@ TEXT ·ppb_vararraybuffer_map(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararraybuffer_map(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_vararraybuffer_map(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // array (sizeof 16)
+	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY_BUFFER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+16(FP)
 	RET
 
 TEXT ·ppb_vararraybuffer_unmap(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vararraybuffer_unmap(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4750,20 +4876,19 @@ TEXT ·ppb_vararraybuffer_unmap(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vararraybuffer_unmap(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
+// Called on the C stack.
+TEXT ppapi·ppb_vararraybuffer_unmap(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // array (sizeof 16)
+	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY_BUFFER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_vardictionary_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vardictionary_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4771,18 +4896,22 @@ TEXT ·ppb_vardictionary_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vardictionary_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_vardictionary_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_vardictionary_get(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vardictionary_get(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4790,29 +4919,26 @@ TEXT ·ppb_vardictionary_get(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vardictionary_get(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_vardictionary_get(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 52(SP)
+	ADDL	$4, AX
+	MOVQ	0(AX), DI  // dict (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVQ	16(AX), DX  // key (sizeof 16)
+	MOVQ	24(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	52(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_vardictionary_set(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vardictionary_set(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4820,34 +4946,23 @@ TEXT ·ppb_vardictionary_set(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vardictionary_set(SB),NOSPLIT,$40
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
-	MOVL	arg36+36(FP), AX
-	MOVL	AX, 12(SP)
-	MOVL	arg40+40(FP), AX
-	MOVL	AX, 16(SP)
-	MOVL	arg44+44(FP), AX
-	MOVL	AX, 20(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_vardictionary_set(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // dict (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVQ	16(AX), DX  // key (sizeof 16)
+	MOVQ	24(AX), CX
+	MOVQ	32(AX), R8  // value (sizeof 16)
+	MOVQ	40(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+48(FP)
 	RET
 
 TEXT ·ppb_vardictionary_delete(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vardictionary_delete(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4855,26 +4970,21 @@ TEXT ·ppb_vardictionary_delete(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vardictionary_delete(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_vardictionary_delete(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // dict (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVQ	16(AX), DX  // key (sizeof 16)
+	MOVQ	24(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_vardictionary_has_key(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vardictionary_has_key(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4882,26 +4992,21 @@ TEXT ·ppb_vardictionary_has_key(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vardictionary_has_key(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_vardictionary_has_key(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVQ	0(AX), DI  // dict (sizeof 16)
+	MOVQ	8(AX), SI
+	MOVQ	16(AX), DX  // key (sizeof 16)
+	MOVQ	24(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+32(FP)
 	RET
 
 TEXT ·ppb_vardictionary_get_keys(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_vardictionary_get_keys(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4909,22 +5014,24 @@ TEXT ·ppb_vardictionary_get_keys(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_vardictionary_get_keys(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_vardictionary_get_keys(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 36(SP)
+	ADDL	$4, AX
+	MOVQ	0(AX), DI  // dict (sizeof 16)
+	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	36(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_videoframe_is_video_frame(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_videoframe_is_video_frame(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4932,17 +5039,18 @@ TEXT ·ppb_videoframe_is_video_frame(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_videoframe_is_video_frame(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_videoframe_is_video_frame(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_videoframe_get_timestamp(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_videoframe_get_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4950,17 +5058,18 @@ TEXT ·ppb_videoframe_get_timestamp(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_videoframe_get_timestamp(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_videoframe_get_timestamp(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVDP	F0, rval+4(FP)
+	MOVSD	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_videoframe_set_timestamp(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_videoframe_set_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4968,19 +5077,19 @@ TEXT ·ppb_videoframe_set_timestamp(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
+// Called on the C stack.
+TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // frame
+	MOVSD	4(AX), X0  // timestamp
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	// No return value.
+	// No return value
 	RET
 
 TEXT ·ppb_videoframe_get_format(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_videoframe_get_format(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4988,17 +5097,18 @@ TEXT ·ppb_videoframe_get_format(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_videoframe_get_format(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_videoframe_get_format(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_videoframe_get_size(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_videoframe_get_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5006,18 +5116,19 @@ TEXT ·ppb_videoframe_get_size(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_videoframe_get_size(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_videoframe_get_size(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // frame
+	MOVL	4(AX), SI  // size
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_videoframe_get_data_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5025,17 +5136,18 @@ TEXT ·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_videoframe_get_data_buffer_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5043,17 +5155,18 @@ TEXT ·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_view_is_view(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_is_view(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5061,17 +5174,18 @@ TEXT ·ppb_view_is_view(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_is_view(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_view_is_view(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_view_get_rect(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_get_rect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5079,18 +5193,19 @@ TEXT ·ppb_view_get_rect(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_get_rect(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_view_get_rect(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // rect
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_view_is_fullscreen(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_is_fullscreen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5098,17 +5213,18 @@ TEXT ·ppb_view_is_fullscreen(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_is_fullscreen(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_view_is_fullscreen(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_view_is_visible(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_is_visible(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5116,17 +5232,18 @@ TEXT ·ppb_view_is_visible(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_is_visible(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_view_is_visible(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_view_is_page_visible(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_is_page_visible(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5134,17 +5251,18 @@ TEXT ·ppb_view_is_page_visible(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_is_page_visible(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_view_is_page_visible(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_view_get_clip_rect(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_get_clip_rect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5152,18 +5270,19 @@ TEXT ·ppb_view_get_clip_rect(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_get_clip_rect(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_view_get_clip_rect(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
+	MOVL	4(AX), SI  // clip
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+8(FP)
 	RET
 
 TEXT ·ppb_view_get_device_scale(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_get_device_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5171,17 +5290,18 @@ TEXT ·ppb_view_get_device_scale(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_get_device_scale(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_view_get_device_scale(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVLP	F0, rval+4(FP)
+	MOVSS	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_view_get_css_scale(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_view_get_css_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5189,17 +5309,18 @@ TEXT ·ppb_view_get_css_scale(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_view_get_css_scale(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_view_get_css_scale(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	FMOVLP	F0, rval+4(FP)
+	MOVSS	X0, rval+4(FP)
 	RET
 
 TEXT ·ppb_websocket_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5207,17 +5328,18 @@ TEXT ·ppb_websocket_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_create(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_create(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_websocket_is_web_socket(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_is_web_socket(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5225,17 +5347,18 @@ TEXT ·ppb_websocket_is_web_socket(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_is_web_socket(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_is_web_socket(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_websocket_connect(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_connect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5243,30 +5366,29 @@ TEXT ·ppb_websocket_connect(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_connect(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
-	MOVL	arg36+36(FP), AX
-	MOVL	AX, 12(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_connect(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVQ	4(AX), SI  // url (sizeof 16)
+	MOVQ	12(AX), DX
+	MOVL	20(AX), CX  // protocols
+	MOVL	24(AX), R8  // protocol_count
+	// cb (sizeof 12)
+	MOVL	28(AX), DX
+	MOVL	DX, 0(SP)
+	MOVL	32(AX), DX
+	MOVL	DX, 4(SP)
+	MOVL	36(AX), DX
+	MOVL	DX, 8(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+40(FP)
 	RET
 
 TEXT ·ppb_websocket_close(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5274,28 +5396,23 @@ TEXT ·ppb_websocket_close(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_close(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
-	MOVL	arg28+28(FP), AX
-	MOVL	AX, 4(SP)
-	MOVL	arg32+32(FP), AX
-	MOVL	AX, 8(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_close(SB),NOSPLIT,$56
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // code
+	MOVQ	8(AX), DX  // reason (sizeof 16)
+	MOVQ	16(AX), CX
+	MOVQ	24(AX), R8  // cb (sizeof 12)
+	MOVL	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+36(FP)
 	RET
 
 TEXT ·ppb_websocket_receive_message(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_receive_message(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5303,21 +5420,21 @@ TEXT ·ppb_websocket_receive_message(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_receive_message(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_receive_message(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVL	4(AX), SI  // message
+	MOVQ	8(AX), DX  // cb (sizeof 12)
+	MOVL	16(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_websocket_send_message(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_send_message(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5325,21 +5442,20 @@ TEXT ·ppb_websocket_send_message(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_send_message(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_send_message(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
+	MOVQ	4(AX), SI  // msg (sizeof 16)
+	MOVQ	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+20(FP)
 	RET
 
 TEXT ·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_buffered_amount(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5347,17 +5463,18 @@ TEXT ·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVQ	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_websocket_get_close_cose(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_close_cose(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5365,17 +5482,18 @@ TEXT ·ppb_websocket_get_close_cose(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_close_cose(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_close_cose(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_websocket_get_close_reason(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_close_reason(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5383,19 +5501,23 @@ TEXT ·ppb_websocket_get_close_reason(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_close_reason(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_close_reason(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_close_was_clean(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5403,17 +5525,18 @@ TEXT ·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_websocket_get_extensions(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_extensions(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5421,19 +5544,23 @@ TEXT ·ppb_websocket_get_extensions(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_extensions(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_extensions(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(10*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_get_protocol(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_protocol(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5441,19 +5568,23 @@ TEXT ·ppb_websocket_get_protocol(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_protocol(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_protocol(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(11*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_get_ready_state(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_ready_state(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5461,17 +5592,18 @@ TEXT ·ppb_websocket_get_ready_state(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_ready_state(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_ready_state(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(12*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_websocket_get_url(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_websocket_get_url(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5479,19 +5611,23 @@ TEXT ·ppb_websocket_get_url(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_websocket_get_url(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_websocket_get_url(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(13*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)  // (sizeof 16)
+	MOVQ	DX, 8(DI)
 	RET
 
 TEXT ·ppb_wheelinputevent_create(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_wheelinputevent_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5499,24 +5635,23 @@ TEXT ·ppb_wheelinputevent_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$24
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
-	MOVL	arg2+8(FP), DX
-	MOVL	arg3+12(FP), CX
-	MOVL	arg4+16(FP), R8
-	MOVL	arg5+20(FP), R9
-	MOVL	arg24+24(FP), AX
-	MOVL	AX, 0(SP)
+// Called on the C stack.
+TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$40
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // instance
+	MOVSD	4(AX), X0  // time_stamp
+	MOVL	12(AX), SI  // modifiers
+	MOVL	16(AX), DX  // wheel_delta
+	MOVL	20(AX), CX  // wheel_tick
+	MOVL	24(AX), R8  // scroll_by_page
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+28(FP)
 	RET
 
 TEXT ·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_wheelinputevent_is_wheel_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5524,17 +5659,18 @@ TEXT ·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
 
 TEXT ·ppb_wheelinputevent_get_delta(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_wheelinputevent_get_delta(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5542,19 +5678,22 @@ TEXT ·ppb_wheelinputevent_get_delta(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_wheelinputevent_get_delta(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_wheelinputevent_get_delta(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)
 	RET
 
 TEXT ·ppb_wheelinputevent_get_ticks(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_wheelinputevent_get_ticks(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5562,19 +5701,22 @@ TEXT ·ppb_wheelinputevent_get_ticks(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_wheelinputevent_get_ticks(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
-	MOVL	arg1+4(FP), SI
+// Called on the C stack.
+TEXT ppapi·ppb_wheelinputevent_get_ticks(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DX  // *rval
+	MOVL	DX, 20(SP)
+	ADDL	$4, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
-	SUBL	$4, SP	// Adjust SP due to struct return.
-	// No return value.
+	MOVL	20(SP), DI
+	MOVQ	AX, 0(DI)
 	RET
 
 TEXT ·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$8
+	GO_ARGS
 	LEAL	ppapi·ppb_wheelinputevent_get_scroll_by_page(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5582,12 +5724,12 @@ TEXT ·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-// Called on the C stack.  Align stack to 16.
-TEXT ppapi·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$8
-	MOVL	arg0+0(FP), DI
+// Called on the C stack.
+TEXT ppapi·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$24
+	MOVL	DI, AX
+	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
-	LEAL	0(SP), BP
 	CALL	AX
 	MOVL	AX, rval+4(FP)
 	RET
@@ -5602,7 +5744,7 @@ TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$24
 	MOVL	DI, ppapi·module_id(SB)  // module_id
 	MOVL	SI, R14  // get_interface
 	LEAL	ppapi·ppb_interfaces(SB), R13
-initialize_module_loop:	
+initialize_module_loop:
 	MOVL	0(R13), DI  // name
 	TESTL	DI, DI
 	JZ	initialize_module_done
@@ -5610,7 +5752,7 @@ initialize_module_loop:
 	MOVL	AX, 4(R13)  // ppb
 	ADDL	$8, R13
 	JMP	initialize_module_loop
-initialize_module_done:	
+initialize_module_done:
 	MOVQ	0(SP), R13
 	MOVQ	8(SP), R14
 	XORL	AX, AX
@@ -5654,3 +5796,13 @@ TEXT ·ppapi_start(SB),NOSPLIT,$8-0
 	// Not reached
 	INT	$3
 	RET
+
+// Tunnel some functions from runtime.
+TEXT ·gostring(SB),NOSPLIT,$0
+	JMP	runtime·gostring(SB)
+
+TEXT ·gostringn(SB),NOSPLIT,$0
+	JMP	runtime·gostringn(SB)
+
+TEXT ·free(SB),NOSPLIT,$0
+	JMP	runtime·cfree(SB)
