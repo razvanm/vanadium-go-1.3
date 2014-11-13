@@ -13,25 +13,25 @@
 // amd64return(ty) expands to the instruction sequence for saving the return
 // value into the caller's stack frame.
 {% endif %}
-{% macro amd64return(resultType, name, off, fp) -%}
+{% macro amd64return(resultType, off, fp) -%}
 	{%- set kind = resultType.kind -%}
 	{%- set size = resultType.size -%}
 	{%- if size == 0 -%}
 	// No return value
 	{%- elif kind == 'float32' -%}
-	MOVSS	X0, {{name}}{{off}}({{fp}})
+	MOVSS	X0, {{off}}({{fp}})
 	{%- elif kind == 'float64' -%}
-	MOVSD	X0, {{name}}{{off}}({{fp}})
+	MOVSD	X0, {{off}}({{fp}})
 	{%- elif size == 4 -%}
-	MOVL	AX, {{name}}{{off}}({{fp}})
+	MOVL	AX, {{off}}({{fp}})
 	{%- elif size == 8 -%}
-	MOVQ	AX, {{name}}{{off}}({{fp}})
+	MOVQ	AX, {{off}}({{fp}})
 	{%- elif size == 12 -%}
-	MOVQ	AX, {{name}}{{off}}({{fp}})  // (sizeof {{size}})
-	MOVL	DX, {{name}}{{off+8}}({{fp}})
+	MOVQ	AX, {{off}}({{fp}})  // (sizeof {{size}})
+	MOVL	DX, {{off+8}}({{fp}})
 	{%- elif size == 16 -%}
-	MOVQ	AX, {{name}}{{off}}({{fp}})  // (sizeof {{size}})
-	MOVQ	DX, {{name}}{{off+8}}({{fp}})
+	MOVQ	AX, {{off}}({{fp}})  // (sizeof {{size}})
+	MOVQ	DX, {{off+8}}({{fp}})
 	{%- else -%}
 	Bogus return value of size {{size}}
 	{%- endif %}
@@ -93,11 +93,13 @@
 // Callbacks are invoked through cgocallback.
 {% for func in callbacks -%}
 {% set fsize = framesize(func) -%}
-TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+48,16)}}
-	MOVQ	BX, {{fsize+16}}(SP)
-	MOVQ	R12, {{fsize+24}}(SP)
-	MOVQ	R13, {{fsize+32}}(SP)
-	MOVQ	R14, {{fsize+40}}(SP)
+TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+52,16)}}
+	LEAL	0(BP), AX
+	MOVL	AX, {{fsize+16}}(SP)
+	MOVQ	BX, {{fsize+20}}(SP)
+	MOVQ	R12, {{fsize+28}}(SP)
+	MOVQ	R13, {{fsize+36}}(SP)
+	MOVQ	R14, {{fsize+44}}(SP)
 	{% if fsize > 0 -%}
 	MOVL	DI, 12(SP)
 	{% endif -%}
@@ -128,10 +130,12 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+48,16)}}
 	MOVL	${{fsize+4}}, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	{{fsize+12}}(SP), AX
-	MOVQ	{{fsize+16}}(SP), BX
-	MOVQ	{{fsize+24}}(SP), R12
-	MOVQ	{{fsize+32}}(SP), R13
-	MOVQ	{{fsize+40}}(SP), R14
+	MOVL	{{fsize+16}}(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	{{fsize+20}}(SP), BX
+	MOVQ	{{fsize+28}}(SP), R12
+	MOVQ	{{fsize+36}}(SP), R13
+	MOVQ	{{fsize+44}}(SP), R14
 	RET
 
 {% endfor %}
@@ -161,11 +165,12 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{asize}}
 	MOVL	({{func.index}}*4)(AX), AX
 	CALL	AX
 	MOVL	{{asize-4}}(SP), DI
-	{{ amd64return(func.result, '', 0, 'DI') }}
+	{{ amd64return(func.result, 0, 'DI') }}
 	RET
 {% else -%}
 TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{asize}}
 	MOVL	DI, AX
+	MOVL	AX, {{asize-4}}(SP)
 	{{- amd64args(func.args) }}
 	MOVL	ppapi·ppb_interfaces+({{func.interface}}*8+4)(SB), AX
 	MOVL	({{func.index}}*4)(AX), AX
@@ -173,7 +178,8 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{asize}}
 	{% if func.structReturn -%}
 	// Struct returned as *return_struct (sizeof {{func.result.size}}).
 	{%- else -%}
-	{{ amd64return(func.result, 'rval+', fsize, 'FP') }}
+	MOVL	{{asize-4}}(SP), DI
+	{{ amd64return(func.result, align(fsize, 8), 'DI') }}
 	{%- endif %}
 	RET
 {% endif %}
@@ -249,3 +255,10 @@ TEXT ·gostringn(SB),NOSPLIT,$0
 
 TEXT ·free(SB),NOSPLIT,$0
 	JMP	runtime·cfree(SB)
+
+TEXT ·ppb_graphics2d_createx(SB),NOSPLIT,$8
+	GO_ARGS
+	MOVL	$22, rval+24(FP)
+	RET
+
+	

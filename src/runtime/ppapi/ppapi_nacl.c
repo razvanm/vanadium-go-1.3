@@ -148,15 +148,6 @@ PPBFunction ppapi·pp_start_functions[] = {
 };
 
 #pragma textflag NOSPLIT
-int32 ppapi·ppp_initialize_module(PPB_GetInterface get_interface) {
-	struct PPBInterface *intf;
-	for (intf = ppapi·ppb_interfaces; intf->name != 0; intf++) {
-	  intf->ppb = get_interface(intf->name);
-	}
-	return 0;
-}
-
-#pragma textflag NOSPLIT
 void *ppapi·ppp_get_interface(int8 *interface_name) {
 	struct PPPInterface *intf;
 	for (intf = ppapi·ppp_interfaces; intf->name != 0; intf++) {

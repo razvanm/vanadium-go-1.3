@@ -7,7 +7,6 @@
 package main
 
 import (
-	"fmt"
 	"runtime/ppapi"
 )
 
@@ -16,7 +15,7 @@ type testInstance struct{
 }
 
 func (inst testInstance) DidCreate(args map[string]string) bool {
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, fmt.Sprintf("DidCreate: %v", args))
+	inst.Printf("DidCreate: %v", args)
 	return true
 }
 

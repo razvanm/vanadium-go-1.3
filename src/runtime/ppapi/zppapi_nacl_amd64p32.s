@@ -98,7 +98,7 @@
 //func ppb_audioconfig_recommend_sample_rate(instance pp_Instance) AudioSampleRate = PPB_AUDIO_CONFIG[5]
  
 //func ppb_console_log(instance pp_Instance, level LogLevel, value pp_Var) = PPB_CONSOLE[0]
-//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[0]
+//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[1]
  
 //func ppb_core_add_ref_resource(resource pp_Resource) = PPB_CORE[0]
 //func ppb_core_release_resource(resource pp_Resource) = PPB_CORE[1]
@@ -377,10 +377,12 @@
 
 // Callbacks are invoked through cgocallback.
 TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
-	MOVQ	BX, 20(SP)
-	MOVQ	R12, 28(SP)
-	MOVQ	R13, 36(SP)
-	MOVQ	R14, 44(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 20(SP)
+	MOVQ	BX, 24(SP)
+	MOVQ	R12, 32(SP)
+	MOVQ	R13, 40(SP)
+	MOVQ	R14, 48(SP)
 	MOVL	DI, 12(SP)
 	MOVL	$0, 16(SP)
 	LEAL	·ppp_graphics3d_context_lost(SB), AX
@@ -390,17 +392,21 @@ TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
 	MOVL	$8, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	16(SP), AX
-	MOVQ	20(SP), BX
-	MOVQ	28(SP), R12
-	MOVQ	36(SP), R13
-	MOVQ	44(SP), R14
+	MOVL	20(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	24(SP), BX
+	MOVQ	32(SP), R12
+	MOVQ	40(SP), R13
+	MOVQ	48(SP), R14
 	RET
 
 TEXT ppapi·ppp_handle_input_event(SB),NOSPLIT,$64
-	MOVQ	BX, 24(SP)
-	MOVQ	R12, 32(SP)
-	MOVQ	R13, 40(SP)
-	MOVQ	R14, 48(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 24(SP)
+	MOVQ	BX, 28(SP)
+	MOVQ	R12, 36(SP)
+	MOVQ	R13, 44(SP)
+	MOVQ	R14, 52(SP)
 	MOVL	DI, 12(SP)
 	MOVL	SI, 16(SP)
 	MOVL	$0, 20(SP)
@@ -411,17 +417,21 @@ TEXT ppapi·ppp_handle_input_event(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
-	MOVQ	24(SP), BX
-	MOVQ	32(SP), R12
-	MOVQ	40(SP), R13
-	MOVQ	48(SP), R14
+	MOVL	24(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	28(SP), BX
+	MOVQ	36(SP), R12
+	MOVQ	44(SP), R13
+	MOVQ	52(SP), R14
 	RET
 
-TEXT ppapi·ppp_did_create(SB),NOSPLIT,$64
-	MOVQ	BX, 32(SP)
-	MOVQ	R12, 40(SP)
-	MOVQ	R13, 48(SP)
-	MOVQ	R14, 56(SP)
+TEXT ppapi·ppp_did_create(SB),NOSPLIT,$80
+	LEAL	0(BP), AX
+	MOVL	AX, 32(SP)
+	MOVQ	BX, 36(SP)
+	MOVQ	R12, 44(SP)
+	MOVQ	R13, 52(SP)
+	MOVQ	R14, 60(SP)
 	MOVL	DI, 12(SP)
 	MOVL	SI, 16(SP)
 	MOVL	DX, 20(SP)
@@ -434,17 +444,21 @@ TEXT ppapi·ppp_did_create(SB),NOSPLIT,$64
 	MOVL	$20, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	28(SP), AX
-	MOVQ	32(SP), BX
-	MOVQ	40(SP), R12
-	MOVQ	48(SP), R13
-	MOVQ	56(SP), R14
+	MOVL	32(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	36(SP), BX
+	MOVQ	44(SP), R12
+	MOVQ	52(SP), R13
+	MOVQ	60(SP), R14
 	RET
 
 TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
-	MOVQ	BX, 20(SP)
-	MOVQ	R12, 28(SP)
-	MOVQ	R13, 36(SP)
-	MOVQ	R14, 44(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 20(SP)
+	MOVQ	BX, 24(SP)
+	MOVQ	R12, 32(SP)
+	MOVQ	R13, 40(SP)
+	MOVQ	R14, 48(SP)
 	MOVL	DI, 12(SP)
 	MOVL	$0, 16(SP)
 	LEAL	·ppp_did_destroy(SB), AX
@@ -454,17 +468,21 @@ TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
 	MOVL	$8, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	16(SP), AX
-	MOVQ	20(SP), BX
-	MOVQ	28(SP), R12
-	MOVQ	36(SP), R13
-	MOVQ	44(SP), R14
+	MOVL	20(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	24(SP), BX
+	MOVQ	32(SP), R12
+	MOVQ	40(SP), R13
+	MOVQ	48(SP), R14
 	RET
 
 TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
-	MOVQ	BX, 24(SP)
-	MOVQ	R12, 32(SP)
-	MOVQ	R13, 40(SP)
-	MOVQ	R14, 48(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 24(SP)
+	MOVQ	BX, 28(SP)
+	MOVQ	R12, 36(SP)
+	MOVQ	R13, 44(SP)
+	MOVQ	R14, 52(SP)
 	MOVL	DI, 12(SP)
 	MOVL	SI, 16(SP)
 	MOVL	$0, 20(SP)
@@ -475,17 +493,21 @@ TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
-	MOVQ	24(SP), BX
-	MOVQ	32(SP), R12
-	MOVQ	40(SP), R13
-	MOVQ	48(SP), R14
+	MOVL	24(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	28(SP), BX
+	MOVQ	36(SP), R12
+	MOVQ	44(SP), R13
+	MOVQ	52(SP), R14
 	RET
 
 TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
-	MOVQ	BX, 24(SP)
-	MOVQ	R12, 32(SP)
-	MOVQ	R13, 40(SP)
-	MOVQ	R14, 48(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 24(SP)
+	MOVQ	BX, 28(SP)
+	MOVQ	R12, 36(SP)
+	MOVQ	R13, 44(SP)
+	MOVQ	R14, 52(SP)
 	MOVL	DI, 12(SP)
 	MOVL	SI, 16(SP)
 	MOVL	$0, 20(SP)
@@ -496,17 +518,21 @@ TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
-	MOVQ	24(SP), BX
-	MOVQ	32(SP), R12
-	MOVQ	40(SP), R13
-	MOVQ	48(SP), R14
+	MOVL	24(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	28(SP), BX
+	MOVQ	36(SP), R12
+	MOVQ	44(SP), R13
+	MOVQ	52(SP), R14
 	RET
 
 TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
-	MOVQ	BX, 24(SP)
-	MOVQ	R12, 32(SP)
-	MOVQ	R13, 40(SP)
-	MOVQ	R14, 48(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 24(SP)
+	MOVQ	BX, 28(SP)
+	MOVQ	R12, 36(SP)
+	MOVQ	R13, 44(SP)
+	MOVQ	R14, 52(SP)
 	MOVL	DI, 12(SP)
 	MOVL	SI, 16(SP)
 	MOVL	$0, 20(SP)
@@ -517,17 +543,21 @@ TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
 	MOVL	$12, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	20(SP), AX
-	MOVQ	24(SP), BX
-	MOVQ	32(SP), R12
-	MOVQ	40(SP), R13
-	MOVQ	48(SP), R14
+	MOVL	24(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	28(SP), BX
+	MOVQ	36(SP), R12
+	MOVQ	44(SP), R13
+	MOVQ	52(SP), R14
 	RET
 
 TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
-	MOVQ	BX, 36(SP)
-	MOVQ	R12, 44(SP)
-	MOVQ	R13, 52(SP)
-	MOVQ	R14, 60(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 36(SP)
+	MOVQ	BX, 40(SP)
+	MOVQ	R12, 48(SP)
+	MOVQ	R13, 56(SP)
+	MOVQ	R14, 64(SP)
 	MOVL	DI, 12(SP)
 	MOVL	SI, 16(SP)
 	MOVL	DX, 20(SP)
@@ -541,17 +571,21 @@ TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
 	MOVL	$24, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	32(SP), AX
-	MOVQ	36(SP), BX
-	MOVQ	44(SP), R12
-	MOVQ	52(SP), R13
-	MOVQ	60(SP), R14
+	MOVL	36(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	40(SP), BX
+	MOVQ	48(SP), R12
+	MOVQ	56(SP), R13
+	MOVQ	64(SP), R14
 	RET
 
 TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
-	MOVQ	BX, 20(SP)
-	MOVQ	R12, 28(SP)
-	MOVQ	R13, 36(SP)
-	MOVQ	R14, 44(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 20(SP)
+	MOVQ	BX, 24(SP)
+	MOVQ	R12, 32(SP)
+	MOVQ	R13, 40(SP)
+	MOVQ	R14, 48(SP)
 	MOVL	DI, 12(SP)
 	MOVL	$0, 16(SP)
 	LEAL	·ppp_mouse_lock_lost(SB), AX
@@ -561,17 +595,21 @@ TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
 	MOVL	$8, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	16(SP), AX
-	MOVQ	20(SP), BX
-	MOVQ	28(SP), R12
-	MOVQ	36(SP), R13
-	MOVQ	44(SP), R14
+	MOVL	20(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	24(SP), BX
+	MOVQ	32(SP), R12
+	MOVQ	40(SP), R13
+	MOVQ	48(SP), R14
 	RET
 
 TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$64
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
+	LEAL	0(BP), AX
+	MOVL	AX, 28(SP)
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
 	MOVL	DI, 12(SP)
 	MOVL	SI, 16(SP)
 	MOVL	DX, 20(SP)
@@ -583,10 +621,12 @@ TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$64
 	MOVL	$16, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	24(SP), AX
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
+	MOVL	28(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
 	RET
 
 
@@ -604,6 +644,7 @@ TEXT ·ppb_audio_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audio_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // config
 	MOVL	8(AX), DX  // callback
@@ -611,7 +652,8 @@ TEXT ppapi·ppb_audio_create(SB),NOSPLIT,$24
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_audio_is_audio(SB),NOSPLIT,$8
@@ -626,11 +668,13 @@ TEXT ·ppb_audio_is_audio(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audio_is_audio(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audio_get_current_config(SB),NOSPLIT,$8
@@ -645,11 +689,13 @@ TEXT ·ppb_audio_get_current_config(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audio_get_current_config(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audio_start_playback(SB),NOSPLIT,$8
@@ -664,11 +710,13 @@ TEXT ·ppb_audio_start_playback(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audio_start_playback(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audio_stop_playback(SB),NOSPLIT,$8
@@ -683,11 +731,13 @@ TEXT ·ppb_audio_stop_playback(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audio_stop_playback(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$8
@@ -702,11 +752,13 @@ TEXT ·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$8
@@ -721,11 +773,13 @@ TEXT ·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVSD	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSD	X0, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$8
@@ -740,10 +794,12 @@ TEXT ·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -759,11 +815,13 @@ TEXT ·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$8
@@ -778,11 +836,13 @@ TEXT ·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$8
@@ -797,11 +857,13 @@ TEXT ·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$8
@@ -816,11 +878,13 @@ TEXT ·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$8
@@ -835,11 +899,13 @@ TEXT ·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$8
@@ -854,11 +920,13 @@ TEXT ·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_BUFFER*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$8
@@ -873,13 +941,15 @@ TEXT ·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // sample_rate
 	MOVL	8(AX), DX  // sample_frame_count
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$8
@@ -894,13 +964,15 @@ TEXT ·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // sample_rate
 	MOVL	8(AX), DX  // requested_sample_frame_count
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$8
@@ -915,11 +987,13 @@ TEXT ·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$8
@@ -934,11 +1008,13 @@ TEXT ·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$8
@@ -953,11 +1029,13 @@ TEXT ·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$8
@@ -972,11 +1050,13 @@ TEXT ·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_AUDIO_CONFIG*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_console_log(SB),NOSPLIT,$8
@@ -991,6 +1071,7 @@ TEXT ·ppb_console_log(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_console_log(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // level
 	MOVQ	8(AX), DX  // value (sizeof 16)
@@ -998,6 +1079,7 @@ TEXT ppapi·ppb_console_log(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_CONSOLE*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
+	MOVL	36(SP), DI
 	// No return value
 	RET
 
@@ -1013,6 +1095,7 @@ TEXT ·ppb_console_log_with_source(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_console_log_with_source(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // level
 	MOVQ	8(AX), DX  // source (sizeof 16)
@@ -1020,8 +1103,9 @@ TEXT ppapi·ppb_console_log_with_source(SB),NOSPLIT,$56
 	MOVQ	24(AX), R8  // value (sizeof 16)
 	MOVQ	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_CONSOLE*8+4)(SB), AX
-	MOVL	(0*4)(AX), AX
+	MOVL	(1*4)(AX), AX
 	CALL	AX
+	MOVL	52(SP), DI
 	// No return value
 	RET
 
@@ -1037,10 +1121,12 @@ TEXT ·ppb_core_add_ref_resource(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_core_add_ref_resource(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -1056,10 +1142,12 @@ TEXT ·ppb_core_release_resource(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_core_release_resource(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -1075,11 +1163,13 @@ TEXT ·ppb_core_get_time(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_core_get_time(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVSD	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSD	X0, 8(DI)
 	RET
 
 TEXT ·ppb_core_get_time_ticks(SB),NOSPLIT,$8
@@ -1094,11 +1184,13 @@ TEXT ·ppb_core_get_time_ticks(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_core_get_time_ticks(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_CORE*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVSD	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSD	X0, 8(DI)
 	RET
 
 TEXT ·ppb_fileio_create(SB),NOSPLIT,$8
@@ -1113,11 +1205,13 @@ TEXT ·ppb_fileio_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fileio_is_file_io(SB),NOSPLIT,$8
@@ -1132,11 +1226,13 @@ TEXT ·ppb_fileio_is_file_io(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_is_file_io(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fileio_open(SB),NOSPLIT,$8
@@ -1151,6 +1247,7 @@ TEXT ·ppb_fileio_open(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_open(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVL	4(AX), SI  // file_ref
 	MOVL	8(AX), DX  // open_flags
@@ -1159,7 +1256,8 @@ TEXT ppapi·ppb_fileio_open(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_fileio_query(SB),NOSPLIT,$8
@@ -1174,6 +1272,7 @@ TEXT ·ppb_fileio_query(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_query(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVL	4(AX), SI  // info
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -1181,7 +1280,8 @@ TEXT ppapi·ppb_fileio_query(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_fileio_touch(SB),NOSPLIT,$8
@@ -1196,6 +1296,7 @@ TEXT ·ppb_fileio_touch(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVSD	4(AX), X0  // last_access_time
 	MOVSD	12(AX), X1  // last_modified_time
@@ -1204,7 +1305,8 @@ TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+32(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
@@ -1219,6 +1321,7 @@ TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVQ	4(AX), SI  // offset
 	MOVL	12(AX), DX  // buf
@@ -1228,7 +1331,8 @@ TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+32(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
@@ -1243,6 +1347,7 @@ TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVQ	4(AX), SI  // offset
 	MOVL	12(AX), DX  // buf
@@ -1252,7 +1357,8 @@ TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+32(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
@@ -1267,6 +1373,7 @@ TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVQ	4(AX), SI  // length
 	MOVQ	12(AX), DX  // cb (sizeof 12)
@@ -1274,7 +1381,8 @@ TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_fileio_flush(SB),NOSPLIT,$8
@@ -1289,13 +1397,15 @@ TEXT ·ppb_fileio_flush(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_flush(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVQ	4(AX), SI  // cb (sizeof 12)
 	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_fileio_close(SB),NOSPLIT,$8
@@ -1310,10 +1420,12 @@ TEXT ·ppb_fileio_close(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileio_close(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // file_io
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -1329,12 +1441,14 @@ TEXT ·ppb_fileref_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // fs
 	MOVL	4(AX), SI  // path
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fileref_is_file_ref(SB),NOSPLIT,$8
@@ -1349,11 +1463,13 @@ TEXT ·ppb_fileref_is_file_ref(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_is_file_ref(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fileref_get_file_system_type(SB),NOSPLIT,$8
@@ -1368,11 +1484,13 @@ TEXT ·ppb_fileref_get_file_system_type(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_get_file_system_type(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // file_ref
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fileref_get_name(SB),NOSPLIT,$8
@@ -1435,11 +1553,13 @@ TEXT ·ppb_fileref_get_parent(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_get_parent(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // file_ref
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fileref_make_directory(SB),NOSPLIT,$8
@@ -1454,6 +1574,7 @@ TEXT ·ppb_fileref_make_directory(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_make_directory(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // dir_ref
 	MOVL	4(AX), SI  // mkdir_flags
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -1461,7 +1582,8 @@ TEXT ppapi·ppb_fileref_make_directory(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_fileref_touch(SB),NOSPLIT,$8
@@ -1476,6 +1598,7 @@ TEXT ·ppb_fileref_touch(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_ref
 	MOVSD	4(AX), X0  // atime
 	MOVSD	12(AX), X1  // mtime
@@ -1484,7 +1607,8 @@ TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+32(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_fileref_delete(SB),NOSPLIT,$8
@@ -1499,13 +1623,15 @@ TEXT ·ppb_fileref_delete(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_delete(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // file_ref
 	MOVQ	4(AX), SI  // cb (sizeof 12)
 	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_fileref_rename(SB),NOSPLIT,$8
@@ -1520,6 +1646,7 @@ TEXT ·ppb_fileref_rename(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_rename(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_ref
 	MOVL	4(AX), SI  // new_file_ref
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -1527,7 +1654,8 @@ TEXT ppapi·ppb_fileref_rename(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_fileref_query(SB),NOSPLIT,$8
@@ -1542,6 +1670,7 @@ TEXT ·ppb_fileref_query(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_query(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_ref
 	MOVL	4(AX), SI  // info
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -1549,7 +1678,8 @@ TEXT ppapi·ppb_fileref_query(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(10*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_fileref_read_directory_entries(SB),NOSPLIT,$8
@@ -1564,6 +1694,7 @@ TEXT ·ppb_fileref_read_directory_entries(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fileref_read_directory_entries(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_ref
 	MOVQ	4(AX), SI  // output
 	MOVQ	12(AX), DX  // cb (sizeof 12)
@@ -1571,7 +1702,8 @@ TEXT ppapi·ppb_fileref_read_directory_entries(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(11*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_filesystem_create(SB),NOSPLIT,$8
@@ -1586,12 +1718,14 @@ TEXT ·ppb_filesystem_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_filesystem_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // ty
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_filesystem_is_file_system(SB),NOSPLIT,$8
@@ -1606,11 +1740,13 @@ TEXT ·ppb_filesystem_is_file_system(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_filesystem_is_file_system(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_filesystem_open(SB),NOSPLIT,$8
@@ -1625,6 +1761,7 @@ TEXT ·ppb_filesystem_open(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // resource
 	MOVQ	4(AX), SI  // expected_size
 	MOVQ	12(AX), DX  // cb (sizeof 12)
@@ -1632,7 +1769,8 @@ TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_filesystem_get_type(SB),NOSPLIT,$8
@@ -1647,11 +1785,13 @@ TEXT ·ppb_filesystem_get_type(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_filesystem_get_type(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$8
@@ -1666,11 +1806,13 @@ TEXT ·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_FULLSCREEN*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$8
@@ -1685,12 +1827,14 @@ TEXT ·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // fullscreen
 	MOVL	ppapi·ppb_interfaces+(PPB_FULLSCREEN*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$8
@@ -1705,12 +1849,14 @@ TEXT ·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // size
 	MOVL	ppapi·ppb_interfaces+(PPB_FULLSCREEN*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_gamepad_sample(SB),NOSPLIT,$8
@@ -1725,11 +1871,13 @@ TEXT ·ppb_gamepad_sample(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_gamepad_sample(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // data
 	MOVL	ppapi·ppb_interfaces+(PPB_GAMEPAD*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -1745,13 +1893,15 @@ TEXT ·ppb_graphics2d_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // size
 	MOVL	8(AX), DX  // is_always_opaque
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$8
@@ -1766,11 +1916,13 @@ TEXT ·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_graphics2d_describe(SB),NOSPLIT,$8
@@ -1785,13 +1937,15 @@ TEXT ·ppb_graphics2d_describe(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_describe(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // size
 	MOVL	8(AX), DX  // is_always_opaque
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$8
@@ -1806,6 +1960,7 @@ TEXT ·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // image_data
 	MOVL	8(AX), DX  // top_left
@@ -1813,6 +1968,7 @@ TEXT ppapi·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$24
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -1828,13 +1984,15 @@ TEXT ·ppb_graphics2d_scroll(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_scroll(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // clip_rect
 	MOVL	8(AX), DX  // amount
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_graphics2d_replace_contents(SB),NOSPLIT,$8
@@ -1849,11 +2007,13 @@ TEXT ·ppb_graphics2d_replace_contents(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_replace_contents(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -1869,13 +2029,15 @@ TEXT ·ppb_graphics2d_flush(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_flush(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVQ	4(AX), SI  // cb (sizeof 12)
 	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_graphics2d_set_scale(SB),NOSPLIT,$8
@@ -1890,12 +2052,14 @@ TEXT ·ppb_graphics2d_set_scale(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_set_scale(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVSS	4(AX), X0  // scale
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_graphics2d_get_scale(SB),NOSPLIT,$8
@@ -1910,11 +2074,13 @@ TEXT ·ppb_graphics2d_get_scale(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics2d_get_scale(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS2D*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
 	CALL	AX
-	MOVSS	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSS	X0, 8(DI)
 	RET
 
 TEXT ·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$8
@@ -1929,13 +2095,15 @@ TEXT ·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // attr
 	MOVL	8(AX), DX  // value
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_graphics3d_create(SB),NOSPLIT,$8
@@ -1950,13 +2118,15 @@ TEXT ·ppb_graphics3d_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics3d_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // share_context
 	MOVL	8(AX), DX  // attrib_list
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$8
@@ -1971,11 +2141,13 @@ TEXT ·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_graphics3d_get_attribs(SB),NOSPLIT,$8
@@ -1990,12 +2162,14 @@ TEXT ·ppb_graphics3d_get_attribs(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics3d_get_attribs(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // attrib_list
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_graphics3d_set_attribs(SB),NOSPLIT,$8
@@ -2010,12 +2184,14 @@ TEXT ·ppb_graphics3d_set_attribs(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics3d_set_attribs(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // attrib_list
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_graphics3d_get_error(SB),NOSPLIT,$8
@@ -2030,11 +2206,13 @@ TEXT ·ppb_graphics3d_get_error(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics3d_get_error(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$8
@@ -2049,13 +2227,15 @@ TEXT ·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // width
 	MOVL	8(AX), DX  // height
 	MOVL	ppapi·ppb_interfaces+(PPB_GRAPHICS3D*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_hostresolver_create(SB),NOSPLIT,$8
@@ -2070,11 +2250,13 @@ TEXT ·ppb_hostresolver_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_hostresolver_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$8
@@ -2089,11 +2271,13 @@ TEXT ·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_hostresolver_resolve(SB),NOSPLIT,$8
@@ -2108,6 +2292,7 @@ TEXT ·ppb_hostresolver_resolve(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_hostresolver_resolve(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // resolver
 	MOVL	4(AX), SI  // host
 	MOVL	8(AX), DX  // port
@@ -2117,7 +2302,8 @@ TEXT ppapi·ppb_hostresolver_resolve(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+28(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_hostresolver_get_canonical_name(SB),NOSPLIT,$8
@@ -2156,11 +2342,13 @@ TEXT ·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resolver
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_hostresolver_get_net_address(SB),NOSPLIT,$8
@@ -2175,12 +2363,14 @@ TEXT ·ppb_hostresolver_get_net_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_hostresolver_get_net_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resolver
 	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_HOST_RESOLVER*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
@@ -2195,10 +2385,12 @@ TEXT ·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
 	MOVL	DI, AX
+	MOVL	AX, 4(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+0(FP)
+	MOVL	4(SP), DI
+	MOVL	AX, 0(DI)
 	RET
 
 TEXT ·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$8
@@ -2213,11 +2405,13 @@ TEXT ·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // format
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_imagedata_create(SB),NOSPLIT,$8
@@ -2232,6 +2426,7 @@ TEXT ·ppb_imagedata_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_imagedata_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // format
 	MOVL	8(AX), DX  // size
@@ -2239,7 +2434,8 @@ TEXT ppapi·ppb_imagedata_create(SB),NOSPLIT,$24
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_imagedata_is_image_data(SB),NOSPLIT,$8
@@ -2254,11 +2450,13 @@ TEXT ·ppb_imagedata_is_image_data(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_imagedata_is_image_data(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_imagedata_describe(SB),NOSPLIT,$8
@@ -2273,12 +2471,14 @@ TEXT ·ppb_imagedata_describe(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_imagedata_describe(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // image_data
 	MOVL	4(AX), SI  // desc
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_imagedata_map(SB),NOSPLIT,$8
@@ -2293,11 +2493,13 @@ TEXT ·ppb_imagedata_map(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_imagedata_map(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_imagedata_unmap(SB),NOSPLIT,$8
@@ -2312,10 +2514,12 @@ TEXT ·ppb_imagedata_unmap(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_imagedata_unmap(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // image_data
 	MOVL	ppapi·ppb_interfaces+(PPB_IMAGE_DATA*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -2331,12 +2535,14 @@ TEXT ·ppb_inputevent_request_input_events(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_inputevent_request_input_events(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // event_classes
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$8
@@ -2351,12 +2557,14 @@ TEXT ·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // event_classes
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$8
@@ -2371,11 +2579,13 @@ TEXT ·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // event_classes
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -2391,11 +2601,13 @@ TEXT ·ppb_inputevent_is_input_event(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_inputevent_is_input_event(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_inputevent_get_type(SB),NOSPLIT,$8
@@ -2410,11 +2622,13 @@ TEXT ·ppb_inputevent_get_type(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_inputevent_get_type(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$8
@@ -2429,11 +2643,13 @@ TEXT ·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVSD	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSD	X0, 8(DI)
 	RET
 
 TEXT ·ppb_inputevent_get_modifiers(SB),NOSPLIT,$8
@@ -2448,11 +2664,13 @@ TEXT ·ppb_inputevent_get_modifiers(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_inputevent_get_modifiers(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_instance_bind_graphics(SB),NOSPLIT,$8
@@ -2467,12 +2685,14 @@ TEXT ·ppb_instance_bind_graphics(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_instance_bind_graphics(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // device
 	MOVL	ppapi·ppb_interfaces+(PPB_INSTANCE*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_instance_is_full_frame(SB),NOSPLIT,$8
@@ -2487,11 +2707,13 @@ TEXT ·ppb_instance_is_full_frame(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_instance_is_full_frame(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_INSTANCE*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_keyboardinputevent_create(SB),NOSPLIT,$8
@@ -2506,6 +2728,7 @@ TEXT ·ppb_keyboardinputevent_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_keyboardinputevent_create(SB),NOSPLIT,$72
 	MOVL	DI, AX
+	MOVL	AX, 68(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // ty
 	MOVSD	8(AX), X0  // ticks
@@ -2525,7 +2748,8 @@ TEXT ppapi·ppb_keyboardinputevent_create(SB),NOSPLIT,$72
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+56(FP)
+	MOVL	68(SP), DI
+	MOVL	AX, 56(DI)
 	RET
 
 TEXT ·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$8
@@ -2540,11 +2764,13 @@ TEXT ·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$8
@@ -2559,11 +2785,13 @@ TEXT ·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_keyboardinputevent_get_character_text(SB),NOSPLIT,$8
@@ -2626,11 +2854,13 @@ TEXT ·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$8
@@ -2645,6 +2875,7 @@ TEXT ·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // audio_track
 	MOVL	4(AX), SI  // attribs
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -2652,7 +2883,8 @@ TEXT ppapi·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$8
@@ -2667,13 +2899,15 @@ TEXT ·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // audio_track
 	MOVL	4(AX), SI  // attrib
 	MOVL	8(AX), DX  // value
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_get_id(SB),NOSPLIT,$8
@@ -2712,11 +2946,13 @@ TEXT ·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // audio_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$8
@@ -2731,6 +2967,7 @@ TEXT ·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // audio_track
 	MOVL	4(AX), SI  // buffer
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -2738,7 +2975,8 @@ TEXT ppapi·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$8
@@ -2753,12 +2991,14 @@ TEXT ·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // audio_track
 	MOVL	4(AX), SI  // buffer
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$8
@@ -2773,10 +3013,12 @@ TEXT ·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // audio_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_AUDIO_TRACK*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -2792,11 +3034,13 @@ TEXT ·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$8
@@ -2811,6 +3055,7 @@ TEXT ·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // video_track
 	MOVL	4(AX), SI  // attribs
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -2818,7 +3063,8 @@ TEXT ppapi·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$8
@@ -2833,13 +3079,15 @@ TEXT ·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // video_track
 	MOVL	4(AX), SI  // attrib
 	MOVL	8(AX), DX  // value
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_get_id(SB),NOSPLIT,$8
@@ -2878,11 +3126,13 @@ TEXT ·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // video_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$8
@@ -2897,6 +3147,7 @@ TEXT ·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // video_track
 	MOVL	4(AX), SI  // buffer
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -2904,7 +3155,8 @@ TEXT ppapi·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$8
@@ -2919,12 +3171,14 @@ TEXT ·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // video_track
 	MOVL	4(AX), SI  // buffer
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$8
@@ -2939,10 +3193,12 @@ TEXT ·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // video_track
 	MOVL	ppapi·ppb_interfaces+(PPB_MEDIA_STREAM_VIDEO_TRACK*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -2958,12 +3214,14 @@ TEXT ·ppb_messaging_post_message(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_messaging_post_message(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // instance
 	MOVQ	4(AX), SI  // msg (sizeof 16)
 	MOVQ	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_MESSAGING*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
+	MOVL	36(SP), DI
 	// No return value
 	RET
 
@@ -2979,6 +3237,7 @@ TEXT ·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // ty
 	MOVL	8(AX), DX  // image
@@ -2986,7 +3245,8 @@ TEXT ppapi·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$24
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_CURSOR*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_mouseinputevent_create(SB),NOSPLIT,$8
@@ -3001,6 +3261,7 @@ TEXT ·ppb_mouseinputevent_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mouseinputevent_create(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // ty
 	MOVSD	8(AX), X0  // ticks
@@ -3014,7 +3275,8 @@ TEXT ppapi·ppb_mouseinputevent_create(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+36(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$8
@@ -3029,11 +3291,13 @@ TEXT ·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mouseinputevent_get_button(SB),NOSPLIT,$8
@@ -3048,11 +3312,13 @@ TEXT ·ppb_mouseinputevent_get_button(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mouseinputevent_get_button(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mouseinputevent_get_position(SB),NOSPLIT,$8
@@ -3090,11 +3356,13 @@ TEXT ·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_mouseinputevent_get_movement(SB),NOSPLIT,$8
@@ -3132,13 +3400,15 @@ TEXT ·ppb_mouselock_lock_mouse(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mouselock_lock_mouse(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVQ	4(AX), SI  // cb (sizeof 12)
 	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_LOCK*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$8
@@ -3153,10 +3423,12 @@ TEXT ·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_LOCK*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -3172,12 +3444,14 @@ TEXT ·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // addr
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$8
@@ -3192,12 +3466,14 @@ TEXT ·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // addr
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_netaddress_is_net_address(SB),NOSPLIT,$8
@@ -3212,11 +3488,13 @@ TEXT ·ppb_netaddress_is_net_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_netaddress_is_net_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_netaddress_get_family(SB),NOSPLIT,$8
@@ -3231,11 +3509,13 @@ TEXT ·ppb_netaddress_get_family(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_netaddress_get_family(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // addr
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_netaddress_describe_as_string(SB),NOSPLIT,$8
@@ -3275,12 +3555,14 @@ TEXT ·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // addr
 	MOVL	4(AX), SI  // ipv4
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$8
@@ -3295,12 +3577,14 @@ TEXT ·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // addr
 	MOVL	4(AX), SI  // ipv6
 	MOVL	ppapi·ppb_interfaces+(PPB_NET_ADDRESS*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_networklist_is_network_list(SB),NOSPLIT,$8
@@ -3315,11 +3599,13 @@ TEXT ·ppb_networklist_is_network_list(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_networklist_is_network_list(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_networklist_get_count(SB),NOSPLIT,$8
@@ -3334,11 +3620,13 @@ TEXT ·ppb_networklist_get_count(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_networklist_get_count(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_networklist_get_name(SB),NOSPLIT,$8
@@ -3378,12 +3666,14 @@ TEXT ·ppb_networklist_get_type(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_networklist_get_type(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resourc
 	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_networklist_get_state(SB),NOSPLIT,$8
@@ -3398,12 +3688,14 @@ TEXT ·ppb_networklist_get_state(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_networklist_get_state(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$8
@@ -3418,13 +3710,15 @@ TEXT ·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // index
 	MOVL	8(AX), DX  // output
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_networklist_get_display_name(SB),NOSPLIT,$8
@@ -3464,12 +3758,14 @@ TEXT ·ppb_networklist_get_mtu(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_networklist_get_mtu(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // index
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_LIST*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_network_monitor_create(SB),NOSPLIT,$8
@@ -3484,11 +3780,13 @@ TEXT ·ppb_network_monitor_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_network_monitor_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_MONITOR*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_network_monitor_update_network_list(SB),NOSPLIT,$8
@@ -3503,6 +3801,7 @@ TEXT ·ppb_network_monitor_update_network_list(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_network_monitor_update_network_list(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // monitor
 	MOVL	4(AX), SI  // network_list
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -3510,7 +3809,8 @@ TEXT ppapi·ppb_network_monitor_update_network_list(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_MONITOR*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$8
@@ -3525,11 +3825,13 @@ TEXT ·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_MONITOR*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$8
@@ -3544,6 +3846,7 @@ TEXT ·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // instance
 	MOVQ	4(AX), SI  // url (sizeof 16)
 	MOVQ	12(AX), DX
@@ -3553,7 +3856,8 @@ TEXT ppapi·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_NETWORK_PROXY*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+36(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_create(SB),NOSPLIT,$8
@@ -3568,11 +3872,13 @@ TEXT ·ppb_tcpsocket_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$8
@@ -3587,11 +3893,13 @@ TEXT ·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_bind(SB),NOSPLIT,$8
@@ -3606,6 +3914,7 @@ TEXT ·ppb_tcpsocket_bind(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_bind(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // addr
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -3613,7 +3922,8 @@ TEXT ppapi·ppb_tcpsocket_bind(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_connect(SB),NOSPLIT,$8
@@ -3628,6 +3938,7 @@ TEXT ·ppb_tcpsocket_connect(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_connect(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // addr
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -3635,7 +3946,8 @@ TEXT ppapi·ppb_tcpsocket_connect(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$8
@@ -3650,11 +3962,13 @@ TEXT ·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$8
@@ -3669,11 +3983,13 @@ TEXT ·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_read(SB),NOSPLIT,$8
@@ -3688,6 +4004,7 @@ TEXT ·ppb_tcpsocket_read(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_read(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // buf
 	MOVL	8(AX), DX  // bytes_to_read
@@ -3696,7 +4013,8 @@ TEXT ppapi·ppb_tcpsocket_read(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_write(SB),NOSPLIT,$8
@@ -3711,6 +4029,7 @@ TEXT ·ppb_tcpsocket_write(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_write(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // buf
 	MOVL	8(AX), DX  // bytes_to_write
@@ -3719,7 +4038,8 @@ TEXT ppapi·ppb_tcpsocket_write(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_listen(SB),NOSPLIT,$8
@@ -3734,6 +4054,7 @@ TEXT ·ppb_tcpsocket_listen(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_listen(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // backlog
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -3741,7 +4062,8 @@ TEXT ppapi·ppb_tcpsocket_listen(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_accept(SB),NOSPLIT,$8
@@ -3756,6 +4078,7 @@ TEXT ·ppb_tcpsocket_accept(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_accept(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // accepted
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -3763,7 +4086,8 @@ TEXT ppapi·ppb_tcpsocket_accept(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_tcpsocket_close(SB),NOSPLIT,$8
@@ -3778,10 +4102,12 @@ TEXT ·ppb_tcpsocket_close(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_close(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(10*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -3797,6 +4123,7 @@ TEXT ·ppb_tcpsocket_set_option(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_tcpsocket_set_option(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // name
 	MOVQ	8(AX), DX  // value (sizeof 16)
@@ -3806,7 +4133,8 @@ TEXT ppapi·ppb_tcpsocket_set_option(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_TCP_SOCKET*8+4)(SB), AX
 	MOVL	(11*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+36(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$8
@@ -3821,11 +4149,13 @@ TEXT ·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // ty
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -3841,11 +4171,13 @@ TEXT ·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // caret
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -3861,10 +4193,12 @@ TEXT ·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -3880,6 +4214,7 @@ TEXT ·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // instance
 	MOVQ	4(AX), SI  // text (sizeof 16)
 	MOVQ	12(AX), DX
@@ -3888,6 +4223,7 @@ TEXT ppapi·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TEXT_INPUT_CONTROLLER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
+	MOVL	36(SP), DI
 	// No return value
 	RET
 
@@ -3903,6 +4239,7 @@ TEXT ·ppb_touchinput_event_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_touchinput_event_create(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	4(AX), SI  // ty
 	MOVSD	8(AX), X0  // time_stamp
@@ -3910,7 +4247,8 @@ TEXT ppapi·ppb_touchinput_event_create(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$8
@@ -3925,12 +4263,14 @@ TEXT ·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	4(AX), SI  // list
 	MOVL	8(AX), DX  // point
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -3946,11 +4286,13 @@ TEXT ·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$8
@@ -3965,12 +4307,14 @@ TEXT ·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // list
 	MOVL	ppapi·ppb_interfaces+(PPB_TOUCH_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$8
@@ -3985,6 +4329,7 @@ TEXT ·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // return_struct
 	MOVL	4(AX), SI  // resource
 	MOVL	8(AX), DX  // list
@@ -4007,6 +4352,7 @@ TEXT ·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // return_struct
 	MOVL	4(AX), SI  // resource
 	MOVL	8(AX), DX  // list
@@ -4029,11 +4375,13 @@ TEXT ·ppb_udpsocket_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$8
@@ -4048,11 +4396,13 @@ TEXT ·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_udpsocket_bind(SB),NOSPLIT,$8
@@ -4067,6 +4417,7 @@ TEXT ·ppb_udpsocket_bind(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_bind(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // addr
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -4074,7 +4425,8 @@ TEXT ppapi·ppb_udpsocket_bind(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$8
@@ -4089,11 +4441,13 @@ TEXT ·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_udpsocket_recvfrom(SB),NOSPLIT,$8
@@ -4108,6 +4462,7 @@ TEXT ·ppb_udpsocket_recvfrom(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_recvfrom(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // buf
 	MOVL	8(AX), DX  // num_bytes
@@ -4117,7 +4472,8 @@ TEXT ppapi·ppb_udpsocket_recvfrom(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+28(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_udpsocket_sendto(SB),NOSPLIT,$8
@@ -4132,6 +4488,7 @@ TEXT ·ppb_udpsocket_sendto(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_sendto(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // buf
 	MOVL	8(AX), DX  // num_bytes
@@ -4141,7 +4498,8 @@ TEXT ppapi·ppb_udpsocket_sendto(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+28(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_udpsocket_close(SB),NOSPLIT,$8
@@ -4156,10 +4514,12 @@ TEXT ·ppb_udpsocket_close(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_close(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -4175,6 +4535,7 @@ TEXT ·ppb_udpsocket_set_option(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_udpsocket_set_option(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // opt
 	MOVQ	8(AX), DX  // value (sizeof 16)
@@ -4184,7 +4545,8 @@ TEXT ppapi·ppb_udpsocket_set_option(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_UDP_SOCKET*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+36(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_urlloader_create(SB),NOSPLIT,$8
@@ -4199,11 +4561,13 @@ TEXT ·ppb_urlloader_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_urlloader_is_url_loader(SB),NOSPLIT,$8
@@ -4218,11 +4582,13 @@ TEXT ·ppb_urlloader_is_url_loader(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_is_url_loader(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_urlloader_open(SB),NOSPLIT,$8
@@ -4237,6 +4603,7 @@ TEXT ·ppb_urlloader_open(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_open(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // loader
 	MOVL	4(AX), SI  // request
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -4244,7 +4611,8 @@ TEXT ppapi·ppb_urlloader_open(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_urlloader_follow_redirect(SB),NOSPLIT,$8
@@ -4259,13 +4627,15 @@ TEXT ·ppb_urlloader_follow_redirect(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_follow_redirect(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // loader
 	MOVQ	4(AX), SI  // cb (sizeof 12)
 	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$8
@@ -4280,13 +4650,15 @@ TEXT ·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // loader
 	MOVL	4(AX), SI  // bytes_sent
 	MOVL	8(AX), DX  // total_bytes
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_urlloader_get_download_progress(SB),NOSPLIT,$8
@@ -4301,13 +4673,15 @@ TEXT ·ppb_urlloader_get_download_progress(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_get_download_progress(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // loader
 	MOVL	4(AX), SI  // bytes_received
 	MOVL	8(AX), DX  // total_bytes
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_urlloader_get_response_info(SB),NOSPLIT,$8
@@ -4322,11 +4696,13 @@ TEXT ·ppb_urlloader_get_response_info(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_get_response_info(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // loader
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_urlloader_read_response_body(SB),NOSPLIT,$8
@@ -4341,6 +4717,7 @@ TEXT ·ppb_urlloader_read_response_body(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_read_response_body(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // loader
 	MOVL	4(AX), SI  // buf
 	MOVL	8(AX), DX  // bytes_to_read
@@ -4349,7 +4726,8 @@ TEXT ppapi·ppb_urlloader_read_response_body(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$8
@@ -4364,13 +4742,15 @@ TEXT ·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // loader
 	MOVQ	4(AX), SI  // cb (sizeof 12)
 	MOVL	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(8*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_urlloader_close(SB),NOSPLIT,$8
@@ -4385,10 +4765,12 @@ TEXT ·ppb_urlloader_close(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlloader_close(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // loader
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_LOADER*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -4404,11 +4786,13 @@ TEXT ·ppb_urlrequestinfo_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlrequestinfo_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$8
@@ -4423,11 +4807,13 @@ TEXT ·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$8
@@ -4442,6 +4828,7 @@ TEXT ·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // request
 	MOVL	4(AX), SI  // property
 	MOVQ	8(AX), DX  // value (sizeof 16)
@@ -4449,7 +4836,8 @@ TEXT ppapi·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+24(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$8
@@ -4464,13 +4852,15 @@ TEXT ·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // request
 	MOVL	4(AX), SI  // data
 	MOVL	8(AX), DX  // len
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+12(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$8
@@ -4485,6 +4875,7 @@ TEXT ·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // request
 	MOVL	4(AX), SI  // file_ref
 	MOVQ	8(AX), DX  // off
@@ -4493,7 +4884,8 @@ TEXT ppapi·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_REQUEST_INFO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+32(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$8
@@ -4508,11 +4900,13 @@ TEXT ·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_RESPONSE_INFO*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_urlresponseinfo_get_property(SB),NOSPLIT,$8
@@ -4552,11 +4946,13 @@ TEXT ·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // response
 	MOVL	ppapi·ppb_interfaces+(PPB_URL_RESPONSE_INFO*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_var_add_ref(SB),NOSPLIT,$8
@@ -4571,11 +4967,13 @@ TEXT ·ppb_var_add_ref(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_var_add_ref(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVQ	0(AX), DI  // v (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -4591,11 +4989,13 @@ TEXT ·ppb_var_release(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_var_release(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVQ	0(AX), DI  // v (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -4636,13 +5036,15 @@ TEXT ·ppb_var_to_utf8(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_var_to_utf8(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVQ	0(AX), DI  // v (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	16(AX), DX  // len
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_var_to_resource(SB),NOSPLIT,$8
@@ -4657,12 +5059,14 @@ TEXT ·ppb_var_to_resource(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_var_to_resource(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVQ	0(AX), DI  // v (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_var_from_resource(SB),NOSPLIT,$8
@@ -4750,6 +5154,7 @@ TEXT ·ppb_vararray_set(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vararray_set(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVQ	0(AX), DI  // array (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	16(AX), DX  // index
@@ -4758,7 +5163,8 @@ TEXT ppapi·ppb_vararray_set(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+36(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_vararray_get_length(SB),NOSPLIT,$8
@@ -4773,12 +5179,14 @@ TEXT ·ppb_vararray_get_length(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vararray_get_length(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVQ	0(AX), DI  // array (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_vararray_set_length(SB),NOSPLIT,$8
@@ -4793,13 +5201,15 @@ TEXT ·ppb_vararray_set_length(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vararray_set_length(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVQ	0(AX), DI  // array (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	16(AX), DX  // len
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_vararraybuffer_create(SB),NOSPLIT,$8
@@ -4838,13 +5248,15 @@ TEXT ·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVQ	0(AX), DI  // array (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	16(AX), DX  // byte_length
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY_BUFFER*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_vararraybuffer_map(SB),NOSPLIT,$8
@@ -4859,12 +5271,14 @@ TEXT ·ppb_vararraybuffer_map(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vararraybuffer_map(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVQ	0(AX), DI  // array (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY_BUFFER*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+16(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 16(DI)
 	RET
 
 TEXT ·ppb_vararraybuffer_unmap(SB),NOSPLIT,$8
@@ -4879,11 +5293,13 @@ TEXT ·ppb_vararraybuffer_unmap(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vararraybuffer_unmap(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVQ	0(AX), DI  // array (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_ARRAY_BUFFER*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -4949,6 +5365,7 @@ TEXT ·ppb_vardictionary_set(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vardictionary_set(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVQ	0(AX), DI  // dict (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVQ	16(AX), DX  // key (sizeof 16)
@@ -4958,7 +5375,8 @@ TEXT ppapi·ppb_vardictionary_set(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+48(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 48(DI)
 	RET
 
 TEXT ·ppb_vardictionary_delete(SB),NOSPLIT,$8
@@ -4973,6 +5391,7 @@ TEXT ·ppb_vardictionary_delete(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vardictionary_delete(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVQ	0(AX), DI  // dict (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVQ	16(AX), DX  // key (sizeof 16)
@@ -4980,6 +5399,7 @@ TEXT ppapi·ppb_vardictionary_delete(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
+	MOVL	36(SP), DI
 	// No return value
 	RET
 
@@ -4995,6 +5415,7 @@ TEXT ·ppb_vardictionary_has_key(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_vardictionary_has_key(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVQ	0(AX), DI  // dict (sizeof 16)
 	MOVQ	8(AX), SI
 	MOVQ	16(AX), DX  // key (sizeof 16)
@@ -5002,7 +5423,8 @@ TEXT ppapi·ppb_vardictionary_has_key(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_VAR_DICTIONARY*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+32(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_vardictionary_get_keys(SB),NOSPLIT,$8
@@ -5042,11 +5464,13 @@ TEXT ·ppb_videoframe_is_video_frame(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_videoframe_is_video_frame(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_videoframe_get_timestamp(SB),NOSPLIT,$8
@@ -5061,11 +5485,13 @@ TEXT ·ppb_videoframe_get_timestamp(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_videoframe_get_timestamp(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVSD	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSD	X0, 8(DI)
 	RET
 
 TEXT ·ppb_videoframe_set_timestamp(SB),NOSPLIT,$8
@@ -5080,11 +5506,13 @@ TEXT ·ppb_videoframe_set_timestamp(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // frame
 	MOVSD	4(AX), X0  // timestamp
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
+	MOVL	20(SP), DI
 	// No return value
 	RET
 
@@ -5100,11 +5528,13 @@ TEXT ·ppb_videoframe_get_format(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_videoframe_get_format(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_videoframe_get_size(SB),NOSPLIT,$8
@@ -5119,12 +5549,14 @@ TEXT ·ppb_videoframe_get_size(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_videoframe_get_size(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // frame
 	MOVL	4(AX), SI  // size
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$8
@@ -5139,11 +5571,13 @@ TEXT ·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$8
@@ -5158,11 +5592,13 @@ TEXT ·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // frame
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_view_is_view(SB),NOSPLIT,$8
@@ -5177,11 +5613,13 @@ TEXT ·ppb_view_is_view(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_is_view(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_view_get_rect(SB),NOSPLIT,$8
@@ -5196,12 +5634,14 @@ TEXT ·ppb_view_get_rect(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_get_rect(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // rect
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_view_is_fullscreen(SB),NOSPLIT,$8
@@ -5216,11 +5656,13 @@ TEXT ·ppb_view_is_fullscreen(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_is_fullscreen(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_view_is_visible(SB),NOSPLIT,$8
@@ -5235,11 +5677,13 @@ TEXT ·ppb_view_is_visible(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_is_visible(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_view_is_page_visible(SB),NOSPLIT,$8
@@ -5254,11 +5698,13 @@ TEXT ·ppb_view_is_page_visible(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_is_page_visible(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_view_get_clip_rect(SB),NOSPLIT,$8
@@ -5273,12 +5719,14 @@ TEXT ·ppb_view_get_clip_rect(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_get_clip_rect(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	4(AX), SI  // clip
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+8(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_view_get_device_scale(SB),NOSPLIT,$8
@@ -5293,11 +5741,13 @@ TEXT ·ppb_view_get_device_scale(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_get_device_scale(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVSS	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSS	X0, 8(DI)
 	RET
 
 TEXT ·ppb_view_get_css_scale(SB),NOSPLIT,$8
@@ -5312,11 +5762,13 @@ TEXT ·ppb_view_get_css_scale(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_view_get_css_scale(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_VIEW*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVSS	X0, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVSS	X0, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_create(SB),NOSPLIT,$8
@@ -5331,11 +5783,13 @@ TEXT ·ppb_websocket_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_create(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // instance
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_is_web_socket(SB),NOSPLIT,$8
@@ -5350,11 +5804,13 @@ TEXT ·ppb_websocket_is_web_socket(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_is_web_socket(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_connect(SB),NOSPLIT,$8
@@ -5369,6 +5825,7 @@ TEXT ·ppb_websocket_connect(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_connect(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // socket
 	MOVQ	4(AX), SI  // url (sizeof 16)
 	MOVQ	12(AX), DX
@@ -5384,7 +5841,8 @@ TEXT ppapi·ppb_websocket_connect(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+40(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_websocket_close(SB),NOSPLIT,$8
@@ -5399,6 +5857,7 @@ TEXT ·ppb_websocket_close(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_close(SB),NOSPLIT,$56
 	MOVL	DI, AX
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // code
 	MOVQ	8(AX), DX  // reason (sizeof 16)
@@ -5408,7 +5867,8 @@ TEXT ppapi·ppb_websocket_close(SB),NOSPLIT,$56
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(3*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+36(FP)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_websocket_receive_message(SB),NOSPLIT,$8
@@ -5423,6 +5883,7 @@ TEXT ·ppb_websocket_receive_message(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_receive_message(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	4(AX), SI  // message
 	MOVQ	8(AX), DX  // cb (sizeof 12)
@@ -5430,7 +5891,8 @@ TEXT ppapi·ppb_websocket_receive_message(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_websocket_send_message(SB),NOSPLIT,$8
@@ -5445,13 +5907,15 @@ TEXT ·ppb_websocket_send_message(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_send_message(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // socket
 	MOVQ	4(AX), SI  // msg (sizeof 16)
 	MOVQ	12(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+20(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 24(DI)
 	RET
 
 TEXT ·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$8
@@ -5466,11 +5930,13 @@ TEXT ·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVQ	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVQ	AX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_get_close_cose(SB),NOSPLIT,$8
@@ -5485,11 +5951,13 @@ TEXT ·ppb_websocket_get_close_cose(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_get_close_cose(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_get_close_reason(SB),NOSPLIT,$8
@@ -5528,11 +5996,13 @@ TEXT ·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(9*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_get_extensions(SB),NOSPLIT,$8
@@ -5595,11 +6065,13 @@ TEXT ·ppb_websocket_get_ready_state(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_websocket_get_ready_state(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // socket
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(12*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_websocket_get_url(SB),NOSPLIT,$8
@@ -5638,6 +6110,7 @@ TEXT ·ppb_wheelinputevent_create(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$40
 	MOVL	DI, AX
+	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // instance
 	MOVSD	4(AX), X0  // time_stamp
 	MOVL	12(AX), SI  // modifiers
@@ -5647,7 +6120,8 @@ TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$40
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+28(FP)
+	MOVL	36(SP), DI
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$8
@@ -5662,11 +6136,13 @@ TEXT ·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // resource
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(1*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 TEXT ·ppb_wheelinputevent_get_delta(SB),NOSPLIT,$8
@@ -5727,11 +6203,13 @@ TEXT ·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$8
 // Called on the C stack.
 TEXT ppapi·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$24
 	MOVL	DI, AX
+	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // event
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, rval+4(FP)
+	MOVL	20(SP), DI
+	MOVL	AX, 8(DI)
 	RET
 
 
@@ -5806,3 +6284,10 @@ TEXT ·gostringn(SB),NOSPLIT,$0
 
 TEXT ·free(SB),NOSPLIT,$0
 	JMP	runtime·cfree(SB)
+
+TEXT ·ppb_graphics2d_createx(SB),NOSPLIT,$8
+	GO_ARGS
+	MOVL	$22, rval+24(FP)
+	RET
+
+	

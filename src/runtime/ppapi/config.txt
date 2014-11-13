@@ -95,7 +95,7 @@
 //func ppb_audioconfig_recommend_sample_rate(instance pp_Instance) AudioSampleRate = PPB_AUDIO_CONFIG[5]
  
 //func ppb_console_log(instance pp_Instance, level LogLevel, value pp_Var) = PPB_CONSOLE[0]
-//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[0]
+//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[1]
  
 //func ppb_core_add_ref_resource(resource pp_Resource) = PPB_CORE[0]
 //func ppb_core_release_resource(resource pp_Resource) = PPB_CORE[1]

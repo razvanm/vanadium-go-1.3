@@ -4,6 +4,11 @@
 
 package ppapi
 
+import (
+	"fmt"
+	"runtime"
+)
+
 // Instance represents one instance of the module on a web page.
 // This corresponds to one <embed ...> occurrence.
 type Instance struct {
@@ -15,19 +20,37 @@ func makeInstance(id pp_Instance) (inst Instance) {
 	return
 }
 
+// IsFullFrame returns true if the instance is full-frame.
+func (inst Instance) IsFullFrame() bool {
+	return ppb_instance_is_full_frame(inst.id) != 0
+}
+
 // Log writes a message to the console.
 func (inst Instance) Log(level LogLevel, v Var) {
 	ppb_console_log(inst.id, level, v.toPPVar())
 }
 
-// Log writes a message to the console.
-func (inst Instance) LogString(level LogLevel, msg string) {
-	v := VarFromString(msg)
-	inst.Log(level, v)
-	v.Release()
-}
-
 // LogWithSource writes a message to the console, using the source information rather than the plugin name.
 func (inst Instance) LogWithSource(level LogLevel, src Var, v Var) {
 	ppb_console_log_with_source(inst.id, level, src.toPPVar(), v.toPPVar())
+}
+
+// LogPrintf writes a formatted message to the console.
+func (inst Instance) logPrintf(level LogLevel, format string, args ...interface{}) {
+	_, file, line, _ := runtime.Caller(2)
+	loc := VarFromString(fmt.Sprintf("%s:%d", file, line))
+	v := VarFromString(fmt.Sprintf(format, args...))
+	inst.LogWithSource(level, loc, v)
+	loc.Release()
+	v.Release()
+}
+
+// Printf writes a formatted message to the console.
+func (inst Instance) Printf(format string, args ...interface{}) {
+	inst.logPrintf(PP_LOGLEVEL_LOG, format, args...)
+}
+
+// Errorf writes a formatted message to the console.
+func (inst Instance) Errorf(format string, args ...interface{}) {
+	inst.logPrintf(PP_LOGLEVEL_ERROR, format, args...)
 }

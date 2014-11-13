@@ -12,8 +12,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"runtime/ppapi"
 	"sync"
 )
@@ -160,12 +158,12 @@ func (inst *Instance) compute() {
 func (inst *Instance) flush() {
 	inst.g2d.PaintImageData(inst.imageData, ppapi.Point{}, nil)
 	if err := inst.g2d.Flush(); err != nil {
-		inst.LogString(ppapi.PP_LOGLEVEL_ERROR, fmt.Sprintf("Flush failed: %s", err))
+		inst.Errorf("Flush failed: %s", err)
 	}
 }
 
 func (inst *Instance) refresh(rect ppapi.Rect) {
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, fmt.Sprintf("refresh: size=%v", rect.Size))
+	inst.Printf("refresh: size=%v", rect.Size)
 	inst.mutex.Lock()
 	defer inst.mutex.Unlock()
 
@@ -178,24 +176,25 @@ func (inst *Instance) refresh(rect ppapi.Rect) {
 	inst.release()
 
 	// Create the Graphics2D context.
-	var err error
-	inst.g2d, err = inst.NewGraphics2D(rect.Size, false)
+	g2d, err := inst.NewGraphics2D(rect.Size, false)
 	if err != nil {
-		log.Printf("Failed to create 2D graphics: %s", err)
+		inst.Printf("Failed to create 2D graphics: %s", err)
 		return
 	}
-	if err := inst.BindGraphics2D(inst.g2d); err != nil {
-		log.Printf("Failed to bind 2D graphics: %s", err)
+	if err := inst.BindGraphics2D(g2d); err != nil {
+		inst.Printf("Failed to bind 2D graphics: %s", err)
+		g2d.Release()
 		return
 	}
+	inst.g2d = g2d
 	inst.imageData, err = inst.NewImageData(ppapi.PP_IMAGEDATAFORMAT_BGRA_PREMUL, rect.Size, true)
 	if err != nil {
-		log.Printf("Failed to create ImageData: %s", err)
+		inst.Printf("Failed to create ImageData: %s", err)
 		return
 	}
 	inst.pixelData, err = inst.imageData.Map()
 	if err != nil {
-		log.Printf("Failed to map ImageData: %s", err)
+		inst.Printf("Failed to map ImageData: %s", err)
 		return
 	}
 
@@ -206,7 +205,7 @@ func (inst *Instance) refresh(rect ppapi.Rect) {
 	inst.compute()
 	inst.flush()
 
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, "refresh: done")
+	inst.Printf("refresh: done")
 }
 
 func (inst *Instance) inputEventLoop() {
@@ -219,28 +218,29 @@ func (inst *Instance) inputEventLoop() {
 // recenter the image around the current mouse click position and zoom in a
 // little.
 func (inst *Instance) handleInputEvent(e ppapi.MouseInputEvent) {
+	inst.Printf("handleInputEvent: %v", e)
 	inst.mutex.Lock()
 	defer inst.mutex.Unlock()
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, fmt.Sprintf("MouseUpEvent: %v", e))
+	inst.Printf("MouseUpEvent: %v", e)
 	inst.mandel.recenter(e.Position)
 	inst.compute()
 	inst.flush()
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, "MouseUpEvent: done")
+	inst.Printf("MouseUpEvent: done")
 }
 
 // DidCreate is called when the instance is created.
 func (inst *Instance) DidCreate(args map[string]string) bool {
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, fmt.Sprintf("DidCreate: %v", args))
+	inst.Printf("DidCreate: %v", args)
 	inst.inputEventQueue = make(chan ppapi.MouseInputEvent, eventQueueSize)
 	inst.pending.Add(1)
 	go inst.inputEventLoop()
 	inst.RequestInputEvents(uint32(ppapi.PP_INPUTEVENT_TYPE_MOUSEUP))
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, "DidCreate: done")
+	inst.Printf("DidCreate: done")
 	return true
 }
 
 func (inst *Instance) DidDestroy() {
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, "DidDestroy")
+	inst.Printf("DidDestroy")
 	if inst.inputEventQueue == nil {
 		return
 	}
@@ -249,14 +249,14 @@ func (inst *Instance) DidDestroy() {
 }
 
 func (inst *Instance) DidChangeView(view ppapi.View) {
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, "DidChangeView")
+	inst.Printf("DidChangeView")
 	r, err := view.GetRect()
 	if err != nil {
-		inst.LogString(ppapi.PP_LOGLEVEL_ERROR, fmt.Sprintf("Can't get view rectangle: %s", err))
+		inst.Errorf("Can't get view rectangle: %s", err)
 		return
 	}
 	go inst.refresh(r)
-	inst.LogString(ppapi.PP_LOGLEVEL_LOG, "DidChangeView: done")
+	inst.Printf("DidChangeView: done")
 }
 
 func (*Instance) DidChangeFocus(has_focus bool) {
@@ -270,7 +270,7 @@ func (inst *Instance) HandleInputEvent(event ppapi.InputEvent) bool {
 	switch event.Type() {
 	case ppapi.PP_INPUTEVENT_TYPE_MOUSEUP:
 		e := event.MouseInputEvent()
-		inst.LogString(ppapi.PP_LOGLEVEL_LOG, fmt.Sprintf("HandleInputEvent: %v", e))
+		inst.Printf("HandleInputEvent: %v", e)
 		inst.inputEventQueue <- e
 		return true
 	}
