@@ -204,8 +204,6 @@ func (inst *Instance) refresh(rect ppapi.Rect) {
 	// Draw the image.
 	inst.compute()
 	inst.flush()
-
-	inst.Printf("refresh: done")
 }
 
 func (inst *Instance) inputEventLoop() {
@@ -218,14 +216,12 @@ func (inst *Instance) inputEventLoop() {
 // recenter the image around the current mouse click position and zoom in a
 // little.
 func (inst *Instance) handleInputEvent(e ppapi.MouseInputEvent) {
-	inst.Printf("handleInputEvent: %v", e)
 	inst.mutex.Lock()
 	defer inst.mutex.Unlock()
 	inst.Printf("MouseUpEvent: %v", e)
 	inst.mandel.recenter(e.Position)
 	inst.compute()
 	inst.flush()
-	inst.Printf("MouseUpEvent: done")
 }
 
 // DidCreate is called when the instance is created.
@@ -270,7 +266,6 @@ func (inst *Instance) HandleInputEvent(event ppapi.InputEvent) bool {
 	switch event.Type() {
 	case ppapi.PP_INPUTEVENT_TYPE_MOUSEUP:
 		e := event.MouseInputEvent()
-		inst.Printf("HandleInputEvent: %v", e)
 		inst.inputEventQueue <- e
 		return true
 	}
