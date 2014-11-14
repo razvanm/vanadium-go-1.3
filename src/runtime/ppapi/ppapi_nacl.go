@@ -68,9 +68,18 @@
 // the Javascript console, and how to debug NaCl applications using gdb.
 package ppapi
 
+import (
+	"fmt"
+	"runtime"
+)
+
 // Init is the main entry point to start PPAPI.  Never returns.  Call this
 // function at most once.
 func Init(factory func(inst Instance) InstanceHandlers) {
-	instanceFactory = factory
-	ppapi_start()
+	configureCallbackHandlers(factory)
+	// This is not supposed to return.
+	runtime.UnlockOSThread()
+	var c chan bool = make(chan bool)
+	fmt.Printf("Thread that called Init() going to sleep forever.")
+	<-c
 }

@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"strconv"
+	"strings"
 	"time"
 	"unsafe"
 )
@@ -95,12 +96,20 @@ func (resolver HostResolver) NetAddresses() []NetAddress {
 
 // ResolveNetAddress resolves a network address.
 func (inst Instance) ResolveNetAddress(network, addr string) (na NetAddress, err error) {
+	if strings.HasPrefix(addr, "[::]:") {
+		// TODO(bprosnitz) We really shouldn't have to do this. Chrome won't resolve the IPv6
+		// address for some reason. Fix this.
+		addr = strings.Replace(addr, "[::]:", "127.0.0.1:", 1)
+	}
 	host, strport, err := net.SplitHostPort(addr)
 	if err != nil {
+		panic(fmt.Sprintf("Failed to resolve 1 %s: %s", addr, err))
 		return
 	}
 	port, err := strconv.Atoi(strport)
 	if err != nil {
+		panic(fmt.Sprintf("Failed to resolve 2 %s: %s", addr, err))
+
 		return
 	}
 	var hint HostResolverHint
@@ -117,15 +126,19 @@ func (inst Instance) ResolveNetAddress(network, addr string) (na NetAddress, err
 	}
 	resolver, err := inst.CreateHostResolver()
 	if err != nil {
+		panic(fmt.Sprintf("Failed to resolve 3 %s: %s", addr, err))
+
 		return
 	}
 	defer resolver.Release()
 	if err = resolver.Resolve(host, uint16(port), &hint); err != nil {
+		panic(fmt.Sprintf("Failed to resolve 4 %s: %s", addr, err))
 		return
 	}
 	addrs := resolver.NetAddresses()
 	if len(addrs) == 0 {
 		err = errHostResolverFailed
+		panic(fmt.Sprintf("Failed to resolve 5 %s: %s", addr, err))
 		return
 	}
 	for _, addr := range addrs[1:] {
@@ -287,6 +300,7 @@ func (na NetAddress) UDPAddr() (addr *net.UDPAddr, err error) {
 // tcpSocket implements functions common to both dialed and lister sockets.
 type tcpSocket struct {
 	Resource
+	closed bool
 }
 
 // CreateTCPConn creates a fresh, unconnected socket.
@@ -421,6 +435,7 @@ func (inst Instance) DialTCP(net string, laddr, raddr *net.TCPAddr) (conn *TCPCo
 func (conn *TCPConn) Close() error {
 	ppb_tcpsocket_close(conn.id)
 	conn.Release()
+	conn.closed = true
 	return nil
 }
 
@@ -436,6 +451,9 @@ func (conn *TCPConn) RemoteAddr() net.Addr {
 
 // Read reads data from the connection.  Deadlines are not supported.
 func (conn *TCPConn) Read(buf []byte) (n int, err error) {
+	if conn.closed {
+		return 0, fmt.Errorf("Reading from closed connection")
+	}
 	code := ppb_tcpsocket_read(conn.id, &buf[0], int32(len(buf)), ppNullCompletionCallback)
 	if code < 0 {
 		err = decodeError(Error(code))
@@ -451,6 +469,9 @@ func (conn *TCPConn) Read(buf []byte) (n int, err error) {
 
 // Write writes data to the connection.  Deadlines are not supported.
 func (conn *TCPConn) Write(buf []byte) (n int, err error) {
+	if conn.closed {
+		return 0, fmt.Errorf("Writing to closed connection")
+	}
 	for len(buf) != 0 {
 		code := ppb_tcpsocket_write(conn.id, &buf[0], int32(len(buf)), ppNullCompletionCallback)
 		if code < 0 {
@@ -754,7 +775,7 @@ func (inst Instance) Dial(network, address string) (net.Conn, error) {
 		if err != nil {
 			return nil, err
 		}
-		return inst.DialUDP(network, nil, raddr)
+		return inst.DialUDP(network, &net.UDPAddr{IP: net.IP{0, 0, 0, 0}}, raddr)
 	default:
 		return nil, fmt.Errorf("unsupported network: %q", network)
 	}

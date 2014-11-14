@@ -514,8 +514,9 @@ func (file *FileIO) Open(ref FileRef, openFlags FileOpenFlag) error {
 // IO was interrupted. It is not valid to call Open() again after a call to this
 // method. Note: If the FileIO object is destroyed, and it is still open, then
 // it will be implicitly closed, so you are not required to call Close().
-func (file *FileIO) Close() {
+func (file *FileIO) Close() error {
 	ppb_fileio_close(file.id)
+	return nil
 }
 
 // Sync flushes changes to disk.

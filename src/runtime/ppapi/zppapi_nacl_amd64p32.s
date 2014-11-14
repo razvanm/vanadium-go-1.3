@@ -35,6 +35,7 @@
 //enum VarType PP_VARTYPE_
 //enum VideoFrameFormat PP_VIDEOFRAME_FORMAT_
 //enum WebSocketReadyState PP_WEBSOCKETREADYSTATE_
+//enum WebSocketCloseCode PP_WEBSOCKETSTATUSCODE_
 
 // type <C type name> <Machine type> [builtin if defined in Go]
 //type FloatPoint		struct[8] builtin
@@ -6270,7 +6271,8 @@ TEXT ppapi·start(SB),NOSPLIT,$8
 	CALL	AX
 	RET
 
-TEXT ·ppapi_start(SB),NOSPLIT,$8-0
+// Called from syscall package to initialize PPAPI.
+TEXT syscall·runtime_ppapi_InitPPAPI(SB),NOSPLIT,$8-0
 	NO_LOCAL_POINTERS
 	LEAL	ppapi·start(SB), AX
 	MOVL	AX, 0(SP)
@@ -6289,10 +6291,3 @@ TEXT ·gostringn(SB),NOSPLIT,$0
 
 TEXT ·free(SB),NOSPLIT,$0
 	JMP	runtime·cfree(SB)
-
-TEXT ·ppb_graphics2d_createx(SB),NOSPLIT,$8
-	GO_ARGS
-	MOVL	$22, rval+24(FP)
-	RET
-
-	

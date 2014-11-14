@@ -6,16 +6,24 @@ package ppapi
 
 import (
 	"sync"
+	"syscall"
+
+	"fmt"
 )
 
 var (
 	ppNullCompletionCallback pp_CompletionCallback
 
-	instanceFactory func(inst Instance) InstanceHandlers
+	ppapiInst     Instance
+	didCreateArgs map[string]string
+	handlers      InstanceHandlers
+
+	numInstances int
 
 	// Instance table.
 	instanceLock sync.Mutex
-	instances    = make(map[pp_Instance]InstanceHandlers)
+
+	deferredCallbacks []func()
 )
 
 // InstanceHandlers contains handlers that you must implement in your application.
@@ -180,119 +188,133 @@ type InstanceHandlers interface {
 	MouseLockLost()
 }
 
-// createInstanceHandlers creates a new handler for the instance.
-func createInstanceHandlers(id pp_Instance) InstanceHandlers {
-	if instanceFactory == nil {
-		panic("PPAPI is not initialized")
+// deferOrHandleCallback calls a callback or defers it if configureCallbackHandlers
+// has not yet been called.
+func deferOrHandleCallback(f func()) {
+	instanceLock.Lock()
+	if handlers != nil {
+		instanceLock.Unlock()
+		f()
+	} else {
+		deferredCallbacks = append(deferredCallbacks, f)
+		instanceLock.Unlock()
 	}
-	handler := instanceFactory(makeInstance(id))
-
-	instanceLock.Lock()
-	defer instanceLock.Unlock()
-	instances[id] = handler
-	return handler
 }
 
-// getInstanceHandlers returns the handler for an instance.
-func getInstanceHandlers(id pp_Instance) InstanceHandlers {
-	instanceLock.Lock()
-	defer instanceLock.Unlock()
-	handler, _ := instances[id]
-	return handler
-}
+// configureCallbackHandlers is called when the user calls Init()
+// (after the rest of the callbacks are set up). It sets the callback handlers
+// and calls any deferred callbacks.
+func configureCallbackHandlers(factory func(inst Instance) InstanceHandlers) InstanceHandlers {
+	fmt.Printf("Starting create instance handlers...")
+	h := factory(ppapiInst)
 
-// removeInstanceHandlers removes the handler, returning it.
-func removeInstanceHandlers(id pp_Instance) InstanceHandlers {
 	instanceLock.Lock()
-	handler, _ := instances[id]
-	delete(instances, id)
+	handlers = h
+	callbacks := deferredCallbacks
+	deferredCallbacks = nil
 	instanceLock.Unlock()
-	return handler
+
+	handlers.DidCreate(didCreateArgs)
+	for _, f := range callbacks {
+		f()
+	}
+	fmt.Printf("Exiting create instance handlers...")
+	return handlers
 }
 
-// Called from C.
+// Called from C. This is called when PPAPI is ready.
 func ppp_did_create(id pp_Instance, argc int32, argn, argv *[1 << 16]*byte) pp_Bool {
-	inst := createInstanceHandlers(id)
-	args := make(map[string]string)
-	for i := int32(0); i < argc; i++ {
-		key := gostring(argn[i])
-		value := gostring(argv[i])
-		args[key] = value
+	instanceLock.Lock()
+	numInstances++
+	if numInstances > 1 {
+		panic("Only a single instance is currently supported")
 	}
-	ok := inst.DidCreate(args)
-	return toPPBool(ok)
+	ppapiInst = makeInstance(id)
+	didCreateArgs = make(map[string]string)
+	for i := int32(0); i < argc; i++ {
+		didCreateArgs[gostring(argn[i])] = gostring(argv[i])
+	}
+	var syscallImpl = PPAPISyscallImpl{ppapiInst}
+	stdout.impl = syscallImpl
+	stderr.impl = syscallImpl
+
+	init_fds()
+	syscall.SetImplementation(syscallImpl)
+	instanceLock.Unlock()
+	return ppTrue
 }
 
 // Called from C.
 func ppp_did_destroy(id pp_Instance) {
-	inst := removeInstanceHandlers(id)
-	if inst == nil {
-		return
-	}
-	inst.DidDestroy()
+	syscall.Write(1, []byte("CALLBACK ppp_did_destroy"))
+	deferOrHandleCallback(func() {
+		instanceLock.Lock()
+		oldHandlers := handlers
+		handlers = nil
+		numInstances--
+		instanceLock.Unlock()
+		oldHandlers.DidDestroy()
+	})
 }
 
 // Called from C.
 func ppp_did_change_view(id pp_Instance, view pp_Resource) {
-	inst := getInstanceHandlers(id)
-	if inst == nil {
-		return
-	}
-	inst.DidChangeView(makeView(view))
+	syscall.Write(1, []byte("CALLBACK ppp_did_change_view"))
+	deferOrHandleCallback(func() {
+		handlers.DidChangeView(makeView(view))
+	})
 }
 
 // Called from C.
 func ppp_did_change_focus(id pp_Instance, hasFocus pp_Bool) {
-	inst := getInstanceHandlers(id)
-	if inst == nil {
-		return
-	}
-	inst.DidChangeFocus(fromPPBool(hasFocus))
+	syscall.Write(1, []byte("CALLBACK ppp_did_change_focus"))
+	deferOrHandleCallback(func() {
+		handlers.DidChangeFocus(fromPPBool(hasFocus))
+	})
 }
 
 // Called from C.
 func ppp_handle_document_load(id pp_Instance, urlLoader pp_Resource) pp_Bool {
-	inst := getInstanceHandlers(id)
-	if inst == nil {
-		return ppFalse
-	}
-	ok := inst.HandleDocumentLoad(makeResource(urlLoader))
-	return toPPBool(ok)
+	syscall.Write(1, []byte("CALLBACK ppp_handle_document_load: %v %v"))
+	result := ppTrue
+	deferOrHandleCallback(func() {
+		ok := handlers.HandleDocumentLoad(makeResource(urlLoader))
+		result = toPPBool(ok)
+	})
+	return result
 }
 
 // Called from C.
 func ppp_handle_input_event(id pp_Instance, event pp_Resource) pp_Bool {
-	inst := getInstanceHandlers(id)
-	if inst == nil {
-		return ppFalse
-	}
-	ok := inst.HandleInputEvent(makeInputEvent(event))
-	return toPPBool(ok)
+	syscall.Write(1, []byte("CALLBACK ppp_handle_input_event"))
+	result := ppTrue
+	deferOrHandleCallback(func() {
+		ok := handlers.HandleInputEvent(makeInputEvent(event))
+		result = toPPBool(ok)
+	})
+	return result
 }
 
 // Called from C.
 func ppp_graphics3d_context_lost(id pp_Instance) {
-	inst := getInstanceHandlers(id)
-	if inst == nil {
-		return
-	}
-	inst.Graphics3DContextLost()
+	syscall.Write(1, []byte("CALLBACK ppp_graphics3d_context_lost"))
+	deferOrHandleCallback(func() {
+		handlers.Graphics3DContextLost()
+	})
 }
 
 // Called from C.
 func ppp_handle_message(id pp_Instance, msg pp_Var) {
-	inst := getInstanceHandlers(id)
-	if inst == nil {
-		return
-	}
-	inst.HandleMessage(makeVar(msg))
+	syscall.Write(1, []byte("CALLBACK ppp_handle_message"))
+	deferOrHandleCallback(func() {
+		handlers.HandleMessage(makeVar(msg))
+	})
 }
 
 // Called from C.
 func ppp_mouse_lock_lost(id pp_Instance) {
-	inst := getInstanceHandlers(id)
-	if inst == nil {
-		return
-	}
-	inst.MouseLockLost()
+	syscall.Write(1, []byte("CALLBACK ppp_mouse_lock_lost"))
+	deferOrHandleCallback(func() {
+		handlers.MouseLockLost()
+	})
 }

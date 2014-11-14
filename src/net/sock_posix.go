@@ -145,8 +145,15 @@ func (fd *netFD) dial(laddr, raddr sockaddr, deadline time.Time) error {
 			return err
 		}
 	}
-	lsa, _ = syscall.Getsockname(fd.sysfd)
-	if rsa, _ = syscall.Getpeername(fd.sysfd); rsa != nil {
+	lsa, err = syscall.Getsockname(fd.sysfd)
+	if err != nil {
+		return err
+	}
+	rsa, err = syscall.Getpeername(fd.sysfd)
+	if err != nil {
+		return err
+	}
+	if rsa != nil {
 		fd.setAddr(fd.addrFunc()(lsa), fd.addrFunc()(rsa))
 	} else {
 		fd.setAddr(fd.addrFunc()(lsa), raddr)

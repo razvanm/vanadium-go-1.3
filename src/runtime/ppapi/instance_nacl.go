@@ -25,6 +25,11 @@ func (inst Instance) IsFullFrame() bool {
 	return ppb_instance_is_full_frame(inst.id) != 0
 }
 
+// PostMessage sends a message to the browser.
+func (inst Instance) PostMessage(v Var) {
+	ppb_messaging_post_message(inst.id, v.toPPVar())
+}
+
 // Log writes a message to the console.
 func (inst Instance) Log(level LogLevel, v Var) {
 	ppb_console_log(inst.id, level, v.toPPVar())

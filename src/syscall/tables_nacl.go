@@ -78,6 +78,25 @@ const (
 	sys_test_syscall_2       = 112
 )
 
+type Errno uintptr
+
+func (e Errno) Error() string {
+	if 0 <= int(e) && int(e) < len(errorstr) {
+		s := errorstr[e]
+		if s != "" {
+			return s
+		}
+	}
+	return "errno " + itoa(int(e))
+}
+
+func (e Errno) Temporary() bool {
+	panic(" not implemented")
+}
+func (e Errno) Timeout() bool {
+	panic(" not implemented")
+}
+
 // TODO: Auto-generate some day. (Hard-coded in binaries so not likely to change.)
 const (
 	// native_client/src/trusted/service_runtime/include/sys/errno.h

@@ -32,6 +32,7 @@
 //enum VarType PP_VARTYPE_
 //enum VideoFrameFormat PP_VIDEOFRAME_FORMAT_
 //enum WebSocketReadyState PP_WEBSOCKETREADYSTATE_
+//enum WebSocketCloseCode PP_WEBSOCKETSTATUSCODE_
 
 // type <C type name> <Machine type> [builtin if defined in Go]
 //type FloatPoint		struct[8] builtin
