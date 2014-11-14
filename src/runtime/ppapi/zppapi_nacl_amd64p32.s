@@ -91,8 +91,8 @@
 //func ppb_audiobuffer_get_data_buffer_size(resource pp_Resource) uint32 = PPB_AUDIO_BUFFER[8]
  
 //func ppb_audioconfig_create_stereo_16bit(instance pp_Instance, sample_rate uint32, sample_frame_count uint32) pp_Resource  = PPB_AUDIO_CONFIG[0]
-//func ppb_audioconfig_recommend_sample_frame_count(instance pp_Instance, sample_rate uint32, requested_sample_frame_count uint32) uint32  = PPB_AUDIO_CONFIG[1]
-//func ppb_audioconfig_is_audio_config(resource pp_Resource)  pp_Bool		= PPB_AUDIO_CONFIG[2]
+//func ppb_audioconfig_recommend_sample_frame_count(instance pp_Instance, sample_rate uint32, requested_sample_frame_count uint32) uint32 = PPB_AUDIO_CONFIG[1]
+//func ppb_audioconfig_is_audio_config(resource pp_Resource)  pp_Bool = PPB_AUDIO_CONFIG[2]
 //func ppb_audioconfig_get_sample_rate(resource pp_Resource) AudioSampleRate = PPB_AUDIO_CONFIG[3]
 //func ppb_audioconfig_get_sample_frame_count(resource pp_Resource) uint32 = PPB_AUDIO_CONFIG[4]
 //func ppb_audioconfig_recommend_sample_rate(instance pp_Instance) AudioSampleRate = PPB_AUDIO_CONFIG[5]
@@ -159,9 +159,9 @@
 //func ppb_graphics3d_resize_buffers(resource pp_Resource, width int32, height int32) int32 = PPB_GRAPHICS3D[6]
 
 //func ppb_hostresolver_create(instance pp_Instance) pp_Resource = PPB_HOST_RESOLVER[0]
-//func ppb_hostresolver_is_host_resolver(resource pp_Resource) pp_Bool	  = PPB_HOST_RESOLVER[1]
-//func ppb_hostresolver_resolve(resolver pp_Resource, host *byte, port uint16, hint *pp_HostResolverHint, cb pp_CompletionCallback) int32  = PPB_HOST_RESOLVER[2]
-//func ppb_hostresolver_get_canonical_name(resolver pp_Resource) pp_Var	       = PPB_HOST_RESOLVER[3]
+//func ppb_hostresolver_is_host_resolver(resource pp_Resource) pp_Bool = PPB_HOST_RESOLVER[1]
+//func ppb_hostresolver_resolve(resolver pp_Resource, host *byte, port uint16, hint *pp_HostResolverHint, cb pp_CompletionCallback) int32 = PPB_HOST_RESOLVER[2]
+//func ppb_hostresolver_get_canonical_name(resolver pp_Resource) pp_Var = PPB_HOST_RESOLVER[3]
 //func ppb_hostresolver_get_net_address_count(resolver pp_Resource) uint32 = PPB_HOST_RESOLVER[4]
 //func ppb_hostresolver_get_net_address(resolver pp_Resource, index uint32) pp_Resource = PPB_HOST_RESOLVER[5]
 
@@ -378,197 +378,71 @@
 // Callbacks are invoked through cgocallback.
 TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
 	LEAL	0(BP), AX
-	MOVL	AX, 20(SP)
-	MOVQ	BX, 24(SP)
-	MOVQ	R12, 32(SP)
-	MOVQ	R13, 40(SP)
-	MOVQ	R14, 48(SP)
-	MOVL	DI, 12(SP)
-	MOVL	$0, 16(SP)
+	MOVL	AX, 28(SP)
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	$0, 24(SP)
 	LEAL	·ppp_graphics3d_context_lost(SB), AX
 	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
+	LEAL	16(SP), AX
 	MOVL	AX, 4(SP)
-	MOVL	$8, 8(SP)
+	MOVL	$12, 8(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVL	16(SP), AX
-	MOVL	20(SP), BX
+	MOVL	24(SP), AX
+	MOVL	28(SP), BX
 	LEAL	0(BX), BP
-	MOVQ	24(SP), BX
-	MOVQ	32(SP), R12
-	MOVQ	40(SP), R13
-	MOVQ	48(SP), R14
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
 	RET
 
 TEXT ppapi·ppp_handle_input_event(SB),NOSPLIT,$64
 	LEAL	0(BP), AX
-	MOVL	AX, 24(SP)
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
-	MOVL	DI, 12(SP)
-	MOVL	SI, 16(SP)
-	MOVL	$0, 20(SP)
+	MOVL	AX, 28(SP)
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	$0, 24(SP)
 	LEAL	·ppp_handle_input_event(SB), AX
 	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
+	LEAL	16(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	$12, 8(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVL	20(SP), AX
-	MOVL	24(SP), BX
+	MOVL	24(SP), AX
+	MOVL	28(SP), BX
 	LEAL	0(BX), BP
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
 	RET
 
 TEXT ppapi·ppp_did_create(SB),NOSPLIT,$80
-	LEAL	0(BP), AX
-	MOVL	AX, 32(SP)
-	MOVQ	BX, 36(SP)
-	MOVQ	R12, 44(SP)
-	MOVQ	R13, 52(SP)
-	MOVQ	R14, 60(SP)
-	MOVL	DI, 12(SP)
-	MOVL	SI, 16(SP)
-	MOVL	DX, 20(SP)
-	MOVL	CX, 24(SP)
-	MOVL	$0, 28(SP)
-	LEAL	·ppp_did_create(SB), AX
-	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
-	MOVL	AX, 4(SP)
-	MOVL	$20, 8(SP)
-	CALL	runtime·cgocallback(SB)
-	MOVL	28(SP), AX
-	MOVL	32(SP), BX
-	LEAL	0(BX), BP
-	MOVQ	36(SP), BX
-	MOVQ	44(SP), R12
-	MOVQ	52(SP), R13
-	MOVQ	60(SP), R14
-	RET
-
-TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
-	LEAL	0(BP), AX
-	MOVL	AX, 20(SP)
-	MOVQ	BX, 24(SP)
-	MOVQ	R12, 32(SP)
-	MOVQ	R13, 40(SP)
-	MOVQ	R14, 48(SP)
-	MOVL	DI, 12(SP)
-	MOVL	$0, 16(SP)
-	LEAL	·ppp_did_destroy(SB), AX
-	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
-	MOVL	AX, 4(SP)
-	MOVL	$8, 8(SP)
-	CALL	runtime·cgocallback(SB)
-	MOVL	16(SP), AX
-	MOVL	20(SP), BX
-	LEAL	0(BX), BP
-	MOVQ	24(SP), BX
-	MOVQ	32(SP), R12
-	MOVQ	40(SP), R13
-	MOVQ	48(SP), R14
-	RET
-
-TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
-	LEAL	0(BP), AX
-	MOVL	AX, 24(SP)
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
-	MOVL	DI, 12(SP)
-	MOVL	SI, 16(SP)
-	MOVL	$0, 20(SP)
-	LEAL	·ppp_did_change_view(SB), AX
-	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
-	MOVL	AX, 4(SP)
-	MOVL	$12, 8(SP)
-	CALL	runtime·cgocallback(SB)
-	MOVL	20(SP), AX
-	MOVL	24(SP), BX
-	LEAL	0(BX), BP
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
-	RET
-
-TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
-	LEAL	0(BP), AX
-	MOVL	AX, 24(SP)
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
-	MOVL	DI, 12(SP)
-	MOVL	SI, 16(SP)
-	MOVL	$0, 20(SP)
-	LEAL	·ppp_did_change_focus(SB), AX
-	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
-	MOVL	AX, 4(SP)
-	MOVL	$12, 8(SP)
-	CALL	runtime·cgocallback(SB)
-	MOVL	20(SP), AX
-	MOVL	24(SP), BX
-	LEAL	0(BX), BP
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
-	RET
-
-TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
-	LEAL	0(BP), AX
-	MOVL	AX, 24(SP)
-	MOVQ	BX, 28(SP)
-	MOVQ	R12, 36(SP)
-	MOVQ	R13, 44(SP)
-	MOVQ	R14, 52(SP)
-	MOVL	DI, 12(SP)
-	MOVL	SI, 16(SP)
-	MOVL	$0, 20(SP)
-	LEAL	·ppp_handle_document_load(SB), AX
-	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
-	MOVL	AX, 4(SP)
-	MOVL	$12, 8(SP)
-	CALL	runtime·cgocallback(SB)
-	MOVL	20(SP), AX
-	MOVL	24(SP), BX
-	LEAL	0(BX), BP
-	MOVQ	28(SP), BX
-	MOVQ	36(SP), R12
-	MOVQ	44(SP), R13
-	MOVQ	52(SP), R14
-	RET
-
-TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
 	LEAL	0(BP), AX
 	MOVL	AX, 36(SP)
 	MOVQ	BX, 40(SP)
 	MOVQ	R12, 48(SP)
 	MOVQ	R13, 56(SP)
 	MOVQ	R14, 64(SP)
-	MOVL	DI, 12(SP)
-	MOVL	SI, 16(SP)
-	MOVL	DX, 20(SP)
-	MOVL	CX, 24(SP)
-	MOVL	R8, 28(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	DX, 24(SP)
+	MOVL	CX, 28(SP)
 	MOVL	$0, 32(SP)
-	LEAL	·ppp_handle_message(SB), AX
+	LEAL	·ppp_did_create(SB), AX
 	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
+	LEAL	16(SP), AX
 	MOVL	AX, 4(SP)
-	MOVL	$24, 8(SP)
+	MOVL	$20, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	32(SP), AX
 	MOVL	36(SP), BX
@@ -579,46 +453,21 @@ TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
 	MOVQ	64(SP), R14
 	RET
 
-TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
-	LEAL	0(BP), AX
-	MOVL	AX, 20(SP)
-	MOVQ	BX, 24(SP)
-	MOVQ	R12, 32(SP)
-	MOVQ	R13, 40(SP)
-	MOVQ	R14, 48(SP)
-	MOVL	DI, 12(SP)
-	MOVL	$0, 16(SP)
-	LEAL	·ppp_mouse_lock_lost(SB), AX
-	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
-	MOVL	AX, 4(SP)
-	MOVL	$8, 8(SP)
-	CALL	runtime·cgocallback(SB)
-	MOVL	16(SP), AX
-	MOVL	20(SP), BX
-	LEAL	0(BX), BP
-	MOVQ	24(SP), BX
-	MOVQ	32(SP), R12
-	MOVQ	40(SP), R13
-	MOVQ	48(SP), R14
-	RET
-
-TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$64
+TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
 	LEAL	0(BP), AX
 	MOVL	AX, 28(SP)
 	MOVQ	BX, 32(SP)
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 12(SP)
-	MOVL	SI, 16(SP)
-	MOVL	DX, 20(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
 	MOVL	$0, 24(SP)
-	LEAL	·get_array_output_buffer(SB), AX
+	LEAL	·ppp_did_destroy(SB), AX
 	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
+	LEAL	16(SP), AX
 	MOVL	AX, 4(SP)
-	MOVL	$16, 8(SP)
+	MOVL	$12, 8(SP)
 	CALL	runtime·cgocallback(SB)
 	MOVL	24(SP), AX
 	MOVL	28(SP), BX
@@ -627,6 +476,162 @@ TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$64
 	MOVQ	40(SP), R12
 	MOVQ	48(SP), R13
 	MOVQ	56(SP), R14
+	RET
+
+TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
+	LEAL	0(BP), AX
+	MOVL	AX, 28(SP)
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	$0, 24(SP)
+	LEAL	·ppp_did_change_view(SB), AX
+	MOVL	AX, 0(SP)
+	LEAL	16(SP), AX
+	MOVL	AX, 4(SP)
+	MOVL	$12, 8(SP)
+	CALL	runtime·cgocallback(SB)
+	MOVL	24(SP), AX
+	MOVL	28(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
+	RET
+
+TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
+	LEAL	0(BP), AX
+	MOVL	AX, 28(SP)
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	$0, 24(SP)
+	LEAL	·ppp_did_change_focus(SB), AX
+	MOVL	AX, 0(SP)
+	LEAL	16(SP), AX
+	MOVL	AX, 4(SP)
+	MOVL	$12, 8(SP)
+	CALL	runtime·cgocallback(SB)
+	MOVL	24(SP), AX
+	MOVL	28(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
+	RET
+
+TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
+	LEAL	0(BP), AX
+	MOVL	AX, 28(SP)
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	$0, 24(SP)
+	LEAL	·ppp_handle_document_load(SB), AX
+	MOVL	AX, 0(SP)
+	LEAL	16(SP), AX
+	MOVL	AX, 4(SP)
+	MOVL	$12, 8(SP)
+	CALL	runtime·cgocallback(SB)
+	MOVL	24(SP), AX
+	MOVL	28(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
+	RET
+
+TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
+	LEAL	0(BP), AX
+	MOVL	AX, 44(SP)
+	MOVQ	BX, 48(SP)
+	MOVQ	R12, 56(SP)
+	MOVQ	R13, 64(SP)
+	MOVQ	R14, 72(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	DX, 24(SP)
+	MOVL	CX, 28(SP)
+	MOVL	R8, 32(SP)
+	MOVL	R9, 36(SP)
+	MOVL	$0, 40(SP)
+	LEAL	·ppp_handle_message(SB), AX
+	MOVL	AX, 0(SP)
+	LEAL	16(SP), AX
+	MOVL	AX, 4(SP)
+	MOVL	$28, 8(SP)
+	CALL	runtime·cgocallback(SB)
+	MOVL	40(SP), AX
+	MOVL	44(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	48(SP), BX
+	MOVQ	56(SP), R12
+	MOVQ	64(SP), R13
+	MOVQ	72(SP), R14
+	RET
+
+TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
+	LEAL	0(BP), AX
+	MOVL	AX, 28(SP)
+	MOVQ	BX, 32(SP)
+	MOVQ	R12, 40(SP)
+	MOVQ	R13, 48(SP)
+	MOVQ	R14, 56(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	$0, 24(SP)
+	LEAL	·ppp_mouse_lock_lost(SB), AX
+	MOVL	AX, 0(SP)
+	LEAL	16(SP), AX
+	MOVL	AX, 4(SP)
+	MOVL	$12, 8(SP)
+	CALL	runtime·cgocallback(SB)
+	MOVL	24(SP), AX
+	MOVL	28(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	32(SP), BX
+	MOVQ	40(SP), R12
+	MOVQ	48(SP), R13
+	MOVQ	56(SP), R14
+	RET
+
+TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$80
+	LEAL	0(BP), AX
+	MOVL	AX, 36(SP)
+	MOVQ	BX, 40(SP)
+	MOVQ	R12, 48(SP)
+	MOVQ	R13, 56(SP)
+	MOVQ	R14, 64(SP)
+	MOVL	DI, 16(SP)
+	MOVL	SI, 20(SP)
+	MOVL	DX, 24(SP)
+	MOVL	CX, 28(SP)
+	MOVL	$0, 32(SP)
+	LEAL	·get_array_output_buffer(SB), AX
+	MOVL	AX, 0(SP)
+	LEAL	16(SP), AX
+	MOVL	AX, 4(SP)
+	MOVL	$20, 8(SP)
+	CALL	runtime·cgocallback(SB)
+	MOVL	32(SP), AX
+	MOVL	36(SP), BX
+	LEAL	0(BX), BP
+	MOVQ	40(SP), BX
+	MOVQ	48(SP), R12
+	MOVQ	56(SP), R13
+	MOVQ	64(SP), R14
 	RET
 
 
@@ -1294,19 +1299,19 @@ TEXT ·ppb_fileio_touch(SB),NOSPLIT,$8
 	RET
 
 // Called on the C stack.
-TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$40
+TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$56
 	MOVL	DI, AX
-	MOVL	AX, 36(SP)
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // file_io
-	MOVSD	4(AX), X0  // last_access_time
-	MOVSD	12(AX), X1  // last_modified_time
-	MOVQ	20(AX), SI  // cb (sizeof 12)
-	MOVL	28(AX), DX
+	MOVSD	8(AX), X0  // last_access_time
+	MOVSD	16(AX), X1  // last_modified_time
+	MOVQ	24(AX), SI  // cb (sizeof 12)
+	MOVL	32(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	36(SP), DI
-	MOVL	AX, 32(DI)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
@@ -1319,20 +1324,20 @@ TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
 	RET
 
 // Called on the C stack.
-TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$40
+TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$56
 	MOVL	DI, AX
-	MOVL	AX, 36(SP)
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // file_io
-	MOVQ	4(AX), SI  // offset
-	MOVL	12(AX), DX  // buf
-	MOVL	16(AX), CX  // bytes_to_write
-	MOVQ	20(AX), R8  // cb (sizeof 12)
-	MOVL	28(AX), R9
+	MOVQ	8(AX), SI  // offset
+	MOVL	16(AX), DX  // buf
+	MOVL	20(AX), CX  // bytes_to_write
+	MOVQ	24(AX), R8  // cb (sizeof 12)
+	MOVL	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	36(SP), DI
-	MOVL	AX, 32(DI)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
@@ -1345,20 +1350,20 @@ TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
 	RET
 
 // Called on the C stack.
-TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$40
+TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$56
 	MOVL	DI, AX
-	MOVL	AX, 36(SP)
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // file_io
-	MOVQ	4(AX), SI  // offset
-	MOVL	12(AX), DX  // buf
-	MOVL	16(AX), CX  // bytes_to_write
-	MOVQ	20(AX), R8  // cb (sizeof 12)
-	MOVL	28(AX), R9
+	MOVQ	8(AX), SI  // offset
+	MOVL	16(AX), DX  // buf
+	MOVL	20(AX), CX  // bytes_to_write
+	MOVQ	24(AX), R8  // cb (sizeof 12)
+	MOVL	32(AX), R9
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	36(SP), DI
-	MOVL	AX, 32(DI)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
@@ -1375,14 +1380,14 @@ TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$40
 	MOVL	DI, AX
 	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // file_io
-	MOVQ	4(AX), SI  // length
-	MOVQ	12(AX), DX  // cb (sizeof 12)
-	MOVL	20(AX), CX
+	MOVQ	8(AX), SI  // length
+	MOVQ	16(AX), DX  // cb (sizeof 12)
+	MOVL	24(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
 	MOVL	36(SP), DI
-	MOVL	AX, 24(DI)
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_fileio_flush(SB),NOSPLIT,$8
@@ -1596,19 +1601,19 @@ TEXT ·ppb_fileref_touch(SB),NOSPLIT,$8
 	RET
 
 // Called on the C stack.
-TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$40
+TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$56
 	MOVL	DI, AX
-	MOVL	AX, 36(SP)
+	MOVL	AX, 52(SP)
 	MOVL	0(AX), DI  // file_ref
-	MOVSD	4(AX), X0  // atime
-	MOVSD	12(AX), X1  // mtime
-	MOVQ	20(AX), SI  // cb (sizeof 12)
-	MOVL	28(AX), DX
+	MOVSD	8(AX), X0  // atime
+	MOVSD	16(AX), X1  // mtime
+	MOVQ	24(AX), SI  // cb (sizeof 12)
+	MOVL	32(AX), DX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	36(SP), DI
-	MOVL	AX, 32(DI)
+	MOVL	52(SP), DI
+	MOVL	AX, 40(DI)
 	RET
 
 TEXT ·ppb_fileref_delete(SB),NOSPLIT,$8
@@ -1763,14 +1768,14 @@ TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$40
 	MOVL	DI, AX
 	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // resource
-	MOVQ	4(AX), SI  // expected_size
-	MOVQ	12(AX), DX  // cb (sizeof 12)
-	MOVL	20(AX), CX
+	MOVQ	8(AX), SI  // expected_size
+	MOVQ	16(AX), DX  // cb (sizeof 12)
+	MOVL	24(AX), CX
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
 	MOVL	36(SP), DI
-	MOVL	AX, 24(DI)
+	MOVL	AX, 32(DI)
 	RET
 
 TEXT ·ppb_filesystem_get_type(SB),NOSPLIT,$8
@@ -5508,7 +5513,7 @@ TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$24
 	MOVL	DI, AX
 	MOVL	AX, 20(SP)
 	MOVL	0(AX), DI  // frame
-	MOVSD	4(AX), X0  // timestamp
+	MOVSD	8(AX), X0  // timestamp
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
@@ -6112,11 +6117,11 @@ TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$40
 	MOVL	DI, AX
 	MOVL	AX, 36(SP)
 	MOVL	0(AX), DI  // instance
-	MOVSD	4(AX), X0  // time_stamp
-	MOVL	12(AX), SI  // modifiers
-	MOVL	16(AX), DX  // wheel_delta
-	MOVL	20(AX), CX  // wheel_tick
-	MOVL	24(AX), R8  // scroll_by_page
+	MOVSD	8(AX), X0  // time_stamp
+	MOVL	16(AX), SI  // modifiers
+	MOVL	20(AX), DX  // wheel_delta
+	MOVL	24(AX), CX  // wheel_tick
+	MOVL	28(AX), R8  // scroll_by_page
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX

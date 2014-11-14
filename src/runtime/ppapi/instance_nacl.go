@@ -35,8 +35,8 @@ func (inst Instance) LogWithSource(level LogLevel, src Var, v Var) {
 	ppb_console_log_with_source(inst.id, level, src.toPPVar(), v.toPPVar())
 }
 
-// LogPrintf writes a formatted message to the console.
-func (inst Instance) logPrintf(level LogLevel, format string, args ...interface{}) {
+// Logf writes a formatted message to the console.
+func (inst Instance) Logf(level LogLevel, format string, args ...interface{}) {
 	_, file, line, _ := runtime.Caller(2)
 	loc := VarFromString(fmt.Sprintf("%s:%d", file, line))
 	v := VarFromString(fmt.Sprintf(format, args...))
@@ -47,10 +47,15 @@ func (inst Instance) logPrintf(level LogLevel, format string, args ...interface{
 
 // Printf writes a formatted message to the console.
 func (inst Instance) Printf(format string, args ...interface{}) {
-	inst.logPrintf(PP_LOGLEVEL_LOG, format, args...)
+	inst.Logf(PP_LOGLEVEL_LOG, format, args...)
+}
+
+// Warningf writes a formatted message to the console.
+func (inst Instance) Warningf(format string, args ...interface{}) {
+	inst.Logf(PP_LOGLEVEL_WARNING, format, args...)
 }
 
 // Errorf writes a formatted message to the console.
 func (inst Instance) Errorf(format string, args ...interface{}) {
-	inst.logPrintf(PP_LOGLEVEL_ERROR, format, args...)
+	inst.Logf(PP_LOGLEVEL_ERROR, format, args...)
 }

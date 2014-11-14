@@ -58,6 +58,9 @@
     {%- set ty = arg.type -%}
     {%- set kind = ty.kind -%}
     {%- set size = ty.size -%}
+    {%- if ty.align > 0 %}
+      {%- set ain = align(ain, ty.align) -%}
+    {%- endif -%}
     {%- if kind == 'float32' and fregs.__len__() >= 1 %}
 	MOVSS	{{ain}}(AX), {{fregs[0]}}  // {{arg.name}}
 	{%- set fregs = fregs[1:] -%}
@@ -92,50 +95,50 @@
 
 // Callbacks are invoked through cgocallback.
 {% for func in callbacks -%}
-{% set fsize = framesize(func) -%}
-TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+52,16)}}
+{% set fsize = align(framesize(func),8) -%}
+TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+56,16)}}
 	LEAL	0(BP), AX
-	MOVL	AX, {{fsize+16}}(SP)
-	MOVQ	BX, {{fsize+20}}(SP)
-	MOVQ	R12, {{fsize+28}}(SP)
-	MOVQ	R13, {{fsize+36}}(SP)
-	MOVQ	R14, {{fsize+44}}(SP)
+	MOVL	AX, {{fsize+20}}(SP)
+	MOVQ	BX, {{fsize+24}}(SP)
+	MOVQ	R12, {{fsize+32}}(SP)
+	MOVQ	R13, {{fsize+40}}(SP)
+	MOVQ	R14, {{fsize+48}}(SP)
 	{% if fsize > 0 -%}
-	MOVL	DI, 12(SP)
+	MOVL	DI, 16(SP)
 	{% endif -%}
 	{% if fsize > 4 -%}
-	MOVL	SI, 16(SP)
+	MOVL	SI, 20(SP)
 	{% endif -%}
 	{% if fsize > 8 -%}
-	MOVL	DX, 20(SP)
+	MOVL	DX, 24(SP)
 	{% endif -%}
 	{% if fsize > 12 -%}
-	MOVL	CX, 24(SP)
+	MOVL	CX, 28(SP)
 	{% endif -%}
 	{% if fsize > 16 -%}
-	MOVL	R8, 28(SP)
+	MOVL	R8, 32(SP)
 	{% endif -%}
 	{% if fsize > 20 -%}
-	MOVL	R0, 32(SP)
+	MOVL	R9, 36(SP)
 	{% endif -%}
-	{% for aoff in range(32, fsize, 4) -%}
-	MOVL	arg{{aoff/4}}+{{aoff-32}}(FP), AX
-	MOVL	AX, {{aoff}}(SP)
+	{% for aoff in range(24, fsize, 4) -%}
+	MOVL	arg{{aoff/4}}+{{aoff-24}}(FP), AX
+	MOVL	AX, {{aoff+12}}(SP)
 	{% endfor -%}
-	MOVL	$0, {{fsize+12}}(SP)
+	MOVL	$0, {{fsize+16}}(SP)
 	LEAL	·{{func.name}}(SB), AX
 	MOVL	AX, 0(SP)
-	LEAL	12(SP), AX
+	LEAL	16(SP), AX
 	MOVL	AX, 4(SP)
 	MOVL	${{fsize+4}}, 8(SP)
 	CALL	runtime·cgocallback(SB)
-	MOVL	{{fsize+12}}(SP), AX
-	MOVL	{{fsize+16}}(SP), BX
+	MOVL	{{fsize+16}}(SP), AX
+	MOVL	{{fsize+20}}(SP), BX
 	LEAL	0(BX), BP
-	MOVQ	{{fsize+20}}(SP), BX
-	MOVQ	{{fsize+28}}(SP), R12
-	MOVQ	{{fsize+36}}(SP), R13
-	MOVQ	{{fsize+44}}(SP), R14
+	MOVQ	{{fsize+24}}(SP), BX
+	MOVQ	{{fsize+32}}(SP), R12
+	MOVQ	{{fsize+40}}(SP), R13
+	MOVQ	{{fsize+48}}(SP), R14
 	RET
 
 {% endfor %}

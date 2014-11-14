@@ -156,3 +156,15 @@ void *ppapi·ppp_get_interface(int8 *interface_name) {
 	}
 	return 0;
 }
+
+// C array allocator.
+struct ppapi·ArrayOutput {
+	void *(*get_data_buffer)(void *user_data, uint32 count, uint32 size);
+	void *user_data;
+};
+
+#pragma textflag NOSPLIT
+void ·init_array_output(struct ppapi·ArrayOutput *aout, void *alloc) {
+	aout->get_data_buffer = ppapi·get_array_output_buffer;
+	aout->user_data = alloc;
+}

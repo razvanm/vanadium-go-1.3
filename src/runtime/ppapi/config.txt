@@ -88,8 +88,8 @@
 //func ppb_audiobuffer_get_data_buffer_size(resource pp_Resource) uint32 = PPB_AUDIO_BUFFER[8]
  
 //func ppb_audioconfig_create_stereo_16bit(instance pp_Instance, sample_rate uint32, sample_frame_count uint32) pp_Resource  = PPB_AUDIO_CONFIG[0]
-//func ppb_audioconfig_recommend_sample_frame_count(instance pp_Instance, sample_rate uint32, requested_sample_frame_count uint32) uint32  = PPB_AUDIO_CONFIG[1]
-//func ppb_audioconfig_is_audio_config(resource pp_Resource)  pp_Bool		= PPB_AUDIO_CONFIG[2]
+//func ppb_audioconfig_recommend_sample_frame_count(instance pp_Instance, sample_rate uint32, requested_sample_frame_count uint32) uint32 = PPB_AUDIO_CONFIG[1]
+//func ppb_audioconfig_is_audio_config(resource pp_Resource)  pp_Bool = PPB_AUDIO_CONFIG[2]
 //func ppb_audioconfig_get_sample_rate(resource pp_Resource) AudioSampleRate = PPB_AUDIO_CONFIG[3]
 //func ppb_audioconfig_get_sample_frame_count(resource pp_Resource) uint32 = PPB_AUDIO_CONFIG[4]
 //func ppb_audioconfig_recommend_sample_rate(instance pp_Instance) AudioSampleRate = PPB_AUDIO_CONFIG[5]
@@ -156,9 +156,9 @@
 //func ppb_graphics3d_resize_buffers(resource pp_Resource, width int32, height int32) int32 = PPB_GRAPHICS3D[6]
 
 //func ppb_hostresolver_create(instance pp_Instance) pp_Resource = PPB_HOST_RESOLVER[0]
-//func ppb_hostresolver_is_host_resolver(resource pp_Resource) pp_Bool	  = PPB_HOST_RESOLVER[1]
-//func ppb_hostresolver_resolve(resolver pp_Resource, host *byte, port uint16, hint *pp_HostResolverHint, cb pp_CompletionCallback) int32  = PPB_HOST_RESOLVER[2]
-//func ppb_hostresolver_get_canonical_name(resolver pp_Resource) pp_Var	       = PPB_HOST_RESOLVER[3]
+//func ppb_hostresolver_is_host_resolver(resource pp_Resource) pp_Bool = PPB_HOST_RESOLVER[1]
+//func ppb_hostresolver_resolve(resolver pp_Resource, host *byte, port uint16, hint *pp_HostResolverHint, cb pp_CompletionCallback) int32 = PPB_HOST_RESOLVER[2]
+//func ppb_hostresolver_get_canonical_name(resolver pp_Resource) pp_Var = PPB_HOST_RESOLVER[3]
 //func ppb_hostresolver_get_net_address_count(resolver pp_Resource) uint32 = PPB_HOST_RESOLVER[4]
 //func ppb_hostresolver_get_net_address(resolver pp_Resource, index uint32) pp_Resource = PPB_HOST_RESOLVER[5]
 

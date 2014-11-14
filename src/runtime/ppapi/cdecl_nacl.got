@@ -52,5 +52,8 @@ func gostringn(s *byte, i int) string
 // free releases a value allocated by malloc.
 func free(p *byte)
 
+// init_array_output initializes the pp_ArrayOutput allocator.
+func init_array_output(*pp_ArrayOutput, *arrayOutputBuffer)
+
 // ppapi_start starts the main loop.
 func ppapi_start()
