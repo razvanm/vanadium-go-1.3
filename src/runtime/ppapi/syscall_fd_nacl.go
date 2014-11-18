@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"math/rand"
+	"runtime"
 	"strings"
 	"sync"
 	"syscall"
@@ -367,6 +368,8 @@ func (*consoleLogFile) read([]byte) (int, error) {
 	panic("Cannot read from log file")
 }
 func (c *consoleLogFile) writeLine(b []byte) (int, error) {
+	_, file, line, _ := runtime.Caller(3)
+	loc := fmt.Sprintf("%s:%d", file, line)
 	// Unfortunately nacl truncates logs at 128 chars.
 	batchSize := 128
 	for i := 0; i*batchSize < len(b); i++ {
@@ -375,7 +378,7 @@ func (c *consoleLogFile) writeLine(b []byte) (int, error) {
 		if max > len(b) {
 			max = len(b)
 		}
-		c.impl.Instance.Logf(c.logLevel, "%s", string(b[min:max]))
+		c.impl.Instance.LogWithSourceString(c.logLevel, loc, string(b[min:max]))
 	}
 	return len(b), nil
 }

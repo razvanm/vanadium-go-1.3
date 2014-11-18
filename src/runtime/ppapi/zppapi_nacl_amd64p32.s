@@ -376,6 +376,7 @@
 
 
 
+
 // Callbacks are invoked through cgocallback.
 TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
 	LEAL	0(BP), AX
@@ -384,8 +385,7 @@ TEXT ppapi·ppp_graphics3d_context_lost(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
+	MOVL	DI, 16(SP)  // instance
 	MOVL	$0, 24(SP)
 	LEAL	·ppp_graphics3d_context_lost(SB), AX
 	MOVL	AX, 0(SP)
@@ -409,8 +409,8 @@ TEXT ppapi·ppp_handle_input_event(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
+	MOVL	DI, 16(SP)  // instance
+	MOVL	SI, 20(SP)  // event
 	MOVL	$0, 24(SP)
 	LEAL	·ppp_handle_input_event(SB), AX
 	MOVL	AX, 0(SP)
@@ -434,10 +434,10 @@ TEXT ppapi·ppp_did_create(SB),NOSPLIT,$80
 	MOVQ	R12, 48(SP)
 	MOVQ	R13, 56(SP)
 	MOVQ	R14, 64(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
-	MOVL	DX, 24(SP)
-	MOVL	CX, 28(SP)
+	MOVL	DI, 16(SP)  // instance
+	MOVL	SI, 20(SP)  // argc
+	MOVL	DX, 24(SP)  // argn
+	MOVL	CX, 28(SP)  // argv
 	MOVL	$0, 32(SP)
 	LEAL	·ppp_did_create(SB), AX
 	MOVL	AX, 0(SP)
@@ -461,8 +461,7 @@ TEXT ppapi·ppp_did_destroy(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
+	MOVL	DI, 16(SP)  // instance
 	MOVL	$0, 24(SP)
 	LEAL	·ppp_did_destroy(SB), AX
 	MOVL	AX, 0(SP)
@@ -486,8 +485,8 @@ TEXT ppapi·ppp_did_change_view(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
+	MOVL	DI, 16(SP)  // instance
+	MOVL	SI, 20(SP)  // view
 	MOVL	$0, 24(SP)
 	LEAL	·ppp_did_change_view(SB), AX
 	MOVL	AX, 0(SP)
@@ -511,8 +510,8 @@ TEXT ppapi·ppp_did_change_focus(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
+	MOVL	DI, 16(SP)  // instance
+	MOVL	SI, 20(SP)  // has_focus
 	MOVL	$0, 24(SP)
 	LEAL	·ppp_did_change_focus(SB), AX
 	MOVL	AX, 0(SP)
@@ -536,8 +535,8 @@ TEXT ppapi·ppp_handle_document_load(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
+	MOVL	DI, 16(SP)  // instance
+	MOVL	SI, 20(SP)  // url_loader
 	MOVL	$0, 24(SP)
 	LEAL	·ppp_handle_document_load(SB), AX
 	MOVL	AX, 0(SP)
@@ -561,12 +560,9 @@ TEXT ppapi·ppp_handle_message(SB),NOSPLIT,$80
 	MOVQ	R12, 56(SP)
 	MOVQ	R13, 64(SP)
 	MOVQ	R14, 72(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
-	MOVL	DX, 24(SP)
-	MOVL	CX, 28(SP)
-	MOVL	R8, 32(SP)
-	MOVL	R9, 36(SP)
+	MOVL	DI, 16(SP)  // instance
+	MOVQ	SI, 20(SP)  // msg (sizeof 16)
+	MOVQ	DX, 28(SP)
 	MOVL	$0, 40(SP)
 	LEAL	·ppp_handle_message(SB), AX
 	MOVL	AX, 0(SP)
@@ -590,8 +586,7 @@ TEXT ppapi·ppp_mouse_lock_lost(SB),NOSPLIT,$64
 	MOVQ	R12, 40(SP)
 	MOVQ	R13, 48(SP)
 	MOVQ	R14, 56(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
+	MOVL	DI, 16(SP)  // instance
 	MOVL	$0, 24(SP)
 	LEAL	·ppp_mouse_lock_lost(SB), AX
 	MOVL	AX, 0(SP)
@@ -615,10 +610,9 @@ TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$80
 	MOVQ	R12, 48(SP)
 	MOVQ	R13, 56(SP)
 	MOVQ	R14, 64(SP)
-	MOVL	DI, 16(SP)
-	MOVL	SI, 20(SP)
-	MOVL	DX, 24(SP)
-	MOVL	CX, 28(SP)
+	MOVL	DI, 16(SP)  // void
+	MOVL	SI, 20(SP)  // count
+	MOVL	DX, 24(SP)  // size
 	MOVL	$0, 32(SP)
 	LEAL	·get_array_output_buffer(SB), AX
 	MOVL	AX, 0(SP)

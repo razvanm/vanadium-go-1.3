@@ -15,6 +15,12 @@
     function moduleDidLoad() {
       MessageModule = document.getElementById('message');
       updateStatus('SUCCESS');
+      MessageModule.postMessage(0x12345678);
+      MessageModule.postMessage(1.23);
+      MessageModule.postMessage(1.234567891234e308);
+      MessageModule.postMessage('Hello world!');
+      MessageModule.postMessage([1, 2, 3, 4]);
+      MessageModule.postMessage({ x: 'Hello world!' });
     }
 
     // The 'message' event handler.  This handler is fired when the NaCl module

@@ -15,6 +15,7 @@
     function moduleDidLoad() {
       MessageModule = document.getElementById('message');
       updateStatus('SUCCESS');
+      MessageModule.postMessage("Hello world!");
     }
 
     // The 'message' event handler.  This handler is fired when the NaCl module
@@ -81,7 +82,7 @@
 
       <embed id="message"
              width=640 height=480
-             src="message.nmf"
+             src="message_debug.nmf"
              type="application/x-nacl" />
     </div>
   </p>

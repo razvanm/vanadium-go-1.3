@@ -6,14 +6,14 @@
   found in the LICENSE file.
   -->
 <head>
-  <title>basic</title>
+  <title>message</title>
   <script type="text/javascript">
-    BasicModule = null;  // Global application object.
+    MessageModule = null;  // Global application object.
     statusText = 'NO-STATUS';
 
     // Indicate load success.
     function moduleDidLoad() {
-      BasicModule = document.getElementById('basic');
+      MessageModule = document.getElementById('message');
       updateStatus('SUCCESS');
     }
 
@@ -29,7 +29,7 @@
     // status message indicating that the module is still loading.  Otherwise,
     // do not change the status message.
     function pageDidLoad() {
-      if (BasicModule == null) {
+      if (MessageModule == null) {
         updateStatus('LOADING...');
       } else {
         // It's possible that the Native Client module onload event fired
@@ -79,9 +79,9 @@
         listener.addEventListener('message', handleMessage, true);
       </script>
 
-      <embed id="basic"
+      <embed id="message"
              width=640 height=480
-             src="basic_debug.nmf"
+             src="message_debug.nmf"
              type="application/x-nacl" />
     </div>
   </p>

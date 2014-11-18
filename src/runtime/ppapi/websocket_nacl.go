@@ -30,6 +30,7 @@ func (inst Instance) createWebsocketConn() (ws *WebsocketConn, err error) {
 
 func (ws *WebsocketConn) connect(url string) error {
 	urlVar := VarFromString(url)
+	defer urlVar.Release()
 	code := ppb_websocket_connect(ws.id, pp_Var(urlVar), (*pp_Var)(unsafe.Pointer(uintptr(0))), uint32(0), ppNullCompletionCallback)
 	return decodeError(Error(code))
 }
@@ -49,12 +50,16 @@ func (ws *WebsocketConn) sendMessageInternal(message Var) error {
 
 // Sends a message as a utf-8 string.
 func (ws *WebsocketConn) SendMessageUtf8String(m string) error {
-	return ws.sendMessageInternal(VarFromString(m))
+	v := VarFromString(m)
+	defer v.Release()
+	return ws.sendMessageInternal(v)
 }
 
 // Sends a byte slice as a message (treating the contents as an array buffer).
 func (ws *WebsocketConn) SendMessage(m []byte) error {
-	return ws.sendMessageInternal(VarFromByteSlice(m))
+	v := VarFromByteSlice(m)
+	defer v.Release()
+	return ws.sendMessageInternal(v)
 }
 
 func (ws *WebsocketConn) receiveMessageInternal() (Var, error) {
@@ -72,6 +77,7 @@ func (ws *WebsocketConn) ReceiveMessageUtf8String() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer v.Release()
 	return v.AsString()
 }
 
@@ -81,6 +87,7 @@ func (ws *WebsocketConn) ReceiveMessage() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer v.Release()
 	return v.AsByteSlice()
 }
 

@@ -36,18 +36,31 @@ func (inst Instance) Log(level LogLevel, v Var) {
 }
 
 // LogWithSource writes a message to the console, using the source information rather than the plugin name.
-func (inst Instance) LogWithSource(level LogLevel, src Var, v Var) {
+func (inst Instance) LogWithSource(level LogLevel, src, v Var) {
 	ppb_console_log_with_source(inst.id, level, src.toPPVar(), v.toPPVar())
+}
+
+func (inst Instance) LogWithSourceString(level LogLevel, src, msg string) {
+	v1 := VarFromString(src)
+	v2 := VarFromString(msg)
+	inst.LogWithSource(level, v1, v2)
+	v1.Release()
+	v2.Release()
+}
+
+// LogString writes a message to the console.
+func (inst Instance) LogString(level LogLevel, msg string) {
+	_, file, line, _ := runtime.Caller(2)
+	loc := fmt.Sprintf("%s:%d", file, line)
+	inst.LogWithSourceString(level, loc, msg)
 }
 
 // Logf writes a formatted message to the console.
 func (inst Instance) Logf(level LogLevel, format string, args ...interface{}) {
 	_, file, line, _ := runtime.Caller(2)
-	loc := VarFromString(fmt.Sprintf("%s:%d", file, line))
-	v := VarFromString(fmt.Sprintf(format, args...))
-	inst.LogWithSource(level, loc, v)
-	loc.Release()
-	v.Release()
+	loc := fmt.Sprintf("%s:%d", file, line)
+	msg := fmt.Sprintf(format, args...)
+	inst.LogWithSourceString(level, loc, msg)
 }
 
 // Printf writes a formatted message to the console.

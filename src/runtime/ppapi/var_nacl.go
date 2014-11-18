@@ -36,7 +36,7 @@ func makeVar(vin pp_Var) Var {
 func varFromTypeAndValue(t VarType, v int32) Var {
 	var pv pp_Var
 	*(*int32)(unsafe.Pointer(&pv[0])) = int32(t)
-	*(*int32)(unsafe.Pointer(&pv[8])) = v
+	*(*uint64)(unsafe.Pointer(&pv[8])) = uint64(v)
 	return Var(pv)
 }
 
@@ -182,16 +182,16 @@ func (v Var) AsDouble() (float64, error) {
 
 // AsString returns the string stored in the Var, or an error if the Var is not a string.
 func (v Var) AsString() (string, error) {
-	if v.IsString() {
-		var len uint32
-		b := ppb_var_to_utf8(pp_Var(v), &len)
-		if b == nil {
-			return "", errVarNotString
-		}
-		s := gostringn(b, int(len))
-		return s, nil
+	if !v.IsString() {
+		return "", errVarNotString
 	}
-	return "", errVarNotString
+	var len uint32
+	b := ppb_var_to_utf8(pp_Var(v), &len)
+	if b == nil {
+		return "", errVarNotString
+	}
+	s := gostringn(b, int(len))
+	return s, nil
 }
 
 // AsByteSlice returns the bytes stored in the Var, or an error if the Var is not an array buffer.

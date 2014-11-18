@@ -4,6 +4,7 @@
   "description": "Go PPAPI Network Test",
   "permissions": [
     "experimental",
+    "unlimitedStorage",
     {"socket": ["resolve-host", "tcp-connect:*.*", "tcp-listen:*.*"]}
   ],
 }

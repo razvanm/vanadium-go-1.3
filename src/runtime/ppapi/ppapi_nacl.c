@@ -78,6 +78,12 @@ struct PPBInterface ppapi·ppb_interfaces[] = {
 	{ 0 },
 };
 
+struct pp_Var {
+	int32 ty;
+	int32 pad;
+	int64 value;
+};
+
 void ppapi·start(void *arg);
 void ppapi·breakpoint(void);
 
@@ -92,7 +98,7 @@ void ppapi·ppp_did_destroy(int32 instance);
 void ppapi·ppp_did_change_view(int32 instance, int32 view);
 void ppapi·ppp_did_change_focus(int32 instance, int32 has_focus);
 int32 ppapi·ppp_handle_document_load(int32 instance, int32 url_loader);
-void ppapi·ppp_handle_message(int32 instance, void *msg);
+void ppapi·ppp_handle_message(int32 instance, struct pp_Var msg);
 void ppapi·ppp_mouse_lock_lost(int32 instance);
 void *ppapi·get_array_output_buffer(void *data, uint32 count, uint32 size);
 
