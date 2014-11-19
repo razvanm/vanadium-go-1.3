@@ -7,6 +7,7 @@
 // #include "../zasm_GOOS_GOARCH.h"
 #include "../zasm_nacl_386.h"
 #include "../../cmd/ld/textflag.h"
+#include "../funcdata.h"
 #include "../irt_nacl.h"
 #include "ppapi_GOOS.h"
 
@@ -85,20 +86,26 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{fsize}}
 
 // ppapi·ppp_initialize_module_handler is called once at initialization
 // initialization time.  Called from the C stack.
-TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$20
-	MOVL	BP, 4(SP)
-	MOVL	BX, 8(SP)
-	MOVL	SI, 12(SP)
-	MOVL	DI, 16(SP)
+TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$12
+	MOVL	SI, 4(SP)
+	MOVL	DI, 8(SP)
 	MOVL	module_id+0(FP), AX
 	MOVL	AX, ppapi·module_id(SB)
-	MOVL	get_browser_interface+4(FP), AX
+	MOVL	get_browser_interface+4(FP), DI
+	LEAL	ppapi·ppb_interfaces(SB), SI
+initialize_module_loop:
+	MOVL	0(SI), AX  // name
+	TESTL	AX, AX
+	JZ	initialize_module_done
 	MOVL	AX, 0(SP)
-	CALL	ppapi·ppp_initialize_module(SB)
-	MOVL	4(SP), BP
-	MOVL	8(SP), BX
-	MOVL	12(SP), SI
-	MOVL	16(SP), DI
+	CALL	DI
+	MOVL	AX, 4(SI)  // ppb
+	ADDL	$8, SI
+	JMP	initialize_module_loop
+initialize_module_done:
+	MOVQ	4(SP), SI
+	MOVQ	8(SP), DI
+	XORL	AX, AX
 	RET
 
 // ppapi·ppp_shutdown_module_handler my or may not be called when the
@@ -128,3 +135,23 @@ TEXT ppapi·start(SB),NOSPLIT,$0
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX
 	RET
+
+TEXT ·ppapi_start(SB),NOSPLIT,$8-0
+	NO_LOCAL_POINTERS
+	LEAL	ppapi·start(SB), AX
+	MOVL	AX, 0(SP)
+	MOVL	$0, 4(SP)
+	CALL	runtime·cgocall(SB)
+	// Not reached
+	INT	$3
+	RET
+
+// Tunnel some functions from runtime.
+TEXT ·gostring(SB),NOSPLIT,$0
+	JMP	runtime·gostring(SB)
+
+TEXT ·gostringn(SB),NOSPLIT,$0
+	JMP	runtime·gostringn(SB)
+
+TEXT ·free(SB),NOSPLIT,$0
+	JMP	runtime·cfree(SB)

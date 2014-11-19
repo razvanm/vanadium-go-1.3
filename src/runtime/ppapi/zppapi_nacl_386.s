@@ -98,7 +98,7 @@
 //func ppb_audioconfig_recommend_sample_rate(instance pp_Instance) AudioSampleRate = PPB_AUDIO_CONFIG[5]
  
 //func ppb_console_log(instance pp_Instance, level LogLevel, value pp_Var) = PPB_CONSOLE[0]
-//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[0]
+//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[1]
  
 //func ppb_core_add_ref_resource(resource pp_Resource) = PPB_CORE[0]
 //func ppb_core_release_resource(resource pp_Resource) = PPB_CORE[1]
@@ -362,6 +362,7 @@
 //func ppb_wheelinputevent_get_delta(event pp_Resource) FloatPoint = PPB_WHEEL_INPUT_EVENT[2]
 //func ppb_wheelinputevent_get_ticks(event pp_Resource) FloatPoint = PPB_WHEEL_INPUT_EVENT[3]
 //func ppb_wheelinputevent_get_scroll_by_page(event pp_Resource) pp_Bool = PPB_WHEEL_INPUT_EVENT[4]
+// -*- mode: asm -*-
 // Copyright 2014 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
@@ -370,6 +371,7 @@
 // #include "../zasm_GOOS_GOARCH.h"
 #include "../zasm_nacl_386.h"
 #include "../../cmd/ld/textflag.h"
+#include "../funcdata.h"
 #include "../irt_nacl.h"
 #include "ppapi_GOOS.h"
 
@@ -1028,7 +1030,7 @@ TEXT ppapi·ppb_console_log_with_source(SB),NOSPLIT,$40
 	MOVL	36(BP), AX
 	MOVL	AX, 36(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_CONSOLE*8+4)(SB), AX
-	MOVL	(0*4)(AX), AX
+	MOVL	(1*4)(AX), AX
 	CALL	AX
 	// No return value.
 	RET
@@ -1194,7 +1196,7 @@ TEXT ·ppb_fileio_touch(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$32
+TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$36
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -1212,10 +1214,12 @@ TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$32
 	MOVL	AX, 24(SP)
 	MOVL	28(BP), AX
 	MOVL	AX, 28(SP)
+	MOVL	32(BP), AX
+	MOVL	AX, 32(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(4*4)(AX), AX
 	CALL	AX
-	MOVL	AX, 32(BP)
+	MOVL	AX, 36(BP)
 	RET
 
 TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
@@ -1225,7 +1229,7 @@ TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$32
+TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$36
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -1243,10 +1247,12 @@ TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$32
 	MOVL	AX, 24(SP)
 	MOVL	28(BP), AX
 	MOVL	AX, 28(SP)
+	MOVL	32(BP), AX
+	MOVL	AX, 32(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(5*4)(AX), AX
 	CALL	AX
-	MOVL	AX, 32(BP)
+	MOVL	AX, 36(BP)
 	RET
 
 TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
@@ -1256,7 +1262,7 @@ TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$32
+TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$36
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -1274,10 +1280,12 @@ TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$32
 	MOVL	AX, 24(SP)
 	MOVL	28(BP), AX
 	MOVL	AX, 28(SP)
+	MOVL	32(BP), AX
+	MOVL	AX, 32(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(6*4)(AX), AX
 	CALL	AX
-	MOVL	AX, 32(BP)
+	MOVL	AX, 36(BP)
 	RET
 
 TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
@@ -1287,7 +1295,7 @@ TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$24
+TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$28
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -1301,10 +1309,12 @@ TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$24
 	MOVL	AX, 16(SP)
 	MOVL	20(BP), AX
 	MOVL	AX, 20(SP)
+	MOVL	24(BP), AX
+	MOVL	AX, 24(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_IO*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, 24(BP)
+	MOVL	AX, 28(BP)
 	RET
 
 TEXT ·ppb_fileio_flush(SB),NOSPLIT,$8
@@ -1489,7 +1499,7 @@ TEXT ·ppb_fileref_touch(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$32
+TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$36
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -1507,10 +1517,12 @@ TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$32
 	MOVL	AX, 24(SP)
 	MOVL	28(BP), AX
 	MOVL	AX, 28(SP)
+	MOVL	32(BP), AX
+	MOVL	AX, 32(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_REF*8+4)(SB), AX
 	MOVL	(7*4)(AX), AX
 	CALL	AX
-	MOVL	AX, 32(BP)
+	MOVL	AX, 36(BP)
 	RET
 
 TEXT ·ppb_fileref_delete(SB),NOSPLIT,$8
@@ -1656,7 +1668,7 @@ TEXT ·ppb_filesystem_open(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$24
+TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$28
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -1670,10 +1682,12 @@ TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$24
 	MOVL	AX, 16(SP)
 	MOVL	20(BP), AX
 	MOVL	AX, 20(SP)
+	MOVL	24(BP), AX
+	MOVL	AX, 24(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_FILE_SYSTEM*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
-	MOVL	AX, 24(BP)
+	MOVL	AX, 28(BP)
 	RET
 
 TEXT ·ppb_filesystem_get_type(SB),NOSPLIT,$8
@@ -5140,7 +5154,7 @@ TEXT ·ppb_videoframe_set_timestamp(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$12
+TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$16
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -5148,6 +5162,8 @@ TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$12
 	MOVL	AX, 4(SP)
 	MOVL	8(BP), AX
 	MOVL	AX, 8(SP)
+	MOVL	12(BP), AX
+	MOVL	AX, 12(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_VIDEO_FRAME*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
@@ -5672,7 +5688,7 @@ TEXT ·ppb_wheelinputevent_create(SB),NOSPLIT,$8
 	CALL	runtime·cgocall(SB)
 	RET
 
-TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$28
+TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$32
 	MOVL	args+0(FP), BP
 	MOVL	0(BP), AX
 	MOVL	AX, 0(SP)
@@ -5688,10 +5704,12 @@ TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$28
 	MOVL	AX, 20(SP)
 	MOVL	24(BP), AX
 	MOVL	AX, 24(SP)
+	MOVL	28(BP), AX
+	MOVL	AX, 28(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_WHEEL_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
-	MOVL	AX, 28(BP)
+	MOVL	AX, 32(BP)
 	RET
 
 TEXT ·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$8
@@ -5772,20 +5790,26 @@ TEXT ppapi·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$4
 
 // ppapi·ppp_initialize_module_handler is called once at initialization
 // initialization time.  Called from the C stack.
-TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$20
-	MOVL	BP, 4(SP)
-	MOVL	BX, 8(SP)
-	MOVL	SI, 12(SP)
-	MOVL	DI, 16(SP)
+TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$12
+	MOVL	SI, 4(SP)
+	MOVL	DI, 8(SP)
 	MOVL	module_id+0(FP), AX
 	MOVL	AX, ppapi·module_id(SB)
-	MOVL	get_browser_interface+4(FP), AX
+	MOVL	get_browser_interface+4(FP), DI
+	LEAL	ppapi·ppb_interfaces(SB), SI
+initialize_module_loop:
+	MOVL	0(SI), AX  // name
+	TESTL	AX, AX
+	JZ	initialize_module_done
 	MOVL	AX, 0(SP)
-	CALL	ppapi·ppp_initialize_module(SB)
-	MOVL	4(SP), BP
-	MOVL	8(SP), BX
-	MOVL	12(SP), SI
-	MOVL	16(SP), DI
+	CALL	DI
+	MOVL	AX, 4(SI)  // ppb
+	ADDL	$8, SI
+	JMP	initialize_module_loop
+initialize_module_done:
+	MOVQ	4(SP), SI
+	MOVQ	8(SP), DI
+	XORL	AX, AX
 	RET
 
 // ppapi·ppp_shutdown_module_handler my or may not be called when the
@@ -5810,9 +5834,28 @@ TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$20
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.
-TEXT ppapi·start(SB),NOSPLIT,$4
-	LEAL	ppapi·pp_start_functions(SB), AX
-	MOVL	AX, 0(SP)
+TEXT ppapi·start(SB),NOSPLIT,$0
+	LEAL	ppapi·pp_start_functions(SB), DI
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX
 	RET
+
+TEXT ·ppapi_start(SB),NOSPLIT,$8-0
+	NO_LOCAL_POINTERS
+	LEAL	ppapi·start(SB), AX
+	MOVL	AX, 0(SP)
+	MOVL	$0, 4(SP)
+	CALL	runtime·cgocall(SB)
+	// Not reached
+	INT	$3
+	RET
+
+// Tunnel some functions from runtime.
+TEXT ·gostring(SB),NOSPLIT,$0
+	JMP	runtime·gostring(SB)
+
+TEXT ·gostringn(SB),NOSPLIT,$0
+	JMP	runtime·gostringn(SB)
+
+TEXT ·free(SB),NOSPLIT,$0
+	JMP	runtime·cfree(SB)

@@ -289,10 +289,3 @@ TEXT ·gostringn(SB),NOSPLIT,$0
 
 TEXT ·free(SB),NOSPLIT,$0
 	JMP	runtime·cfree(SB)
-
-TEXT ·ppb_graphics2d_createx(SB),NOSPLIT,$8
-	GO_ARGS
-	MOVL	$22, rval+24(FP)
-	RET
-
-	
