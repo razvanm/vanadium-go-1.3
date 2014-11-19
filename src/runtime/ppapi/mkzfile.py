@@ -64,30 +64,34 @@ parser.add_argument('template', nargs='+', help='template files')
 
 # Sizes for machine kinds.
 sizes = {
-    'void': 0,
-    'int32': 4,
-    'int64': 8,
-    'float32': 4,
-    'float64': 8,
-    '*': 4,
+    'void': (0, 0),
+    'int32': (4, 4),
+    'int64': (8, 8),
+    'float32': (4, 4),
+    'float64': (8, 8),
+    '*': (4, 4),
     }
 
 # align aligns an address to the next larger boundary.
 def align(addr, n):
   return (addr + n - 1) & ~(n - 1)
 
-# sizeof returns a pair of the kind name and number of bytes needed to represent
-# a value of that kind.
+# sizeof returns a triple of the kind name, the number of bytes needed to
+# represent a value of that kind, and the alignment.
 def sizeof(kind):
   if kind.startswith('*'):
-    return ('*', 4)
+    return ('*', 4, 4)
   elif kind.startswith('struct'):
-    m = re.search(r'struct\[(\w+)\]', kind)
+    m = re.search(r'struct\[(\w+)(,(\w+))?\]', kind)
     if m == None:
       raise Exception("Malformed struct type: " + kind)
-    return ('struct', int(m.group(1)))
+    a = 4
+    if m.group(3) != None:
+      a = int(m.group(3))
+    return ('struct', int(m.group(1)), a)
   else:
-    return (kind, sizes[kind])
+    n, a = sizes[kind]
+    return (kind, n, a)
 
 # Type represents a type, where <name> is the name of the type, <kind> is the
 # machine kind, and <size> is the sizeof that type.
@@ -95,7 +99,7 @@ class Type:
   """Type represents base type"""
   def __init__(self, name, kind, builtin=False):
     self.name = name
-    self.kind, self.size = sizeof(kind)
+    self.kind, self.size, self.align = sizeof(kind)
     self.builtin = builtin
 
 # Arg represents a function parameter, including the name and the type.
@@ -170,6 +174,8 @@ class Processor:
   def framesize(self, func):
     size = 0
     for arg in func.args:
+      if arg.type.align > 0:
+        size = align(size, arg.type.align)
       size += arg.type.size
     return size
 
@@ -209,7 +215,7 @@ class Processor:
 
       elif line.startswith('//type'):
         # //type name name
-        m = re.search(r'^//type\s+(\w+)\s+([][\w*]+)\s*(\w*)\s*$', line)
+        m = re.search(r'^//type\s+(\w+)\s+([][,\w*]+)\s*(\w*)\s*$', line)
         if m == None:
           raise Exception('Malformed //type: ' + line)
         self.types[m.group(1)] = Type(m.group(1), m.group(2), m.group(3) <> '')

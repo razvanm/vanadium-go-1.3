@@ -89,17 +89,17 @@
 //func ppb_audiobuffer_get_number_of_samples(resource pp_Resource)  uint32 = PPB_AUDIO_BUFFER[6]
 //func ppb_audiobuffer_get_data_buffer(resource pp_Resource) *byte = PPB_AUDIO_BUFFER[7]
 //func ppb_audiobuffer_get_data_buffer_size(resource pp_Resource) uint32 = PPB_AUDIO_BUFFER[8]
-
+ 
 //func ppb_audioconfig_create_stereo_16bit(instance pp_Instance, sample_rate uint32, sample_frame_count uint32) pp_Resource  = PPB_AUDIO_CONFIG[0]
 //func ppb_audioconfig_recommend_sample_frame_count(instance pp_Instance, sample_rate uint32, requested_sample_frame_count uint32) uint32  = PPB_AUDIO_CONFIG[1]
 //func ppb_audioconfig_is_audio_config(resource pp_Resource)  pp_Bool		= PPB_AUDIO_CONFIG[2]
 //func ppb_audioconfig_get_sample_rate(resource pp_Resource) AudioSampleRate = PPB_AUDIO_CONFIG[3]
 //func ppb_audioconfig_get_sample_frame_count(resource pp_Resource) uint32 = PPB_AUDIO_CONFIG[4]
 //func ppb_audioconfig_recommend_sample_rate(instance pp_Instance) AudioSampleRate = PPB_AUDIO_CONFIG[5]
-
+ 
 //func ppb_console_log(instance pp_Instance, level LogLevel, value pp_Var) = PPB_CONSOLE[0]
-//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[0]
-
+//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[1]
+ 
 //func ppb_core_add_ref_resource(resource pp_Resource) = PPB_CORE[0]
 //func ppb_core_release_resource(resource pp_Resource) = PPB_CORE[1]
 //func ppb_core_get_time(resource pp_Resource) pp_Time = PPB_CORE[2]
@@ -128,7 +128,7 @@
 //func ppb_fileref_rename(file_ref pp_Resource, new_file_ref pp_Resource, cb pp_CompletionCallback) int32 = PPB_FILE_REF[9]
 //func ppb_fileref_query(file_ref pp_Resource, info *pp_FileInfo, cb pp_CompletionCallback) int32 = PPB_FILE_REF[10]
 //func ppb_fileref_read_directory_entries(file_ref pp_Resource, output pp_ArrayOutput, cb pp_CompletionCallback) int32 = PPB_FILE_REF[11]
-
+ 
 //func ppb_filesystem_create(instance pp_Instance, ty FileSystemType) pp_Resource = PPB_FILE_SYSTEM[0]
 //func ppb_filesystem_is_file_system(resource pp_Resource)  pp_Bool = PPB_FILE_SYSTEM[1]
 //func ppb_filesystem_open(resource pp_Resource, expected_size int64, cb pp_CompletionCallback) int32 = PPB_FILE_SYSTEM[2]
@@ -139,7 +139,7 @@
 //func ppb_fullscreen_get_screen_size(instance pp_Instance, size *Size) pp_Bool = PPB_FULLSCREEN[2]
 
 //func ppb_gamepad_sample(instance pp_Instance, data *pp_GamepadSampleData) = PPB_GAMEPAD[0]
-
+ 
 //func ppb_graphics2d_create(instance pp_Instance, size *Size, is_always_opaque pp_Bool) pp_Resource = PPB_GRAPHICS2D[0]
 //func ppb_graphics2d_is_graphics2d(resource pp_Resource) pp_Bool = PPB_GRAPHICS2D[1]
 //func ppb_graphics2d_describe(resource pp_Resource, size *Size, is_always_opaque *pp_Bool) pp_Bool = PPB_GRAPHICS2D[2]
@@ -341,7 +341,7 @@
 //func ppb_view_get_clip_rect(resource pp_Resource, clip *Rect) pp_Bool = PPB_VIEW[5]
 //func ppb_view_get_device_scale(resource pp_Resource) float32 = PPB_VIEW[6]
 //func ppb_view_get_css_scale(resource pp_Resource) float32 = PPB_VIEW[7]
-
+ 
 //func ppb_websocket_create(instance pp_Instance) pp_Resource = PPB_WEB_SOCKET[0]
 //func ppb_websocket_is_web_socket(resource pp_Resource) pp_Bool = PPB_WEB_SOCKET[1]
 //func ppb_websocket_connect(socket pp_Resource, url pp_Var, protocols *pp_Var, protocol_count uint32, cb pp_CompletionCallback) int32 = PPB_WEB_SOCKET[2]
@@ -388,28 +388,23 @@ type pp_Bool int32
 type UDPSocketOption int32
 type pp_ArrayOutput [8]byte
 type LogLevel int32
-
 // type uintptr int32
 type NetAddressFamily int32
 type NetworkListState int32
 type pp_FileInfo [40]byte
 type pp_TouchPoint [28]byte
 type pp_TimeDelta float64
-
 // type uint16 int32
 // type bool int32
 type pp_HostResolverHint [8]byte
 type MouseCursorType int32
 type FileType int32
-
 // type float32 float32
 // type ImageDataDesc struct
 // type int32 int32
 type InputEventType int32
-
 // type int16 int32
 type pp_NetAddress_IPv4 [6]byte
-
 // type void void
 type pp_GamepadSampleData [472]byte
 type ImageDataFormat int32
@@ -417,274 +412,270 @@ type FileOpenFlag int32
 type HostResolverFlag int32
 type Error int32
 type TextInputType int32
-
 // type uint64 int64
 type pp_NetAddress_IPv6 [18]byte
 type pp_Resource int32
 type pp_Instance int32
-
 // type float64 float64
 type AudioSampleRate int32
 type FileSystemType int32
 type pp_CompletionCallback [12]byte
-
 // type FloatPoint struct
 // type uint32 int32
 type TouchListType int32
-
 // type Point struct
 type pp_Time float64
-
 // type int64 int64
 // type Rect struct
 type URLResponseProperty int32
 type VideoFrameFormat int32
 type VarType int32
 type MakeDirectoryFlag int32
-
 // type Size struct
+
 
 type TimeTicks pp_TimeTicks
 
 // Enumerations.
 const (
 	PP_OK Error = 0
-
-	PP_VARTYPE_DOUBLE                                   VarType                     = 4
-	PP_URLREQUESTPROPERTY_ALLOWCREDENTIALS              URLRequestProperty          = 9
-	PP_ERROR_NOTAFILE                                   Error                       = -24
-	PP_INPUTEVENT_TYPE_IME_COMPOSITION_START            InputEventType              = 11
-	PP_INPUTEVENT_TYPE_CONTEXTMENU                      InputEventType              = 10
-	PP_INPUTEVENT_MOUSEBUTTON_RIGHT                     InputEventMouseButton       = 2
-	PP_MOUSECURSOR_TYPE_MOVE                            MouseCursorType             = 29
-	PP_ERROR_FILEEXISTS                                 Error                       = -21
-	PP_GRAPHICS3DATTRIB_SAMPLE_BUFFERS                  Graphics3DAttrib            = 0x3032
-	PP_MOUSECURSOR_TYPE_COPY                            MouseCursorType             = 36
-	PP_MOUSECURSOR_TYPE_MIDDLEPANNING                   MouseCursorType             = 20
-	PP_URLREQUESTPROPERTY_METHOD                        URLRequestProperty          = 1
-	PP_MOUSECURSOR_TYPE_CELL                            MouseCursorType             = 31
-	PP_AUDIOSAMPLERATE_44100                            AudioSampleRate             = 44100
-	PP_ERROR_NOTSUPPORTED                               Error                       = -12
-	PP_MOUSECURSOR_TYPE_ALIAS                           MouseCursorType             = 33
-	PP_GRAPHICS3DATTRIB_BUFFER_DESTROYED                Graphics3DAttrib            = 0x3095
-	PP_INPUTEVENT_TYPE_IME_COMPOSITION_END              InputEventType              = 13
-	PP_OK_COMPLETIONPENDING                             Error                       = -1
-	PP_VARTYPE_INT32                                    VarType                     = 3
-	PP_FILEOPENFLAG_WRITE                               FileOpenFlag                = 1 << 1
-	PP_TEXTINPUT_TYPE_TELEPHONE                         TextInputType               = 6
-	PP_MOUSECURSOR_TYPE_CONTEXTMENU                     MouseCursorType             = 32
-	PP_WEBSOCKETREADYSTATE_CLOSED                       WebSocketReadyState         = 3
-	PP_MAKEDIRECTORYFLAG_EXCLUSIVE                      MakeDirectoryFlag           = 1 << 1
-	PP_ERROR_NAME_NOT_RESOLVED                          Error                       = -110
-	PP_FILETYPE_OTHER                                   FileType                    = 2
-	PP_LOGLEVEL_TIP                                     LogLevel                    = 0
-	PP_TEXTINPUT_TYPE_EMAIL                             TextInputType               = 4
-	PP_GRAPHICS3DATTRIB_BUFFER_PRESERVED                Graphics3DAttrib            = 0x3094
-	PP_ERROR_WRONG_THREAD                               Error                       = -52
-	PP_VARTYPE_ARRAY_BUFFER                             VarType                     = 9
-	PP_GRAPHICS3DATTRIB_WIDTH                           Graphics3DAttrib            = 0x3057
-	PP_MOUSECURSOR_TYPE_NORTHPANNING                    MouseCursorType             = 22
-	PP_UDPSOCKET_OPTION_SEND_BUFFER_SIZE                UDPSocketOption             = 2
-	PP_VARTYPE_STRING                                   VarType                     = 5
-	PP_VIDEOFRAME_FORMAT_BGRA                           VideoFrameFormat            = 3
-	PP_INPUTEVENT_MOUSEBUTTON_LEFT                      InputEventMouseButton       = 0
-	PP_FILETYPE_DIRECTORY                               FileType                    = 1
-	PP_MOUSECURSOR_TYPE_PROGRESS                        MouseCursorType             = 34
-	PP_MOUSECURSOR_TYPE_NORTHRESIZE                     MouseCursorType             = 7
-	PP_MOUSECURSOR_TYPE_NORTHWESTPANNING                MouseCursorType             = 24
-	PP_TEXTINPUT_TYPE_PASSWORD                          TextInputType               = 2
-	PP_MOUSECURSOR_TYPE_CROSS                           MouseCursorType             = 1
-	PP_NETWORKLIST_TYPE_WIFI                            NetworkListType             = 2
-	PP_FILESYSTEMTYPE_LOCALTEMPORARY                    FileSystemType              = 3
-	PP_URLREQUESTPROPERTY_FOLLOWREDIRECTS               URLRequestProperty          = 4
-	PP_VARTYPE_BOOL                                     VarType                     = 2
-	PP_ERROR_MESSAGE_TOO_BIG                            Error                       = -109
-	PP_FILESYSTEMTYPE_EXTERNAL                          FileSystemType              = 1
-	PP_INPUTEVENT_TYPE_TOUCHSTART                       InputEventType              = 15
-	PP_URLREQUESTPROPERTY_HEADERS                       URLRequestProperty          = 2
-	PP_URLRESPONSEPROPERTY_STATUSLINE                   URLResponseProperty         = 4
-	PP_GRAPHICS3DATTRIB_HEIGHT                          Graphics3DAttrib            = 0x3056
-	PP_MOUSECURSOR_TYPE_COLUMNRESIZE                    MouseCursorType             = 18
-	PP_MOUSECURSOR_TYPE_CUSTOM                          MouseCursorType             = -1
-	PP_TEXTINPUT_TYPE_NUMBER                            TextInputType               = 5
-	PP_URLRESPONSEPROPERTY_URL                          URLResponseProperty         = 0
-	PP_AUDIOSAMPLERATE_48000                            AudioSampleRate             = 48000
-	PP_GRAPHICS3DATTRIB_GPU_PREFERENCE_PERFORMANCE      Graphics3DAttrib            = 0x11002
-	PP_MOUSECURSOR_TYPE_ZOOMOUT                         MouseCursorType             = 40
-	PP_VARTYPE_DICTIONARY                               VarType                     = 8
-	PP_NETWORKLIST_STATE_DOWN                           NetworkListState            = 0
-	PP_INPUTEVENT_TYPE_MOUSELEAVE                       InputEventType              = 4
-	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_SAMPLE_SIZE         MediaStreamAudioTrackAttrib = 3
-	PP_AUDIOBUFFER_SAMPLERATE_44100                     AudioBufferSampleRate       = 44100
-	PP_INPUTEVENT_TYPE_CHAR                             InputEventType              = 9
-	PP_ERROR_CONNECTION_CLOSED                          Error                       = -100
-	PP_VARTYPE_OBJECT                                   VarType                     = 6
-	PP_WEBSOCKETREADYSTATE_CLOSING                      WebSocketReadyState         = 2
-	PP_VIDEOFRAME_FORMAT_UNKNOWN                        VideoFrameFormat            = 0
-	PP_VARTYPE_UNDEFINED                                VarType                     = 0
-	PP_MOUSECURSOR_TYPE_IBEAM                           MouseCursorType             = 3
-	PP_NETWORKLIST_TYPE_UNKNOWN                         NetworkListType             = 0
-	PP_MOUSECURSOR_TYPE_SOUTHEASTRESIZE                 MouseCursorType             = 11
-	PP_ERROR_CONNECTION_FAILED                          Error                       = -104
-	PP_ERROR_ADDRESS_INVALID                            Error                       = -106
-	PP_INPUTEVENT_TYPE_MOUSEENTER                       InputEventType              = 3
-	PP_INPUTEVENT_TYPE_IME_COMPOSITION_UPDATE           InputEventType              = 12
-	PP_GRAPHICS3DATTRIB_SAMPLES                         Graphics3DAttrib            = 0x3031
-	PP_URLREQUESTPROPERTY_PREFETCHBUFFERUPPERTHRESHOLD  URLRequestProperty          = 11
-	PP_HOSTRESOLVER_FLAG_CANONNAME                      HostResolverFlag            = 1 << 0
-	PP_TEXTINPUT_TYPE_URL                               TextInputType               = 7
-	PP_MOUSECURSOR_TYPE_SOUTHEASTPANNING                MouseCursorType             = 26
-	PP_TCPSOCKET_OPTION_SEND_BUFFER_SIZE                TCPSocketOption             = 1
-	PP_WEBSOCKETREADYSTATE_OPEN                         WebSocketReadyState         = 1
-	PP_ERROR_CONTEXT_LOST                               Error                       = -50
-	PP_MOUSECURSOR_TYPE_NONE                            MouseCursorType             = 37
-	PP_TEXTINPUT_TYPE_TEXT                              TextInputType               = 1
-	PP_ERROR_TIMEDOUT                                   Error                       = -30
-	PP_INPUTEVENT_TYPE_MOUSEUP                          InputEventType              = 1
-	PP_FILEOPENFLAG_TRUNCATE                            FileOpenFlag                = 1 << 3
-	PP_VIDEOFRAME_FORMAT_LAST                           VideoFrameFormat            = PP_VIDEOFRAME_FORMAT_BGRA
-	PP_NETADDRESS_FAMILY_IPV4                           NetAddressFamily            = 1
-	PP_NETWORKLIST_TYPE_CELLULAR                        NetworkListType             = 3
-	PP_MOUSECURSOR_TYPE_GRABBING                        MouseCursorType             = 42
-	PP_URLRESPONSEPROPERTY_REDIRECTURL                  URLResponseProperty         = 1
-	PP_ERROR_FILETOOBIG                                 Error                       = -22
-	PP_MOUSECURSOR_TYPE_NORTHSOUTHRESIZE                MouseCursorType             = 14
-	PP_MOUSECURSOR_TYPE_NORTHEASTPANNING                MouseCursorType             = 23
-	PP_INPUTEVENT_TYPE_KEYDOWN                          InputEventType              = 7
-	PP_INPUTEVENT_TYPE_KEYUP                            InputEventType              = 8
-	PP_INPUTEVENT_TYPE_UNDEFINED                        InputEventType              = -1
-	PP_GRAPHICS3DATTRIB_GPU_PREFERENCE_LOW_POWER        Graphics3DAttrib            = 0x11001
-	PP_TEXTINPUT_TYPE_SEARCH                            TextInputType               = 3
-	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_SAMPLE_RATE         MediaStreamAudioTrackAttrib = 2
-	PP_MOUSECURSOR_TYPE_NOTALLOWED                      MouseCursorType             = 38
-	PP_TCPSOCKET_OPTION_NO_DELAY                        TCPSocketOption             = 0
-	PP_INPUTEVENT_TYPE_TOUCHCANCEL                      InputEventType              = 18
-	PP_MOUSECURSOR_TYPE_SOUTHRESIZE                     MouseCursorType             = 10
-	PP_NETADDRESS_FAMILY_UNSPECIFIED                    NetAddressFamily            = 0
-	PP_ERROR_FILENOTFOUND                               Error                       = -20
-	PP_MOUSECURSOR_TYPE_EASTWESTRESIZE                  MouseCursorType             = 15
-	PP_AUDIOBUFFER_SAMPLESIZE_16_BITS                   AudioBufferSampleSize       = 2
-	PP_MOUSECURSOR_TYPE_WAIT                            MouseCursorType             = 4
-	PP_UDPSOCKET_OPTION_RECV_BUFFER_SIZE                UDPSocketOption             = 3
-	PP_URLREQUESTPROPERTY_URL                           URLRequestProperty          = 0
-	PP_URLREQUESTPROPERTY_ALLOWCROSSORIGINREQUESTS      URLRequestProperty          = 8
-	PP_ERROR_NOMEMORY                                   Error                       = -8
-	PP_ERROR_ADDRESS_UNREACHABLE                        Error                       = -107
-	PP_ERROR_BLOCKS_MAIN_THREAD                         Error                       = -13
-	PP_GRAPHICS3DATTRIB_SWAP_BEHAVIOR                   Graphics3DAttrib            = 0x3093
-	PP_MOUSECURSOR_TYPE_EASTRESIZE                      MouseCursorType             = 6
-	PP_URLREQUESTPROPERTY_CUSTOMCONTENTTRANSFERENCODING URLRequestProperty          = 10
-	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_HEIGHT              MediaStreamVideoTrackAttrib = 3
-	PP_MOUSECURSOR_TYPE_EASTPANNING                     MouseCursorType             = 21
-	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_DURATION            MediaStreamAudioTrackAttrib = 5
-	PP_AUDIOBUFFER_SAMPLERATE_UNKNOWN                   AudioBufferSampleRate       = 0
-	PP_LOGLEVEL_ERROR                                   LogLevel                    = 3
-	PP_TOUCHLIST_TYPE_TARGETTOUCHES                     TouchListType               = 2
-	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_NONE                MediaStreamVideoTrackAttrib = 0
-	PP_ERROR_CONNECTION_ABORTED                         Error                       = -103
-	PP_INPUTEVENT_TYPE_MOUSEDOWN                        InputEventType              = 0
-	PP_URLREQUESTPROPERTY_RECORDUPLOADPROGRESS          URLRequestProperty          = 6
-	PP_GRAPHICS3DATTRIB_DEPTH_SIZE                      Graphics3DAttrib            = 0x3025
-	PP_AUDIOBUFFER_SAMPLERATE_8000                      AudioBufferSampleRate       = 8000
-	PP_ERROR_ADDRESS_IN_USE                             Error                       = -108
-	PP_MOUSECURSOR_TYPE_SOUTHWESTPANNING                MouseCursorType             = 27
-	PP_MOUSECURSOR_TYPE_NORTHEASTSOUTHWESTRESIZE        MouseCursorType             = 16
-	PP_ERROR_NO_USER_GESTURE                            Error                       = -41
-	PP_MOUSECURSOR_TYPE_ROWRESIZE                       MouseCursorType             = 19
-	PP_VARTYPE_RESOURCE                                 VarType                     = 10
-	PP_INPUTEVENT_MOUSEBUTTON_MIDDLE                    InputEventMouseButton       = 1
-	PP_MOUSECURSOR_TYPE_NORTHWESTRESIZE                 MouseCursorType             = 9
-	PP_MOUSECURSOR_TYPE_NORTHWESTSOUTHEASTRESIZE        MouseCursorType             = 17
-	PP_URLREQUESTPROPERTY_STREAMTOFILE                  URLRequestProperty          = 3
-	PP_ERROR_BADARGUMENT                                Error                       = -4
-	PP_INPUTEVENT_MOUSEBUTTON_NONE                      InputEventMouseButton       = -1
-	PP_MOUSECURSOR_TYPE_WESTRESIZE                      MouseCursorType             = 13
-	PP_AUDIOBUFFER_SAMPLERATE_16000                     AudioBufferSampleRate       = 16000
-	PP_GRAPHICS3DATTRIB_NONE                            Graphics3DAttrib            = 0x3038
-	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_FORMAT              MediaStreamVideoTrackAttrib = 4
-	PP_MAKEDIRECTORYFLAG_WITH_ANCESTORS                 MakeDirectoryFlag           = 1 << 0
-	PP_ERROR_INPROGRESS                                 Error                       = -11
-	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_NONE                MediaStreamAudioTrackAttrib = 0
-	PP_MOUSECURSOR_TYPE_SOUTHWESTRESIZE                 MouseCursorType             = 12
-	PP_URLRESPONSEPROPERTY_REDIRECTMETHOD               URLResponseProperty         = 2
-	PP_WEBSOCKETREADYSTATE_INVALID                      WebSocketReadyState         = -1
-	PP_AUDIOSAMPLERATE_NONE                             AudioSampleRate             = 0
-	PP_FILETYPE_REGULAR                                 FileType                    = 0
-	PP_GRAPHICS3DATTRIB_GPU_PREFERENCE                  Graphics3DAttrib            = 0x11000
-	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_BUFFERED_FRAMES     MediaStreamVideoTrackAttrib = 1
-	PP_AUDIOBUFFER_SAMPLERATE_32000                     AudioBufferSampleRate       = 32000
-	PP_FILESYSTEMTYPE_LOCALPERSISTENT                   FileSystemType              = 2
-	PP_ERROR_NOACCESS                                   Error                       = -7
-	PP_ERROR_NOSPACE                                    Error                       = -9
-	PP_MOUSECURSOR_TYPE_VERTICALTEXT                    MouseCursorType             = 30
-	PP_URLREQUESTPROPERTY_PREFETCHBUFFERLOWERTHRESHOLD  URLRequestProperty          = 12
-	PP_ERROR_NOQUOTA                                    Error                       = -10
-	PP_TOUCHLIST_TYPE_TOUCHES                           TouchListType               = 0
-	PP_FILEOPENFLAG_EXCLUSIVE                           FileOpenFlag                = 1 << 4
-	PP_NETWORKLIST_STATE_UP                             NetworkListState            = 1
-	PP_AUDIOBUFFER_SAMPLERATE_22050                     AudioBufferSampleRate       = 22050
-	PP_MOUSECURSOR_TYPE_WESTPANNING                     MouseCursorType             = 28
-	PP_GRAPHICS3DATTRIB_GREEN_SIZE                      Graphics3DAttrib            = 0x3023
-	PP_URLRESPONSEPROPERTY_STATUSCODE                   URLResponseProperty         = 3
-	PP_MOUSECURSOR_TYPE_GRAB                            MouseCursorType             = 41
-	PP_TOUCHLIST_TYPE_CHANGEDTOUCHES                    TouchListType               = 1
-	PP_FILEOPENFLAG_APPEND                              FileOpenFlag                = 1 << 5
-	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_BUFFERS             MediaStreamAudioTrackAttrib = 1
-	PP_INPUTEVENT_TYPE_IME_TEXT                         InputEventType              = 14
-	PP_UDPSOCKET_OPTION_ADDRESS_REUSE                   UDPSocketOption             = 0
-	PP_URLREQUESTPROPERTY_RECORDDOWNLOADPROGRESS        URLRequestProperty          = 5
-	PP_ERROR_NO_MESSAGE_LOOP                            Error                       = -51
-	PP_ERROR_BADRESOURCE                                Error                       = -5
-	PP_ERROR_FILECHANGED                                Error                       = -23
-	PP_ERROR_CONNECTION_RESET                           Error                       = -101
-	PP_VARTYPE_NULL                                     VarType                     = 1
-	PP_VARTYPE_ARRAY                                    VarType                     = 7
-	PP_TCPSOCKET_OPTION_RECV_BUFFER_SIZE                TCPSocketOption             = 2
-	PP_FILESYSTEMTYPE_INVALID                           FileSystemType              = 0
-	PP_FILEOPENFLAG_CREATE                              FileOpenFlag                = 1 << 2
-	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_WIDTH               MediaStreamVideoTrackAttrib = 2
-	PP_MOUSECURSOR_TYPE_SOUTHPANNING                    MouseCursorType             = 25
-	PP_URLREQUESTPROPERTY_CUSTOMUSERAGENT               URLRequestProperty          = 13
-	PP_TEXTINPUT_TYPE_NONE                              TextInputType               = 0
-	PP_MOUSECURSOR_TYPE_POINTER                         MouseCursorType             = 0
-	PP_INPUTEVENT_TYPE_WHEEL                            InputEventType              = 5
-	PP_URLREQUESTPROPERTY_CUSTOMREFERRERURL             URLRequestProperty          = 7
-	PP_INPUTEVENT_TYPE_TOUCHMOVE                        InputEventType              = 16
-	PP_ERROR_FAILED                                     Error                       = -2
-	PP_LOGLEVEL_LOG                                     LogLevel                    = 1
-	PP_ERROR_NOINTERFACE                                Error                       = -6
-	PP_GRAPHICS3DATTRIB_BLUE_SIZE                       Graphics3DAttrib            = 0x3022
-	PP_VIDEOFRAME_FORMAT_YV12                           VideoFrameFormat            = 1
-	PP_URLRESPONSEPROPERTY_HEADERS                      URLResponseProperty         = 5
-	PP_AUDIOBUFFER_SAMPLERATE_96000                     AudioBufferSampleRate       = 96000
-	PP_MOUSECURSOR_TYPE_HELP                            MouseCursorType             = 5
-	PP_AUDIOBUFFER_SAMPLERATE_192000                    AudioBufferSampleRate       = 192000
-	PP_ERROR_CONNECTION_REFUSED                         Error                       = -102
-	PP_LOGLEVEL_WARNING                                 LogLevel                    = 2
-	PP_NETWORKLIST_TYPE_ETHERNET                        NetworkListType             = 1
-	PP_MOUSECURSOR_TYPE_ZOOMIN                          MouseCursorType             = 39
-	PP_ERROR_ABORTED                                    Error                       = -3
-	PP_NETADDRESS_FAMILY_IPV6                           NetAddressFamily            = 2
-	PP_MOUSECURSOR_TYPE_NORTHEASTRESIZE                 MouseCursorType             = 8
-	PP_FILEOPENFLAG_READ                                FileOpenFlag                = 1 << 0
-	PP_WEBSOCKETREADYSTATE_CONNECTING                   WebSocketReadyState         = 0
-	PP_VIDEOFRAME_FORMAT_I420                           VideoFrameFormat            = 2
-	PP_MAKEDIRECTORYFLAG_NONE                           MakeDirectoryFlag           = 0 << 0
-	PP_FILESYSTEMTYPE_ISOLATED                          FileSystemType              = 4
-	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_CHANNELS            MediaStreamAudioTrackAttrib = 4
-	PP_AUDIOBUFFER_SAMPLESIZE_UNKNOWN                   AudioBufferSampleSize       = 0
-	PP_AUDIOBUFFER_SAMPLERATE_48000                     AudioBufferSampleRate       = 48000
-	PP_INPUTEVENT_TYPE_RAWKEYDOWN                       InputEventType              = 6
-	PP_ERROR_USERCANCEL                                 Error                       = -40
-	PP_GRAPHICS3DATTRIB_STENCIL_SIZE                    Graphics3DAttrib            = 0x3026
-	PP_UDPSOCKET_OPTION_BROADCAST                       UDPSocketOption             = 1
-	PP_INPUTEVENT_TYPE_MOUSEMOVE                        InputEventType              = 2
-	PP_GRAPHICS3DATTRIB_ALPHA_SIZE                      Graphics3DAttrib            = 0x3021
-	PP_MOUSECURSOR_TYPE_HAND                            MouseCursorType             = 2
-	PP_GRAPHICS3DATTRIB_RED_SIZE                        Graphics3DAttrib            = 0x3024
-	PP_MOUSECURSOR_TYPE_NODROP                          MouseCursorType             = 35
-	PP_INPUTEVENT_TYPE_TOUCHEND                         InputEventType              = 17
-	PP_ERROR_CONNECTION_TIMEDOUT                        Error                       = -105
+	
+	PP_VARTYPE_DOUBLE VarType = 4
+	PP_URLREQUESTPROPERTY_ALLOWCREDENTIALS URLRequestProperty = 9
+	PP_ERROR_NOTAFILE Error = -24
+	PP_INPUTEVENT_TYPE_IME_COMPOSITION_START InputEventType = 11
+	PP_INPUTEVENT_TYPE_CONTEXTMENU InputEventType = 10
+	PP_INPUTEVENT_MOUSEBUTTON_RIGHT InputEventMouseButton = 2
+	PP_MOUSECURSOR_TYPE_MOVE MouseCursorType = 29
+	PP_ERROR_FILEEXISTS Error = -21
+	PP_GRAPHICS3DATTRIB_SAMPLE_BUFFERS Graphics3DAttrib = 0x3032
+	PP_MOUSECURSOR_TYPE_COPY MouseCursorType = 36
+	PP_MOUSECURSOR_TYPE_MIDDLEPANNING MouseCursorType = 20
+	PP_URLREQUESTPROPERTY_METHOD URLRequestProperty = 1
+	PP_MOUSECURSOR_TYPE_CELL MouseCursorType = 31
+	PP_AUDIOSAMPLERATE_44100 AudioSampleRate = 44100
+	PP_ERROR_NOTSUPPORTED Error = -12
+	PP_MOUSECURSOR_TYPE_ALIAS MouseCursorType = 33
+	PP_GRAPHICS3DATTRIB_BUFFER_DESTROYED Graphics3DAttrib = 0x3095
+	PP_INPUTEVENT_TYPE_IME_COMPOSITION_END InputEventType = 13
+	PP_OK_COMPLETIONPENDING Error = -1
+	PP_VARTYPE_INT32 VarType = 3
+	PP_FILEOPENFLAG_WRITE FileOpenFlag = 1 << 1
+	PP_TEXTINPUT_TYPE_TELEPHONE TextInputType = 6
+	PP_MOUSECURSOR_TYPE_CONTEXTMENU MouseCursorType = 32
+	PP_WEBSOCKETREADYSTATE_CLOSED WebSocketReadyState = 3
+	PP_MAKEDIRECTORYFLAG_EXCLUSIVE MakeDirectoryFlag = 1 << 1
+	PP_ERROR_NAME_NOT_RESOLVED Error = -110
+	PP_FILETYPE_OTHER FileType = 2
+	PP_LOGLEVEL_TIP LogLevel = 0
+	PP_TEXTINPUT_TYPE_EMAIL TextInputType = 4
+	PP_GRAPHICS3DATTRIB_BUFFER_PRESERVED Graphics3DAttrib = 0x3094
+	PP_ERROR_WRONG_THREAD Error = -52
+	PP_VARTYPE_ARRAY_BUFFER VarType = 9
+	PP_GRAPHICS3DATTRIB_WIDTH Graphics3DAttrib = 0x3057
+	PP_MOUSECURSOR_TYPE_NORTHPANNING MouseCursorType = 22
+	PP_UDPSOCKET_OPTION_SEND_BUFFER_SIZE UDPSocketOption = 2
+	PP_VARTYPE_STRING VarType = 5
+	PP_VIDEOFRAME_FORMAT_BGRA VideoFrameFormat = 3
+	PP_INPUTEVENT_MOUSEBUTTON_LEFT InputEventMouseButton = 0
+	PP_FILETYPE_DIRECTORY FileType = 1
+	PP_MOUSECURSOR_TYPE_PROGRESS MouseCursorType = 34
+	PP_MOUSECURSOR_TYPE_NORTHRESIZE MouseCursorType = 7
+	PP_MOUSECURSOR_TYPE_NORTHWESTPANNING MouseCursorType = 24
+	PP_TEXTINPUT_TYPE_PASSWORD TextInputType = 2
+	PP_MOUSECURSOR_TYPE_CROSS MouseCursorType = 1
+	PP_NETWORKLIST_TYPE_WIFI NetworkListType = 2
+	PP_FILESYSTEMTYPE_LOCALTEMPORARY FileSystemType = 3
+	PP_URLREQUESTPROPERTY_FOLLOWREDIRECTS URLRequestProperty = 4
+	PP_VARTYPE_BOOL VarType = 2
+	PP_ERROR_MESSAGE_TOO_BIG Error = -109
+	PP_FILESYSTEMTYPE_EXTERNAL FileSystemType = 1
+	PP_INPUTEVENT_TYPE_TOUCHSTART InputEventType = 15
+	PP_URLREQUESTPROPERTY_HEADERS URLRequestProperty = 2
+	PP_URLRESPONSEPROPERTY_STATUSLINE URLResponseProperty = 4
+	PP_GRAPHICS3DATTRIB_HEIGHT Graphics3DAttrib = 0x3056
+	PP_MOUSECURSOR_TYPE_COLUMNRESIZE MouseCursorType = 18
+	PP_MOUSECURSOR_TYPE_CUSTOM MouseCursorType = -1
+	PP_TEXTINPUT_TYPE_NUMBER TextInputType = 5
+	PP_URLRESPONSEPROPERTY_URL URLResponseProperty = 0
+	PP_AUDIOSAMPLERATE_48000 AudioSampleRate = 48000
+	PP_GRAPHICS3DATTRIB_GPU_PREFERENCE_PERFORMANCE Graphics3DAttrib = 0x11002
+	PP_MOUSECURSOR_TYPE_ZOOMOUT MouseCursorType = 40
+	PP_VARTYPE_DICTIONARY VarType = 8
+	PP_NETWORKLIST_STATE_DOWN NetworkListState = 0
+	PP_INPUTEVENT_TYPE_MOUSELEAVE InputEventType = 4
+	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_SAMPLE_SIZE MediaStreamAudioTrackAttrib = 3
+	PP_AUDIOBUFFER_SAMPLERATE_44100 AudioBufferSampleRate = 44100
+	PP_INPUTEVENT_TYPE_CHAR InputEventType = 9
+	PP_ERROR_CONNECTION_CLOSED Error = -100
+	PP_VARTYPE_OBJECT VarType = 6
+	PP_WEBSOCKETREADYSTATE_CLOSING WebSocketReadyState = 2
+	PP_VIDEOFRAME_FORMAT_UNKNOWN VideoFrameFormat = 0
+	PP_VARTYPE_UNDEFINED VarType = 0
+	PP_MOUSECURSOR_TYPE_IBEAM MouseCursorType = 3
+	PP_NETWORKLIST_TYPE_UNKNOWN NetworkListType = 0
+	PP_MOUSECURSOR_TYPE_SOUTHEASTRESIZE MouseCursorType = 11
+	PP_ERROR_CONNECTION_FAILED Error = -104
+	PP_ERROR_ADDRESS_INVALID Error = -106
+	PP_INPUTEVENT_TYPE_MOUSEENTER InputEventType = 3
+	PP_INPUTEVENT_TYPE_IME_COMPOSITION_UPDATE InputEventType = 12
+	PP_GRAPHICS3DATTRIB_SAMPLES Graphics3DAttrib = 0x3031
+	PP_URLREQUESTPROPERTY_PREFETCHBUFFERUPPERTHRESHOLD URLRequestProperty = 11
+	PP_HOSTRESOLVER_FLAG_CANONNAME HostResolverFlag = 1 << 0
+	PP_TEXTINPUT_TYPE_URL TextInputType = 7
+	PP_MOUSECURSOR_TYPE_SOUTHEASTPANNING MouseCursorType = 26
+	PP_TCPSOCKET_OPTION_SEND_BUFFER_SIZE TCPSocketOption = 1
+	PP_WEBSOCKETREADYSTATE_OPEN WebSocketReadyState = 1
+	PP_ERROR_CONTEXT_LOST Error = -50
+	PP_MOUSECURSOR_TYPE_NONE MouseCursorType = 37
+	PP_TEXTINPUT_TYPE_TEXT TextInputType = 1
+	PP_ERROR_TIMEDOUT Error = -30
+	PP_INPUTEVENT_TYPE_MOUSEUP InputEventType = 1
+	PP_FILEOPENFLAG_TRUNCATE FileOpenFlag = 1 << 3
+	PP_VIDEOFRAME_FORMAT_LAST VideoFrameFormat = PP_VIDEOFRAME_FORMAT_BGRA
+	PP_NETADDRESS_FAMILY_IPV4 NetAddressFamily = 1
+	PP_NETWORKLIST_TYPE_CELLULAR NetworkListType = 3
+	PP_MOUSECURSOR_TYPE_GRABBING MouseCursorType = 42
+	PP_URLRESPONSEPROPERTY_REDIRECTURL URLResponseProperty = 1
+	PP_ERROR_FILETOOBIG Error = -22
+	PP_MOUSECURSOR_TYPE_NORTHSOUTHRESIZE MouseCursorType = 14
+	PP_MOUSECURSOR_TYPE_NORTHEASTPANNING MouseCursorType = 23
+	PP_INPUTEVENT_TYPE_KEYDOWN InputEventType = 7
+	PP_INPUTEVENT_TYPE_KEYUP InputEventType = 8
+	PP_INPUTEVENT_TYPE_UNDEFINED InputEventType = -1
+	PP_GRAPHICS3DATTRIB_GPU_PREFERENCE_LOW_POWER Graphics3DAttrib = 0x11001
+	PP_TEXTINPUT_TYPE_SEARCH TextInputType = 3
+	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_SAMPLE_RATE MediaStreamAudioTrackAttrib = 2
+	PP_MOUSECURSOR_TYPE_NOTALLOWED MouseCursorType = 38
+	PP_TCPSOCKET_OPTION_NO_DELAY TCPSocketOption = 0
+	PP_INPUTEVENT_TYPE_TOUCHCANCEL InputEventType = 18
+	PP_MOUSECURSOR_TYPE_SOUTHRESIZE MouseCursorType = 10
+	PP_NETADDRESS_FAMILY_UNSPECIFIED NetAddressFamily = 0
+	PP_ERROR_FILENOTFOUND Error = -20
+	PP_MOUSECURSOR_TYPE_EASTWESTRESIZE MouseCursorType = 15
+	PP_AUDIOBUFFER_SAMPLESIZE_16_BITS AudioBufferSampleSize = 2
+	PP_MOUSECURSOR_TYPE_WAIT MouseCursorType = 4
+	PP_UDPSOCKET_OPTION_RECV_BUFFER_SIZE UDPSocketOption = 3
+	PP_URLREQUESTPROPERTY_URL URLRequestProperty = 0
+	PP_URLREQUESTPROPERTY_ALLOWCROSSORIGINREQUESTS URLRequestProperty = 8
+	PP_ERROR_NOMEMORY Error = -8
+	PP_ERROR_ADDRESS_UNREACHABLE Error = -107
+	PP_ERROR_BLOCKS_MAIN_THREAD Error = -13
+	PP_GRAPHICS3DATTRIB_SWAP_BEHAVIOR Graphics3DAttrib = 0x3093
+	PP_MOUSECURSOR_TYPE_EASTRESIZE MouseCursorType = 6
+	PP_URLREQUESTPROPERTY_CUSTOMCONTENTTRANSFERENCODING URLRequestProperty = 10
+	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_HEIGHT MediaStreamVideoTrackAttrib = 3
+	PP_MOUSECURSOR_TYPE_EASTPANNING MouseCursorType = 21
+	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_DURATION MediaStreamAudioTrackAttrib = 5
+	PP_AUDIOBUFFER_SAMPLERATE_UNKNOWN AudioBufferSampleRate = 0
+	PP_LOGLEVEL_ERROR LogLevel = 3
+	PP_TOUCHLIST_TYPE_TARGETTOUCHES TouchListType = 2
+	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_NONE MediaStreamVideoTrackAttrib = 0
+	PP_ERROR_CONNECTION_ABORTED Error = -103
+	PP_INPUTEVENT_TYPE_MOUSEDOWN InputEventType = 0
+	PP_URLREQUESTPROPERTY_RECORDUPLOADPROGRESS URLRequestProperty = 6
+	PP_GRAPHICS3DATTRIB_DEPTH_SIZE Graphics3DAttrib = 0x3025
+	PP_AUDIOBUFFER_SAMPLERATE_8000 AudioBufferSampleRate = 8000
+	PP_ERROR_ADDRESS_IN_USE Error = -108
+	PP_MOUSECURSOR_TYPE_SOUTHWESTPANNING MouseCursorType = 27
+	PP_MOUSECURSOR_TYPE_NORTHEASTSOUTHWESTRESIZE MouseCursorType = 16
+	PP_ERROR_NO_USER_GESTURE Error = -41
+	PP_MOUSECURSOR_TYPE_ROWRESIZE MouseCursorType = 19
+	PP_VARTYPE_RESOURCE VarType = 10
+	PP_INPUTEVENT_MOUSEBUTTON_MIDDLE InputEventMouseButton = 1
+	PP_MOUSECURSOR_TYPE_NORTHWESTRESIZE MouseCursorType = 9
+	PP_MOUSECURSOR_TYPE_NORTHWESTSOUTHEASTRESIZE MouseCursorType = 17
+	PP_URLREQUESTPROPERTY_STREAMTOFILE URLRequestProperty = 3
+	PP_ERROR_BADARGUMENT Error = -4
+	PP_INPUTEVENT_MOUSEBUTTON_NONE InputEventMouseButton = -1
+	PP_MOUSECURSOR_TYPE_WESTRESIZE MouseCursorType = 13
+	PP_AUDIOBUFFER_SAMPLERATE_16000 AudioBufferSampleRate = 16000
+	PP_GRAPHICS3DATTRIB_NONE Graphics3DAttrib = 0x3038
+	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_FORMAT MediaStreamVideoTrackAttrib = 4
+	PP_MAKEDIRECTORYFLAG_WITH_ANCESTORS MakeDirectoryFlag = 1 << 0
+	PP_ERROR_INPROGRESS Error = -11
+	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_NONE MediaStreamAudioTrackAttrib = 0
+	PP_MOUSECURSOR_TYPE_SOUTHWESTRESIZE MouseCursorType = 12
+	PP_URLRESPONSEPROPERTY_REDIRECTMETHOD URLResponseProperty = 2
+	PP_WEBSOCKETREADYSTATE_INVALID WebSocketReadyState = -1
+	PP_AUDIOSAMPLERATE_NONE AudioSampleRate = 0
+	PP_FILETYPE_REGULAR FileType = 0
+	PP_GRAPHICS3DATTRIB_GPU_PREFERENCE Graphics3DAttrib = 0x11000
+	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_BUFFERED_FRAMES MediaStreamVideoTrackAttrib = 1
+	PP_AUDIOBUFFER_SAMPLERATE_32000 AudioBufferSampleRate = 32000
+	PP_FILESYSTEMTYPE_LOCALPERSISTENT FileSystemType = 2
+	PP_ERROR_NOACCESS Error = -7
+	PP_ERROR_NOSPACE Error = -9
+	PP_MOUSECURSOR_TYPE_VERTICALTEXT MouseCursorType = 30
+	PP_URLREQUESTPROPERTY_PREFETCHBUFFERLOWERTHRESHOLD URLRequestProperty = 12
+	PP_ERROR_NOQUOTA Error = -10
+	PP_TOUCHLIST_TYPE_TOUCHES TouchListType = 0
+	PP_FILEOPENFLAG_EXCLUSIVE FileOpenFlag = 1 << 4
+	PP_NETWORKLIST_STATE_UP NetworkListState = 1
+	PP_AUDIOBUFFER_SAMPLERATE_22050 AudioBufferSampleRate = 22050
+	PP_MOUSECURSOR_TYPE_WESTPANNING MouseCursorType = 28
+	PP_GRAPHICS3DATTRIB_GREEN_SIZE Graphics3DAttrib = 0x3023
+	PP_URLRESPONSEPROPERTY_STATUSCODE URLResponseProperty = 3
+	PP_MOUSECURSOR_TYPE_GRAB MouseCursorType = 41
+	PP_TOUCHLIST_TYPE_CHANGEDTOUCHES TouchListType = 1
+	PP_FILEOPENFLAG_APPEND FileOpenFlag = 1 << 5
+	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_BUFFERS MediaStreamAudioTrackAttrib = 1
+	PP_INPUTEVENT_TYPE_IME_TEXT InputEventType = 14
+	PP_UDPSOCKET_OPTION_ADDRESS_REUSE UDPSocketOption = 0
+	PP_URLREQUESTPROPERTY_RECORDDOWNLOADPROGRESS URLRequestProperty = 5
+	PP_ERROR_NO_MESSAGE_LOOP Error = -51
+	PP_ERROR_BADRESOURCE Error = -5
+	PP_ERROR_FILECHANGED Error = -23
+	PP_ERROR_CONNECTION_RESET Error = -101
+	PP_VARTYPE_NULL VarType = 1
+	PP_VARTYPE_ARRAY VarType = 7
+	PP_TCPSOCKET_OPTION_RECV_BUFFER_SIZE TCPSocketOption = 2
+	PP_FILESYSTEMTYPE_INVALID FileSystemType = 0
+	PP_FILEOPENFLAG_CREATE FileOpenFlag = 1 << 2
+	PP_MEDIASTREAMVIDEOTRACK_ATTRIB_WIDTH MediaStreamVideoTrackAttrib = 2
+	PP_MOUSECURSOR_TYPE_SOUTHPANNING MouseCursorType = 25
+	PP_URLREQUESTPROPERTY_CUSTOMUSERAGENT URLRequestProperty = 13
+	PP_TEXTINPUT_TYPE_NONE TextInputType = 0
+	PP_MOUSECURSOR_TYPE_POINTER MouseCursorType = 0
+	PP_INPUTEVENT_TYPE_WHEEL InputEventType = 5
+	PP_URLREQUESTPROPERTY_CUSTOMREFERRERURL URLRequestProperty = 7
+	PP_INPUTEVENT_TYPE_TOUCHMOVE InputEventType = 16
+	PP_ERROR_FAILED Error = -2
+	PP_LOGLEVEL_LOG LogLevel = 1
+	PP_ERROR_NOINTERFACE Error = -6
+	PP_GRAPHICS3DATTRIB_BLUE_SIZE Graphics3DAttrib = 0x3022
+	PP_VIDEOFRAME_FORMAT_YV12 VideoFrameFormat = 1
+	PP_URLRESPONSEPROPERTY_HEADERS URLResponseProperty = 5
+	PP_AUDIOBUFFER_SAMPLERATE_96000 AudioBufferSampleRate = 96000
+	PP_MOUSECURSOR_TYPE_HELP MouseCursorType = 5
+	PP_AUDIOBUFFER_SAMPLERATE_192000 AudioBufferSampleRate = 192000
+	PP_ERROR_CONNECTION_REFUSED Error = -102
+	PP_LOGLEVEL_WARNING LogLevel = 2
+	PP_NETWORKLIST_TYPE_ETHERNET NetworkListType = 1
+	PP_MOUSECURSOR_TYPE_ZOOMIN MouseCursorType = 39
+	PP_ERROR_ABORTED Error = -3
+	PP_NETADDRESS_FAMILY_IPV6 NetAddressFamily = 2
+	PP_MOUSECURSOR_TYPE_NORTHEASTRESIZE MouseCursorType = 8
+	PP_FILEOPENFLAG_READ FileOpenFlag = 1 << 0
+	PP_WEBSOCKETREADYSTATE_CONNECTING WebSocketReadyState = 0
+	PP_VIDEOFRAME_FORMAT_I420 VideoFrameFormat = 2
+	PP_MAKEDIRECTORYFLAG_NONE MakeDirectoryFlag = 0 << 0
+	PP_FILESYSTEMTYPE_ISOLATED FileSystemType = 4
+	PP_MEDIASTREAMAUDIOTRACK_ATTRIB_CHANNELS MediaStreamAudioTrackAttrib = 4
+	PP_AUDIOBUFFER_SAMPLESIZE_UNKNOWN AudioBufferSampleSize = 0
+	PP_AUDIOBUFFER_SAMPLERATE_48000 AudioBufferSampleRate = 48000
+	PP_INPUTEVENT_TYPE_RAWKEYDOWN InputEventType = 6
+	PP_ERROR_USERCANCEL Error = -40
+	PP_GRAPHICS3DATTRIB_STENCIL_SIZE Graphics3DAttrib = 0x3026
+	PP_UDPSOCKET_OPTION_BROADCAST UDPSocketOption = 1
+	PP_INPUTEVENT_TYPE_MOUSEMOVE InputEventType = 2
+	PP_GRAPHICS3DATTRIB_ALPHA_SIZE Graphics3DAttrib = 0x3021
+	PP_MOUSECURSOR_TYPE_HAND MouseCursorType = 2
+	PP_GRAPHICS3DATTRIB_RED_SIZE Graphics3DAttrib = 0x3024
+	PP_MOUSECURSOR_TYPE_NODROP MouseCursorType = 35
+	PP_INPUTEVENT_TYPE_TOUCHEND InputEventType = 17
+	PP_ERROR_CONNECTION_TIMEDOUT Error = -105
+	
 
 	PP_IMAGEDATAFORMAT_BGRA_PREMUL ImageDataFormat = 0
 	PP_IMAGEDATAFORMAT_RGBA_PREMUL ImageDataFormat = 1
@@ -938,7 +929,6 @@ func ppb_wheelinputevent_is_wheel_input_event(resource pp_Resource) pp_Bool
 func ppb_wheelinputevent_get_delta(return_struct *FloatPoint, event pp_Resource)
 func ppb_wheelinputevent_get_ticks(return_struct *FloatPoint, event pp_Resource)
 func ppb_wheelinputevent_get_scroll_by_page(event pp_Resource) pp_Bool
-
 // gostring returns a string object containing the contents of the
 // null-terminated UTF-8 C string.
 func gostring(buf *byte) string
