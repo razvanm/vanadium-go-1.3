@@ -111,8 +111,8 @@ nex_return:
 
 TEXT runtime·settls(SB),NOSPLIT,$0
 	MOVL	DI, TLS // really BP
-	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	ADDL	$8, DI
+	CMPL	runtime·nacl_irt_is_enabled(SB), $0
 	JNE	settls_irt
 	NACL_SYSCALL(SYS_tls_init)
 	JMP	settls_done
