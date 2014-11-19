@@ -103,8 +103,8 @@ initialize_module_loop:
 	ADDL	$8, SI
 	JMP	initialize_module_loop
 initialize_module_done:
-	MOVQ	4(SP), SI
-	MOVQ	8(SP), DI
+	MOVL	4(SP), SI
+	MOVL	8(SP), DI
 	XORL	AX, AX
 	RET
 
@@ -115,23 +115,25 @@ TEXT ppapi·ppp_shutdown_module_handler(SB),NOSPLIT,$0
 
 // ppapi·ppp_get_interface_handler is called by the browser to get
 // callback functions.  Called from the C stack.
-TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$20
-	MOVL	BP, 4(SP)
-	MOVL	BX, 8(SP)
-	MOVL	SI, 12(SP)
-	MOVL	DI, 16(SP)
+TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$24
+	MOVL	BP, 8(SP)
+	MOVL	BX, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	DI, 20(SP)
 	MOVL	interface_name+0(FP), AX
 	MOVL	AX, 0(SP)
 	CALL	ppapi·ppp_get_interface(SB)
-	MOVL	4(SP), BP
-	MOVL	8(SP), BX
-	MOVL	12(SP), SI
-	MOVL	16(SP), DI
+	MOVL	4(SP), AX
+	MOVL	8(SP), BP
+	MOVL	12(SP), BX
+	MOVL	16(SP), SI
+	MOVL	20(SP), DI
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.
-TEXT ppapi·start(SB),NOSPLIT,$0
+TEXT ppapi·start(SB),NOSPLIT,$4
 	LEAL	ppapi·pp_start_functions(SB), DI
+	MOVL	DI, 0(SP)
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX
 	RET

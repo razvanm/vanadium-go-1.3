@@ -644,13 +644,26 @@ TEXT ·asmcgocall(SB),NOSPLIT,$0-8
 	RET
 
 TEXT ·asmcgocall_errno(SB),NOSPLIT,$0-12
+	GO_ARGS
 	MOVL	fn+0(FP), AX
 	MOVL	arg+4(FP), BX
 	CALL	asmcgocall<>(SB)
 	MOVL	AX, ret+8(FP)
 	RET
 
-TEXT asmcgocall<>(SB),NOSPLIT,$0-0
+// asmcgocall common code. fn in AX, arg in BX. returns errno in AX.
+//
+// We need to include dummy space for parameters.  If there is a callback,
+// ·cgocallback_gofunc will splice the callback onto the goroutine stack.
+// Since ·cgocallback_gofunc expects 12 parameters, we need to place dummy
+// parameters here.
+TEXT asmcgocall<>(SB),NOSPLIT,$16-0
+	NO_LOCAL_POINTERS
+	MOVL	$0, 0(SP)
+	MOVL	$0, 4(SP)
+	MOVL	$0, 8(SP)
+	MOVL	$0, 12(SP)
+	
 	// fn in AX, arg in BX
 	MOVL	SP, DX
 

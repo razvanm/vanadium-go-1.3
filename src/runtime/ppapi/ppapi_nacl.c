@@ -151,8 +151,9 @@ PPBFunction ppapi·pp_start_functions[] = {
 void *ppapi·ppp_get_interface(int8 *interface_name) {
 	struct PPPInterface *intf;
 	for (intf = ppapi·ppp_interfaces; intf->name != 0; intf++) {
-	  if (runtime·strcmp((byte *) intf->name, (byte *) interface_name) == 0)
-	    return intf->functions;
+		if (runtime·strcmp((byte *) intf->name, (byte *) interface_name) == 0) {
+			return intf->functions;
+		}
 	}
 	return 0;
 }
