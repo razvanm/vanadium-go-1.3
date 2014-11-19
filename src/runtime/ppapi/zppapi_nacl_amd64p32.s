@@ -6242,17 +6242,17 @@ TEXT ppapi·ppp_shutdown_module_handler(SB),NOSPLIT,$0
 
 // ppapi·ppp_get_interface_handler is called by the browser to get
 // callback functions.  Called on the C stack.
-TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$40
-	MOVQ	BX, 4(SP)
-	MOVQ	R12, 12(SP)
-	MOVQ	R13, 20(SP)
-	MOVQ	R14, 28(SP)
+TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$48
+	MOVQ	BX, 16(SP)
+	MOVQ	R12, 24(SP)
+	MOVQ	R13, 32(SP)
+	MOVQ	R14, 40(SP)
 	MOVL	DI, 0(SP)  // interface_name
 	CALL	ppapi·ppp_get_interface(SB)
-	MOVQ	4(SP), BX
-	MOVQ	12(SP), R12
-	MOVQ	20(SP), R13
-	MOVQ	28(SP), R14
+	MOVQ	16(SP), BX
+	MOVQ	24(SP), R12
+	MOVQ	32(SP), R13
+	MOVQ	40(SP), R14
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.

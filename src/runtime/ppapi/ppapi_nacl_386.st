@@ -123,7 +123,6 @@ TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$24
 	MOVL	interface_name+0(FP), AX
 	MOVL	AX, 0(SP)
 	CALL	ppapi·ppp_get_interface(SB)
-	MOVL	4(SP), AX
 	MOVL	8(SP), BP
 	MOVL	12(SP), BX
 	MOVL	16(SP), SI
