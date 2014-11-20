@@ -7,7 +7,6 @@ import (
 	"os"
 	"time"
 	"unsafe"
-	"log"
 )
 
 var (
@@ -460,7 +459,6 @@ func (ref FileRef) ReadDirectoryEntries() (entries []DirectoryEntry, err error) 
 	var aout pp_ArrayOutput
 	var alloc arrayOutputBuffer
 	init_array_output(&aout, &alloc)
-	log.Printf("AAAAAAAA2: %p", &alloc)
 	code := ppb_fileref_read_directory_entries(ref.id, aout, ppNullCompletionCallback)
 	if code < 0 {
 		err = decodeError(Error(code))

@@ -62,7 +62,7 @@ parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--include', nargs=1, help='PPAPI include directory from the NaCl SDK')
 parser.add_argument('template', nargs='+', help='template files')
 
-# Sizes for machine kinds.
+# Size/align for machine kinds.
 sizes = {
     'void': (0, 0),
     'int32': (4, 4),
@@ -122,7 +122,8 @@ class Func:
     self.structReturn = False
 
 # builtin_types is a dictionary containing the predefined base types.
-builtin_types = {
+def builtin_types():
+  return {
     '':        Type('void', 'void', True),
     'void':    Type('void', 'void', True),
     'bool':    Type('bool', 'int32', True),
@@ -145,7 +146,7 @@ class Processor:
 
   # Scanned configuration info.
   enums = {}
-  types = builtin_types.copy()
+  types = builtin_types()
   callbacks = []
   functions = []
 
@@ -201,6 +202,17 @@ class Processor:
       m = re.search(r'(PP\w*)\s*=\s*([^,\n\r]+),?\s*$', line)
       if m:
         self.consts[m.group(1)] = m.group(2)
+
+  # scanArch reads the architecture from the files.
+  def scanArch(self, files):
+    for line in fileinput.input(files):
+      if line.startswith('//sizeof'):
+        # //enum regex typename
+        m = re.search(r'^//sizeof\s+(\w+)\s+(\d+)\s+(\d+)$', line)
+        if m == None:
+          raise Exception('Malformed //sizeof: ' + line)
+        sizes[m.group(1)] = (int(m.group(2)), int(m.group(3)))
+    self.types = builtin_types()
 
   # scanConfig reads the configuration from a set of files.
   def scanConfig(self, files):
@@ -279,6 +291,7 @@ def main():
   if args.include != None:
     for dir in args.include:
       p.scanIncludeFiles(glob.glob(dir + '/*.h'))
+  p.scanArch(args.template)
   p.scanConfig(args.template)
   p.printTemplates(args.template)
 
