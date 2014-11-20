@@ -371,69 +371,69 @@ package ppapi
 
 // Type definitions.
 // type void void
-type AudioBufferSampleSize int32
-type Graphics3DAttrib int32
-type WebSocketReadyState int32
-type WebSocketCloseCode int32
-type AudioBufferSampleRate int32
 type NetworkListType int32
-type MediaStreamVideoTrackAttrib int32
 type pp_TimeTicks float64
-type pp_DirectoryEntry [8]byte
-type InputEventMouseButton int32
-type URLRequestProperty int32
 type pp_Var [16]byte
 type MediaStreamAudioTrackAttrib int32
 type TCPSocketOption int32
-type pp_Bool int32
 type UDPSocketOption int32
 type pp_AudioCallback uintptr
-type pp_ArrayOutput [8]byte
 type LogLevel int32
 // type uintptr int32
-type NetAddressFamily int32
 type NetworkListState int32
 type pp_FileInfo [40]byte
-type pp_TouchPoint [28]byte
-type pp_TimeDelta float64
 // type uint16 int32
-// type bool int32
 type pp_HostResolverHint [8]byte
-type MouseCursorType int32
-type FileType int32
+// type bool int32
 // type float32 float32
-// type ImageDataDesc struct
 // type int32 int32
-type InputEventType int32
-// type int16 int32
-type pp_NetAddress_IPv4 [6]byte
-// type void void
-type pp_GamepadSampleData [472]byte
+type TextInputType int32
+type WebSocketReadyState int32
 type ImageDataFormat int32
 type FileOpenFlag int32
 type HostResolverFlag int32
 type Error int32
-type TextInputType int32
 // type uint64 int64
+type VideoFrameFormat int32
+// type Point struct
+type pp_CompletionCallback [12]byte
+// type uint32 int32
+// type Rect struct
+type URLResponseProperty int32
+// type Size struct
+type AudioBufferSampleSize int32
+type Graphics3DAttrib int32
+type WebSocketCloseCode int32
+type NetAddressFamily int32
+type MediaStreamVideoTrackAttrib int32
+type InputEventMouseButton int32
+type URLRequestProperty int32
+type pp_Bool int32
+type pp_DirectoryEntry [8]byte
+type pp_TouchPoint [28]byte
+type pp_TimeDelta float64
+type pp_ArrayOutput [8]byte
+type MouseCursorType int32
+// type void void
+type AudioBufferSampleRate int32
+type InputEventType int32
+// type int16 int32
+type FileType int32
+type pp_GamepadSampleData [472]byte
+type pp_NetAddress_IPv4 [6]byte
 type pp_NetAddress_IPv6 [18]byte
 type pp_Resource int32
 type pp_Instance int32
 // type float64 float64
 type AudioSampleRate int32
 type FileSystemType int32
-type pp_CompletionCallback [12]byte
 // type FloatPoint struct
-// type uint32 int32
 type TouchListType int32
-// type Point struct
 type pp_Time float64
 // type int64 int64
-// type Rect struct
-type URLResponseProperty int32
-type VideoFrameFormat int32
+// type ImageDataDesc struct
 type VarType int32
 type MakeDirectoryFlag int32
-// type Size struct
 
 
 type TimeTicks pp_TimeTicks

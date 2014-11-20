@@ -245,7 +245,7 @@ func (inst *Instance) DidDestroy() {
 }
 
 func (inst *Instance) DidChangeView(view ppapi.View) {
-	inst.Printf("DidChangeView")
+	inst.Printf("DidChangeView: %v", view)
 	r, err := view.GetRect()
 	if err != nil {
 		inst.Errorf("Can't get view rectangle: %s", err)

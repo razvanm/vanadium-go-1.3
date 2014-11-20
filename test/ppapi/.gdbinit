@@ -1,3 +1,3 @@
 target remote localhost:4014
-nacl-manifest message.nmf
-nacl-irt irt_core_x86_64.nexe
+nacl-manifest mandel.nmf
+nacl-irt irt_core_x86_32.nexe

@@ -612,11 +612,17 @@ TEXT runtime·asmcgocall_errno(SB),NOSPLIT,$0-12
 	RET
 
 // asmcgocall common code. fn in AX, arg in BX. returns errno in AX.
+//
+// We need to include dummy space for parameters.  If there is a callback,
+// ·cgocallback_gofunc will splice the callback onto the goroutine stack.
+// Since ·cgocallback_gofunc expects 12 parameters, we need to place dummy
+// parameters here.
 TEXT asmcgocall<>(SB),NOSPLIT,$16-0
 	NO_LOCAL_POINTERS
 	MOVQ	$0, 0(SP)
 	MOVQ	$0, 8(SP)
-	
+
+	// fn in AX, arg in BX. 
 	MOVL	SP, DX
 
 	// Figure out if we need to switch to m->g0 stack.
@@ -640,8 +646,6 @@ TEXT asmcgocall<>(SB),NOSPLIT,$16-0
 nosave:
 
 	// Now on a scheduling stack (a pthread-created stack).
-	// Make sure we have enough room for 4 stack-backed fast-call
-	// registers as per windows amd64 calling convention.
 	SUBL	$64, SP
 	ANDL	$~15, SP	// alignment for gcc ABI
 	LEAL	0(BP), R9
