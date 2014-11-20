@@ -93,6 +93,61 @@
   {%- endfor -%}
 {%- endmacro -%}
 
+{% if False %}
+// goargs sets up the arguments, converting to the Go calling convention,
+// where everything is passed on the stack, from the gcc calling convention, where:
+//   - integer args are passed in registers DI, SI, DX, CX, R8, R9.
+//   - float args are passed in registers X0, ..., X5.
+//   - structs smaller than 16 bytes are passed in registers.
+//   - everything else is passed on the stack.
+//
+// AX refers to the caller stack frame.
+// SP refers the the callee stack frame.
+// Destroys DX.
+{% endif %}
+{% macro goargs(args, ain) -%}
+  {%- set regs = ['DI', 'SI', 'DX', 'CX', 'R8', 'R9'] -%}
+  {%- set fregs = ['X0', 'X1', 'X2', 'X3', 'X4', 'X5'] -%}
+  {%- set soff = 0 -%}
+  {%- for arg in args -%}
+    {%- set ty = arg.type -%}
+    {%- set kind = ty.kind -%}
+    {%- set size = ty.size -%}
+    {%- if ty.align > 0 %}
+      {%- set ain = align(ain, ty.align) -%}
+    {%- endif -%}
+    {%- if kind == 'float32' and fregs.__len__() >= 1 %}
+	MOVSS	{{fregs[0]}}, {{ain}}(SP)  // {{arg.name}}
+	{%- set fregs = fregs[1:] -%}
+    {%- elif kind == 'float64' and fregs.__len__() >= 1 %}
+	MOVSD	{{fregs[0]}}, {{ain}}(SP)  // {{arg.name}}
+	{%- set fregs = fregs[1:] -%}
+    {%- elif size == 4 and regs.__len__() >= 1 %}
+	MOVL	{{regs[0]}}, {{ain}}(SP)  // {{arg.name}}
+	{%- set regs = regs[1:] -%}
+    {%- elif size == 8 and regs.__len__() >= 1 %}
+	MOVQ	{{regs[0]}}, {{ain}}(SP)  // {{arg.name}}
+	{%- set regs = regs[1:] -%}
+    {%- elif size == 12 and regs.__len__() >= 2 %}
+	MOVQ	{{regs[0]}}, {{ain}}(SP)  // {{arg.name}} (sizeof {{size}})
+	MOVL	{{regs[1]}}, {{ain+8}}(SP)
+	{%- set regs = regs[2:] -%}
+    {%- elif size == 16 and regs.__len__() >= 2 %}
+	MOVQ	{{regs[0]}}, {{ain}}(SP)  // {{arg.name}} (sizeof {{size}})
+	MOVQ	{{regs[1]}}, {{ain+8}}(SP)
+	{%- set regs = regs[2:] -%}
+    {%- else %}
+	// {{arg.name}} (sizeof {{size}})
+      {%- for aoff in range(0, size, 4) %}
+	MOVL	{{soff+aoff}}(FP), DX
+	MOVL	DX, {{ain+aoff}}(SP)
+      {%- endfor -%}
+      {%- set soff = soff + size -%}
+    {%- endif -%}
+    {%- set ain = ain + size -%}
+  {%- endfor -%}
+{%- endmacro -%}
+
 // Callbacks are invoked through cgocallback.
 {% for func in callbacks -%}
 {% set fsize = align(framesize(func),8) -%}
@@ -103,28 +158,7 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+56,16)}}
 	MOVQ	R12, {{fsize+32}}(SP)
 	MOVQ	R13, {{fsize+40}}(SP)
 	MOVQ	R14, {{fsize+48}}(SP)
-	{% if fsize > 0 -%}
-	MOVL	DI, 16(SP)
-	{% endif -%}
-	{% if fsize > 4 -%}
-	MOVL	SI, 20(SP)
-	{% endif -%}
-	{% if fsize > 8 -%}
-	MOVL	DX, 24(SP)
-	{% endif -%}
-	{% if fsize > 12 -%}
-	MOVL	CX, 28(SP)
-	{% endif -%}
-	{% if fsize > 16 -%}
-	MOVL	R8, 32(SP)
-	{% endif -%}
-	{% if fsize > 20 -%}
-	MOVL	R9, 36(SP)
-	{% endif -%}
-	{% for aoff in range(24, fsize, 4) -%}
-	MOVL	arg{{aoff/4}}+{{aoff-24}}(FP), AX
-	MOVL	AX, {{aoff+12}}(SP)
-	{% endfor -%}
+	{{- goargs(func.args, 16) }}
 	MOVL	$0, {{fsize+16}}(SP)
 	LEAL	·{{func.name}}(SB), AX
 	MOVL	AX, 0(SP)
@@ -217,17 +251,17 @@ TEXT ppapi·ppp_shutdown_module_handler(SB),NOSPLIT,$0
 
 // ppapi·ppp_get_interface_handler is called by the browser to get
 // callback functions.  Called on the C stack.
-TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$40
-	MOVQ	BX, 4(SP)
-	MOVQ	R12, 12(SP)
-	MOVQ	R13, 20(SP)
-	MOVQ	R14, 28(SP)
+TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$48
+	MOVQ	BX, 16(SP)
+	MOVQ	R12, 24(SP)
+	MOVQ	R13, 32(SP)
+	MOVQ	R14, 40(SP)
 	MOVL	DI, 0(SP)  // interface_name
 	CALL	ppapi·ppp_get_interface(SB)
-	MOVQ	4(SP), BX
-	MOVQ	12(SP), R12
-	MOVQ	20(SP), R13
-	MOVQ	28(SP), R14
+	MOVQ	16(SP), BX
+	MOVQ	24(SP), R12
+	MOVQ	32(SP), R13
+	MOVQ	40(SP), R14
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.
@@ -258,10 +292,3 @@ TEXT ·gostringn(SB),NOSPLIT,$0
 
 TEXT ·free(SB),NOSPLIT,$0
 	JMP	runtime·cfree(SB)
-
-TEXT ·ppb_graphics2d_createx(SB),NOSPLIT,$8
-	GO_ARGS
-	MOVL	$22, rval+24(FP)
-	RET
-
-	

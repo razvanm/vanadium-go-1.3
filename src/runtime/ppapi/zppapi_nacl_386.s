@@ -91,14 +91,14 @@
 //func ppb_audiobuffer_get_data_buffer_size(resource pp_Resource) uint32 = PPB_AUDIO_BUFFER[8]
  
 //func ppb_audioconfig_create_stereo_16bit(instance pp_Instance, sample_rate uint32, sample_frame_count uint32) pp_Resource  = PPB_AUDIO_CONFIG[0]
-//func ppb_audioconfig_recommend_sample_frame_count(instance pp_Instance, sample_rate uint32, requested_sample_frame_count uint32) uint32  = PPB_AUDIO_CONFIG[1]
-//func ppb_audioconfig_is_audio_config(resource pp_Resource)  pp_Bool		= PPB_AUDIO_CONFIG[2]
+//func ppb_audioconfig_recommend_sample_frame_count(instance pp_Instance, sample_rate uint32, requested_sample_frame_count uint32) uint32 = PPB_AUDIO_CONFIG[1]
+//func ppb_audioconfig_is_audio_config(resource pp_Resource)  pp_Bool = PPB_AUDIO_CONFIG[2]
 //func ppb_audioconfig_get_sample_rate(resource pp_Resource) AudioSampleRate = PPB_AUDIO_CONFIG[3]
 //func ppb_audioconfig_get_sample_frame_count(resource pp_Resource) uint32 = PPB_AUDIO_CONFIG[4]
 //func ppb_audioconfig_recommend_sample_rate(instance pp_Instance) AudioSampleRate = PPB_AUDIO_CONFIG[5]
  
 //func ppb_console_log(instance pp_Instance, level LogLevel, value pp_Var) = PPB_CONSOLE[0]
-//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[0]
+//func ppb_console_log_with_source(instance pp_Instance, level LogLevel, source pp_Var, value pp_Var) = PPB_CONSOLE[1]
  
 //func ppb_core_add_ref_resource(resource pp_Resource) = PPB_CORE[0]
 //func ppb_core_release_resource(resource pp_Resource) = PPB_CORE[1]
@@ -159,9 +159,9 @@
 //func ppb_graphics3d_resize_buffers(resource pp_Resource, width int32, height int32) int32 = PPB_GRAPHICS3D[6]
 
 //func ppb_hostresolver_create(instance pp_Instance) pp_Resource = PPB_HOST_RESOLVER[0]
-//func ppb_hostresolver_is_host_resolver(resource pp_Resource) pp_Bool	  = PPB_HOST_RESOLVER[1]
-//func ppb_hostresolver_resolve(resolver pp_Resource, host *byte, port uint16, hint *pp_HostResolverHint, cb pp_CompletionCallback) int32  = PPB_HOST_RESOLVER[2]
-//func ppb_hostresolver_get_canonical_name(resolver pp_Resource) pp_Var	       = PPB_HOST_RESOLVER[3]
+//func ppb_hostresolver_is_host_resolver(resource pp_Resource) pp_Bool = PPB_HOST_RESOLVER[1]
+//func ppb_hostresolver_resolve(resolver pp_Resource, host *byte, port uint16, hint *pp_HostResolverHint, cb pp_CompletionCallback) int32 = PPB_HOST_RESOLVER[2]
+//func ppb_hostresolver_get_canonical_name(resolver pp_Resource) pp_Var = PPB_HOST_RESOLVER[3]
 //func ppb_hostresolver_get_net_address_count(resolver pp_Resource) uint32 = PPB_HOST_RESOLVER[4]
 //func ppb_hostresolver_get_net_address(resolver pp_Resource, index uint32) pp_Resource = PPB_HOST_RESOLVER[5]
 
@@ -362,6 +362,7 @@
 //func ppb_wheelinputevent_get_delta(event pp_Resource) FloatPoint = PPB_WHEEL_INPUT_EVENT[2]
 //func ppb_wheelinputevent_get_ticks(event pp_Resource) FloatPoint = PPB_WHEEL_INPUT_EVENT[3]
 //func ppb_wheelinputevent_get_scroll_by_page(event pp_Resource) pp_Bool = PPB_WHEEL_INPUT_EVENT[4]
+// -*- mode: asm -*-
 // Copyright 2014 The Go Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
@@ -370,8 +371,14 @@
 // #include "../zasm_GOOS_GOARCH.h"
 #include "../zasm_nacl_386.h"
 #include "../../cmd/ld/textflag.h"
+#include "../funcdata.h"
 #include "../irt_nacl.h"
 #include "ppapi_GOOS.h"
+
+// Architectural parameters.
+//
+//sizeof int64 8 4
+//sizeof float64 8 4
 
 // doreturn(ty) expands to the instruction sequence for saving the return
 // value into the caller's stack frame.
@@ -1028,7 +1035,7 @@ TEXT ppapi·ppb_console_log_with_source(SB),NOSPLIT,$40
 	MOVL	36(BP), AX
 	MOVL	AX, 36(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_CONSOLE*8+4)(SB), AX
-	MOVL	(0*4)(AX), AX
+	MOVL	(1*4)(AX), AX
 	CALL	AX
 	// No return value.
 	RET
@@ -5772,20 +5779,26 @@ TEXT ppapi·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$4
 
 // ppapi·ppp_initialize_module_handler is called once at initialization
 // initialization time.  Called from the C stack.
-TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$20
-	MOVL	BP, 4(SP)
-	MOVL	BX, 8(SP)
-	MOVL	SI, 12(SP)
-	MOVL	DI, 16(SP)
+TEXT ppapi·ppp_initialize_module_handler(SB),NOSPLIT,$12
+	MOVL	SI, 4(SP)
+	MOVL	DI, 8(SP)
 	MOVL	module_id+0(FP), AX
 	MOVL	AX, ppapi·module_id(SB)
-	MOVL	get_browser_interface+4(FP), AX
+	MOVL	get_browser_interface+4(FP), DI
+	LEAL	ppapi·ppb_interfaces(SB), SI
+initialize_module_loop:
+	MOVL	0(SI), AX  // name
+	TESTL	AX, AX
+	JZ	initialize_module_done
 	MOVL	AX, 0(SP)
-	CALL	ppapi·ppp_initialize_module(SB)
-	MOVL	4(SP), BP
-	MOVL	8(SP), BX
-	MOVL	12(SP), SI
-	MOVL	16(SP), DI
+	CALL	DI
+	MOVL	AX, 4(SI)  // ppb
+	ADDL	$8, SI
+	JMP	initialize_module_loop
+initialize_module_done:
+	MOVL	4(SP), SI
+	MOVL	8(SP), DI
+	XORL	AX, AX
 	RET
 
 // ppapi·ppp_shutdown_module_handler my or may not be called when the
@@ -5795,24 +5808,44 @@ TEXT ppapi·ppp_shutdown_module_handler(SB),NOSPLIT,$0
 
 // ppapi·ppp_get_interface_handler is called by the browser to get
 // callback functions.  Called from the C stack.
-TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$20
-	MOVL	BP, 4(SP)
-	MOVL	BX, 8(SP)
-	MOVL	SI, 12(SP)
-	MOVL	DI, 16(SP)
+TEXT ppapi·ppp_get_interface_handler(SB),NOSPLIT,$24
+	MOVL	BP, 8(SP)
+	MOVL	BX, 12(SP)
+	MOVL	SI, 16(SP)
+	MOVL	DI, 20(SP)
 	MOVL	interface_name+0(FP), AX
 	MOVL	AX, 0(SP)
 	CALL	ppapi·ppp_get_interface(SB)
-	MOVL	4(SP), BP
-	MOVL	8(SP), BX
-	MOVL	12(SP), SI
-	MOVL	16(SP), DI
+	MOVL	8(SP), BP
+	MOVL	12(SP), BX
+	MOVL	16(SP), SI
+	MOVL	20(SP), DI
 	RET
 
 // ppapi·start is called to start PPAPI.  Never returns.
 TEXT ppapi·start(SB),NOSPLIT,$4
-	LEAL	ppapi·pp_start_functions(SB), AX
-	MOVL	AX, 0(SP)
+	LEAL	ppapi·pp_start_functions(SB), DI
+	MOVL	DI, 0(SP)
 	MOVL	runtime·nacl_irt_ppapihook_v0_1+IRT_PPAPI_START(SB), AX
 	CALL	AX
 	RET
+
+TEXT ·ppapi_start(SB),NOSPLIT,$8-0
+	NO_LOCAL_POINTERS
+	LEAL	ppapi·start(SB), AX
+	MOVL	AX, 0(SP)
+	MOVL	$0, 4(SP)
+	CALL	runtime·cgocall(SB)
+	// Not reached
+	INT	$3
+	RET
+
+// Tunnel some functions from runtime.
+TEXT ·gostring(SB),NOSPLIT,$0
+	JMP	runtime·gostring(SB)
+
+TEXT ·gostringn(SB),NOSPLIT,$0
+	JMP	runtime·gostringn(SB)
+
+TEXT ·free(SB),NOSPLIT,$0
+	JMP	runtime·cfree(SB)
