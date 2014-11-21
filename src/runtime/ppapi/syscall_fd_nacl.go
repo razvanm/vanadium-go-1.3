@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"runtime"
+	"strconv"
 	"strings"
 	"sync"
 	"syscall"
@@ -369,7 +370,7 @@ func (*consoleLogFile) read([]byte) (int, error) {
 }
 func (c *consoleLogFile) writeLine(b []byte) (int, error) {
 	_, file, line, _ := runtime.Caller(3)
-	loc := fmt.Sprintf("%s:%d", file, line)
+	loc := file + ":" + strconv.Itoa(line)
 	// Unfortunately nacl truncates logs at 128 chars.
 	batchSize := 128
 	for i := 0; i*batchSize < len(b); i++ {
