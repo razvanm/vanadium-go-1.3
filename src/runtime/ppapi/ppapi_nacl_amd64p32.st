@@ -84,8 +84,8 @@
     {%- else %}
 	// {{arg.name}} (sizeof {{size}})
       {%- for aoff in range(0, size, 4) %}
-	MOVL	{{ain+aoff}}(AX), DX
-	MOVL	DX, {{soff+aoff}}(SP)
+	MOVL	{{ain+aoff}}(AX), R10
+	MOVL	R10, {{soff+aoff}}(SP)
       {%- endfor -%}
       {%- set soff = soff + size -%}
     {%- endif -%}

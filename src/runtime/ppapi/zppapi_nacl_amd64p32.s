@@ -2737,14 +2737,14 @@ TEXT ppapi·ppb_keyboardinputevent_create(SB),NOSPLIT,$72
 	MOVQ	24(AX), R8  // text (sizeof 16)
 	MOVQ	32(AX), R9
 	// code (sizeof 16)
-	MOVL	40(AX), DX
-	MOVL	DX, 0(SP)
-	MOVL	44(AX), DX
-	MOVL	DX, 4(SP)
-	MOVL	48(AX), DX
-	MOVL	DX, 8(SP)
-	MOVL	52(AX), DX
-	MOVL	DX, 12(SP)
+	MOVL	40(AX), R10
+	MOVL	R10, 0(SP)
+	MOVL	44(AX), R10
+	MOVL	R10, 4(SP)
+	MOVL	48(AX), R10
+	MOVL	R10, 8(SP)
+	MOVL	52(AX), R10
+	MOVL	R10, 12(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_KEYBOARD_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
@@ -3270,8 +3270,8 @@ TEXT ppapi·ppb_mouseinputevent_create(SB),NOSPLIT,$56
 	MOVL	24(AX), R8  // position
 	MOVL	28(AX), R9  // clicks
 	// movement (sizeof 4)
-	MOVL	32(AX), DX
-	MOVL	DX, 0(SP)
+	MOVL	32(AX), R10
+	MOVL	R10, 0(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_MOUSE_INPUT_EVENT*8+4)(SB), AX
 	MOVL	(0*4)(AX), AX
 	CALL	AX
@@ -5832,12 +5832,12 @@ TEXT ppapi·ppb_websocket_connect(SB),NOSPLIT,$56
 	MOVL	20(AX), CX  // protocols
 	MOVL	24(AX), R8  // protocol_count
 	// cb (sizeof 12)
-	MOVL	28(AX), DX
-	MOVL	DX, 0(SP)
-	MOVL	32(AX), DX
-	MOVL	DX, 4(SP)
-	MOVL	36(AX), DX
-	MOVL	DX, 8(SP)
+	MOVL	28(AX), R10
+	MOVL	R10, 0(SP)
+	MOVL	32(AX), R10
+	MOVL	R10, 4(SP)
+	MOVL	36(AX), R10
+	MOVL	R10, 8(SP)
 	MOVL	ppapi·ppb_interfaces+(PPB_WEB_SOCKET*8+4)(SB), AX
 	MOVL	(2*4)(AX), AX
 	CALL	AX
