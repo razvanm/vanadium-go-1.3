@@ -183,6 +183,7 @@ TEXT ppapi·{{func.name}}(SB),NOSPLIT,${{align(fsize+56,16)}}
 {% set asize = align(fsize, 16)+8 -%}
 TEXT ·{{func.name}}(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·{{func.name}}(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX

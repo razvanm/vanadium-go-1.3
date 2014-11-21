@@ -634,6 +634,7 @@ TEXT ppapi·get_array_output_buffer(SB),NOSPLIT,$80
 // PPAPI calls are invoked using cgocall.
 TEXT ·ppb_audio_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audio_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -658,6 +659,7 @@ TEXT ppapi·ppb_audio_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_audio_is_audio(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audio_is_audio(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -679,6 +681,7 @@ TEXT ppapi·ppb_audio_is_audio(SB),NOSPLIT,$24
 
 TEXT ·ppb_audio_get_current_config(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audio_get_current_config(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -700,6 +703,7 @@ TEXT ppapi·ppb_audio_get_current_config(SB),NOSPLIT,$24
 
 TEXT ·ppb_audio_start_playback(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audio_start_playback(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -721,6 +725,7 @@ TEXT ppapi·ppb_audio_start_playback(SB),NOSPLIT,$24
 
 TEXT ·ppb_audio_stop_playback(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audio_stop_playback(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -742,6 +747,7 @@ TEXT ppapi·ppb_audio_stop_playback(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_is_audio_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -763,6 +769,7 @@ TEXT ppapi·ppb_audiobuffer_is_audio_buffer(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_get_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -784,6 +791,7 @@ TEXT ppapi·ppb_audiobuffer_get_timestamp(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_set_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -805,6 +813,7 @@ TEXT ppapi·ppb_audiobuffer_set_timestamp(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_get_sample_rate(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -826,6 +835,7 @@ TEXT ppapi·ppb_audiobuffer_get_sample_rate(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_get_sample_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -847,6 +857,7 @@ TEXT ppapi·ppb_audiobuffer_get_sample_size(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_get_number_of_channels(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -868,6 +879,7 @@ TEXT ppapi·ppb_audiobuffer_get_number_of_channels(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_get_number_of_samples(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -889,6 +901,7 @@ TEXT ppapi·ppb_audiobuffer_get_number_of_samples(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_get_data_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -910,6 +923,7 @@ TEXT ppapi·ppb_audiobuffer_get_data_buffer(SB),NOSPLIT,$24
 
 TEXT ·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audiobuffer_get_data_buffer_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -931,6 +945,7 @@ TEXT ppapi·ppb_audiobuffer_get_data_buffer_size(SB),NOSPLIT,$24
 
 TEXT ·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audioconfig_create_stereo_16bit(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -954,6 +969,7 @@ TEXT ppapi·ppb_audioconfig_create_stereo_16bit(SB),NOSPLIT,$24
 
 TEXT ·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audioconfig_recommend_sample_frame_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -977,6 +993,7 @@ TEXT ppapi·ppb_audioconfig_recommend_sample_frame_count(SB),NOSPLIT,$24
 
 TEXT ·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audioconfig_is_audio_config(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -998,6 +1015,7 @@ TEXT ppapi·ppb_audioconfig_is_audio_config(SB),NOSPLIT,$24
 
 TEXT ·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audioconfig_get_sample_rate(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1019,6 +1037,7 @@ TEXT ppapi·ppb_audioconfig_get_sample_rate(SB),NOSPLIT,$24
 
 TEXT ·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audioconfig_get_sample_frame_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1040,6 +1059,7 @@ TEXT ppapi·ppb_audioconfig_get_sample_frame_count(SB),NOSPLIT,$24
 
 TEXT ·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_audioconfig_recommend_sample_rate(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1061,6 +1081,7 @@ TEXT ppapi·ppb_audioconfig_recommend_sample_rate(SB),NOSPLIT,$24
 
 TEXT ·ppb_console_log(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_console_log(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1085,6 +1106,7 @@ TEXT ppapi·ppb_console_log(SB),NOSPLIT,$40
 
 TEXT ·ppb_console_log_with_source(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_console_log_with_source(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1111,6 +1133,7 @@ TEXT ppapi·ppb_console_log_with_source(SB),NOSPLIT,$56
 
 TEXT ·ppb_core_add_ref_resource(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_core_add_ref_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1132,6 +1155,7 @@ TEXT ppapi·ppb_core_add_ref_resource(SB),NOSPLIT,$24
 
 TEXT ·ppb_core_release_resource(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_core_release_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1153,6 +1177,7 @@ TEXT ppapi·ppb_core_release_resource(SB),NOSPLIT,$24
 
 TEXT ·ppb_core_get_time(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_core_get_time(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1174,6 +1199,7 @@ TEXT ppapi·ppb_core_get_time(SB),NOSPLIT,$24
 
 TEXT ·ppb_core_get_time_ticks(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_core_get_time_ticks(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1195,6 +1221,7 @@ TEXT ppapi·ppb_core_get_time_ticks(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileio_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1216,6 +1243,7 @@ TEXT ppapi·ppb_fileio_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileio_is_file_io(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_is_file_io(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1237,6 +1265,7 @@ TEXT ppapi·ppb_fileio_is_file_io(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileio_open(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_open(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1262,6 +1291,7 @@ TEXT ppapi·ppb_fileio_open(SB),NOSPLIT,$40
 
 TEXT ·ppb_fileio_query(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_query(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1286,6 +1316,7 @@ TEXT ppapi·ppb_fileio_query(SB),NOSPLIT,$40
 
 TEXT ·ppb_fileio_touch(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_touch(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1311,6 +1342,7 @@ TEXT ppapi·ppb_fileio_touch(SB),NOSPLIT,$56
 
 TEXT ·ppb_fileio_read(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_read(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1337,6 +1369,7 @@ TEXT ppapi·ppb_fileio_read(SB),NOSPLIT,$56
 
 TEXT ·ppb_fileio_write(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_write(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1363,6 +1396,7 @@ TEXT ppapi·ppb_fileio_write(SB),NOSPLIT,$56
 
 TEXT ·ppb_fileio_set_length(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_set_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1387,6 +1421,7 @@ TEXT ppapi·ppb_fileio_set_length(SB),NOSPLIT,$40
 
 TEXT ·ppb_fileio_flush(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_flush(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1410,6 +1445,7 @@ TEXT ppapi·ppb_fileio_flush(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileio_close(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileio_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1431,6 +1467,7 @@ TEXT ppapi·ppb_fileio_close(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1453,6 +1490,7 @@ TEXT ppapi·ppb_fileref_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_is_file_ref(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_is_file_ref(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1474,6 +1512,7 @@ TEXT ppapi·ppb_fileref_is_file_ref(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_get_file_system_type(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_get_file_system_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1495,6 +1534,7 @@ TEXT ppapi·ppb_fileref_get_file_system_type(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_get_name(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_get_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1519,6 +1559,7 @@ TEXT ppapi·ppb_fileref_get_name(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_get_path(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_get_path(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1543,6 +1584,7 @@ TEXT ppapi·ppb_fileref_get_path(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_get_parent(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_get_parent(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1564,6 +1606,7 @@ TEXT ppapi·ppb_fileref_get_parent(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_make_directory(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_make_directory(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1588,6 +1631,7 @@ TEXT ppapi·ppb_fileref_make_directory(SB),NOSPLIT,$40
 
 TEXT ·ppb_fileref_touch(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_touch(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1613,6 +1657,7 @@ TEXT ppapi·ppb_fileref_touch(SB),NOSPLIT,$56
 
 TEXT ·ppb_fileref_delete(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_delete(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1636,6 +1681,7 @@ TEXT ppapi·ppb_fileref_delete(SB),NOSPLIT,$24
 
 TEXT ·ppb_fileref_rename(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_rename(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1660,6 +1706,7 @@ TEXT ppapi·ppb_fileref_rename(SB),NOSPLIT,$40
 
 TEXT ·ppb_fileref_query(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_query(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1684,6 +1731,7 @@ TEXT ppapi·ppb_fileref_query(SB),NOSPLIT,$40
 
 TEXT ·ppb_fileref_read_directory_entries(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fileref_read_directory_entries(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1708,6 +1756,7 @@ TEXT ppapi·ppb_fileref_read_directory_entries(SB),NOSPLIT,$40
 
 TEXT ·ppb_filesystem_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_filesystem_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1730,6 +1779,7 @@ TEXT ppapi·ppb_filesystem_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_filesystem_is_file_system(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_filesystem_is_file_system(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1751,6 +1801,7 @@ TEXT ppapi·ppb_filesystem_is_file_system(SB),NOSPLIT,$24
 
 TEXT ·ppb_filesystem_open(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_filesystem_open(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1775,6 +1826,7 @@ TEXT ppapi·ppb_filesystem_open(SB),NOSPLIT,$40
 
 TEXT ·ppb_filesystem_get_type(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_filesystem_get_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1796,6 +1848,7 @@ TEXT ppapi·ppb_filesystem_get_type(SB),NOSPLIT,$24
 
 TEXT ·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fullscreen_is_fullscreen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1817,6 +1870,7 @@ TEXT ppapi·ppb_fullscreen_is_fullscreen(SB),NOSPLIT,$24
 
 TEXT ·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fullscreen_set_fullscreen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1839,6 +1893,7 @@ TEXT ppapi·ppb_fullscreen_set_fullscreen(SB),NOSPLIT,$24
 
 TEXT ·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_fullscreen_get_screen_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1861,6 +1916,7 @@ TEXT ppapi·ppb_fullscreen_get_screen_size(SB),NOSPLIT,$24
 
 TEXT ·ppb_gamepad_sample(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_gamepad_sample(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1883,6 +1939,7 @@ TEXT ppapi·ppb_gamepad_sample(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1906,6 +1963,7 @@ TEXT ppapi·ppb_graphics2d_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_is_graphics2d(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1927,6 +1985,7 @@ TEXT ppapi·ppb_graphics2d_is_graphics2d(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_describe(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_describe(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1950,6 +2009,7 @@ TEXT ppapi·ppb_graphics2d_describe(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_paint_image_data(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1974,6 +2034,7 @@ TEXT ppapi·ppb_graphics2d_paint_image_data(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_scroll(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_scroll(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -1997,6 +2058,7 @@ TEXT ppapi·ppb_graphics2d_scroll(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_replace_contents(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_replace_contents(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2019,6 +2081,7 @@ TEXT ppapi·ppb_graphics2d_replace_contents(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_flush(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_flush(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2042,6 +2105,7 @@ TEXT ppapi·ppb_graphics2d_flush(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_set_scale(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_set_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2064,6 +2128,7 @@ TEXT ppapi·ppb_graphics2d_set_scale(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics2d_get_scale(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics2d_get_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2085,6 +2150,7 @@ TEXT ppapi·ppb_graphics2d_get_scale(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics3d_get_attrib_max_value(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2108,6 +2174,7 @@ TEXT ppapi·ppb_graphics3d_get_attrib_max_value(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics3d_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics3d_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2131,6 +2198,7 @@ TEXT ppapi·ppb_graphics3d_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics3d_is_graphics3d(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2152,6 +2220,7 @@ TEXT ppapi·ppb_graphics3d_is_graphics3d(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics3d_get_attribs(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics3d_get_attribs(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2174,6 +2243,7 @@ TEXT ppapi·ppb_graphics3d_get_attribs(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics3d_set_attribs(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics3d_set_attribs(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2196,6 +2266,7 @@ TEXT ppapi·ppb_graphics3d_set_attribs(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics3d_get_error(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics3d_get_error(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2217,6 +2288,7 @@ TEXT ppapi·ppb_graphics3d_get_error(SB),NOSPLIT,$24
 
 TEXT ·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_graphics3d_resize_buffers(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2240,6 +2312,7 @@ TEXT ppapi·ppb_graphics3d_resize_buffers(SB),NOSPLIT,$24
 
 TEXT ·ppb_hostresolver_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_hostresolver_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2261,6 +2334,7 @@ TEXT ppapi·ppb_hostresolver_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_hostresolver_is_host_resolver(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2282,6 +2356,7 @@ TEXT ppapi·ppb_hostresolver_is_host_resolver(SB),NOSPLIT,$24
 
 TEXT ·ppb_hostresolver_resolve(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_hostresolver_resolve(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2308,6 +2383,7 @@ TEXT ppapi·ppb_hostresolver_resolve(SB),NOSPLIT,$40
 
 TEXT ·ppb_hostresolver_get_canonical_name(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_hostresolver_get_canonical_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2332,6 +2408,7 @@ TEXT ppapi·ppb_hostresolver_get_canonical_name(SB),NOSPLIT,$24
 
 TEXT ·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_hostresolver_get_net_address_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2353,6 +2430,7 @@ TEXT ppapi·ppb_hostresolver_get_net_address_count(SB),NOSPLIT,$24
 
 TEXT ·ppb_hostresolver_get_net_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_hostresolver_get_net_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2375,6 +2453,7 @@ TEXT ppapi·ppb_hostresolver_get_net_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_imagedata_get_native_image_data_format(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2395,6 +2474,7 @@ TEXT ppapi·ppb_imagedata_get_native_image_data_format(SB),NOSPLIT,$8
 
 TEXT ·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_imagedata_is_image_data_supported(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2416,6 +2496,7 @@ TEXT ppapi·ppb_imagedata_is_image_data_supported(SB),NOSPLIT,$24
 
 TEXT ·ppb_imagedata_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_imagedata_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2440,6 +2521,7 @@ TEXT ppapi·ppb_imagedata_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_imagedata_is_image_data(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_imagedata_is_image_data(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2461,6 +2543,7 @@ TEXT ppapi·ppb_imagedata_is_image_data(SB),NOSPLIT,$24
 
 TEXT ·ppb_imagedata_describe(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_imagedata_describe(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2483,6 +2566,7 @@ TEXT ppapi·ppb_imagedata_describe(SB),NOSPLIT,$24
 
 TEXT ·ppb_imagedata_map(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_imagedata_map(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2504,6 +2588,7 @@ TEXT ppapi·ppb_imagedata_map(SB),NOSPLIT,$24
 
 TEXT ·ppb_imagedata_unmap(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_imagedata_unmap(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2525,6 +2610,7 @@ TEXT ppapi·ppb_imagedata_unmap(SB),NOSPLIT,$24
 
 TEXT ·ppb_inputevent_request_input_events(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_inputevent_request_input_events(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2547,6 +2633,7 @@ TEXT ppapi·ppb_inputevent_request_input_events(SB),NOSPLIT,$24
 
 TEXT ·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_inputevent_request_filtering_input_events(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2569,6 +2656,7 @@ TEXT ppapi·ppb_inputevent_request_filtering_input_events(SB),NOSPLIT,$24
 
 TEXT ·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_inputevent_clear_input_event_request(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2591,6 +2679,7 @@ TEXT ppapi·ppb_inputevent_clear_input_event_request(SB),NOSPLIT,$24
 
 TEXT ·ppb_inputevent_is_input_event(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_inputevent_is_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2612,6 +2701,7 @@ TEXT ppapi·ppb_inputevent_is_input_event(SB),NOSPLIT,$24
 
 TEXT ·ppb_inputevent_get_type(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_inputevent_get_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2633,6 +2723,7 @@ TEXT ppapi·ppb_inputevent_get_type(SB),NOSPLIT,$24
 
 TEXT ·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_inputevent_get_time_stamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2654,6 +2745,7 @@ TEXT ppapi·ppb_inputevent_get_time_stamp(SB),NOSPLIT,$24
 
 TEXT ·ppb_inputevent_get_modifiers(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_inputevent_get_modifiers(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2675,6 +2767,7 @@ TEXT ppapi·ppb_inputevent_get_modifiers(SB),NOSPLIT,$24
 
 TEXT ·ppb_instance_bind_graphics(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_instance_bind_graphics(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2697,6 +2790,7 @@ TEXT ppapi·ppb_instance_bind_graphics(SB),NOSPLIT,$24
 
 TEXT ·ppb_instance_is_full_frame(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_instance_is_full_frame(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2718,6 +2812,7 @@ TEXT ppapi·ppb_instance_is_full_frame(SB),NOSPLIT,$24
 
 TEXT ·ppb_keyboardinputevent_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_keyboardinputevent_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2754,6 +2849,7 @@ TEXT ppapi·ppb_keyboardinputevent_create(SB),NOSPLIT,$72
 
 TEXT ·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_keyboardinputevent_is_keyboard_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2775,6 +2871,7 @@ TEXT ppapi·ppb_keyboardinputevent_is_keyboard_input_event(SB),NOSPLIT,$24
 
 TEXT ·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_keyboardinputevent_get_key_code(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2796,6 +2893,7 @@ TEXT ppapi·ppb_keyboardinputevent_get_key_code(SB),NOSPLIT,$24
 
 TEXT ·ppb_keyboardinputevent_get_character_text(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_keyboardinputevent_get_character_text(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2820,6 +2918,7 @@ TEXT ppapi·ppb_keyboardinputevent_get_character_text(SB),NOSPLIT,$24
 
 TEXT ·ppb_keyboardinputevent_get_code(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_keyboardinputevent_get_code(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2844,6 +2943,7 @@ TEXT ppapi·ppb_keyboardinputevent_get_code(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2865,6 +2965,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_is_media_stream_audio_track(SB),NOSPLIT,$2
 
 TEXT ·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_configure(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2889,6 +2990,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_configure(SB),NOSPLIT,$40
 
 TEXT ·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_get_attrib(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2912,6 +3014,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_get_attrib(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamaudiotrack_get_id(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_get_id(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2936,6 +3039,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_get_id(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_has_ended(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2957,6 +3061,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_has_ended(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_get_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -2981,6 +3086,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_get_buffer(SB),NOSPLIT,$40
 
 TEXT ·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_recycle_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3003,6 +3109,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_recycle_buffer(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamaudiotrack_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3024,6 +3131,7 @@ TEXT ppapi·ppb_mediastreamaudiotrack_close(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_is_media_stream_video_track(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3045,6 +3153,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_is_media_stream_video_track(SB),NOSPLIT,$2
 
 TEXT ·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_configure(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3069,6 +3178,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_configure(SB),NOSPLIT,$40
 
 TEXT ·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_get_attrib(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3092,6 +3202,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_get_attrib(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamvideotrack_get_id(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_get_id(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3116,6 +3227,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_get_id(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_has_ended(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3137,6 +3249,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_has_ended(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_get_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3161,6 +3274,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_get_buffer(SB),NOSPLIT,$40
 
 TEXT ·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_recycle_frame(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3183,6 +3297,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_recycle_frame(SB),NOSPLIT,$24
 
 TEXT ·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mediastreamvideotrack_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3204,6 +3319,7 @@ TEXT ppapi·ppb_mediastreamvideotrack_close(SB),NOSPLIT,$24
 
 TEXT ·ppb_messaging_post_message(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_messaging_post_message(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3227,6 +3343,7 @@ TEXT ppapi·ppb_messaging_post_message(SB),NOSPLIT,$40
 
 TEXT ·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouse_cursor_set_cursor(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3251,6 +3368,7 @@ TEXT ppapi·ppb_mouse_cursor_set_cursor(SB),NOSPLIT,$24
 
 TEXT ·ppb_mouseinputevent_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouseinputevent_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3281,6 +3399,7 @@ TEXT ppapi·ppb_mouseinputevent_create(SB),NOSPLIT,$56
 
 TEXT ·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouseinputevent_is_mouse_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3302,6 +3421,7 @@ TEXT ppapi·ppb_mouseinputevent_is_mouse_input_event(SB),NOSPLIT,$24
 
 TEXT ·ppb_mouseinputevent_get_button(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouseinputevent_get_button(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3323,6 +3443,7 @@ TEXT ppapi·ppb_mouseinputevent_get_button(SB),NOSPLIT,$24
 
 TEXT ·ppb_mouseinputevent_get_position(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouseinputevent_get_position(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3346,6 +3467,7 @@ TEXT ppapi·ppb_mouseinputevent_get_position(SB),NOSPLIT,$24
 
 TEXT ·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouseinputevent_get_click_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3367,6 +3489,7 @@ TEXT ppapi·ppb_mouseinputevent_get_click_count(SB),NOSPLIT,$24
 
 TEXT ·ppb_mouseinputevent_get_movement(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouseinputevent_get_movement(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3390,6 +3513,7 @@ TEXT ppapi·ppb_mouseinputevent_get_movement(SB),NOSPLIT,$24
 
 TEXT ·ppb_mouselock_lock_mouse(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouselock_lock_mouse(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3413,6 +3537,7 @@ TEXT ppapi·ppb_mouselock_lock_mouse(SB),NOSPLIT,$24
 
 TEXT ·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_mouselock_unlock_mouse(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3434,6 +3559,7 @@ TEXT ppapi·ppb_mouselock_unlock_mouse(SB),NOSPLIT,$24
 
 TEXT ·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_netaddress_create_from_ipv4_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3456,6 +3582,7 @@ TEXT ppapi·ppb_netaddress_create_from_ipv4_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_netaddress_create_from_ipv6_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3478,6 +3605,7 @@ TEXT ppapi·ppb_netaddress_create_from_ipv6_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_netaddress_is_net_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_netaddress_is_net_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3499,6 +3627,7 @@ TEXT ppapi·ppb_netaddress_is_net_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_netaddress_get_family(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_netaddress_get_family(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3520,6 +3649,7 @@ TEXT ppapi·ppb_netaddress_get_family(SB),NOSPLIT,$24
 
 TEXT ·ppb_netaddress_describe_as_string(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_netaddress_describe_as_string(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3545,6 +3675,7 @@ TEXT ppapi·ppb_netaddress_describe_as_string(SB),NOSPLIT,$24
 
 TEXT ·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_netaddress_describe_as_ipv4_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3567,6 +3698,7 @@ TEXT ppapi·ppb_netaddress_describe_as_ipv4_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_netaddress_describe_as_ipv6_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3589,6 +3721,7 @@ TEXT ppapi·ppb_netaddress_describe_as_ipv6_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_is_network_list(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_is_network_list(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3610,6 +3743,7 @@ TEXT ppapi·ppb_networklist_is_network_list(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_get_count(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_get_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3631,6 +3765,7 @@ TEXT ppapi·ppb_networklist_get_count(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_get_name(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_get_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3656,6 +3791,7 @@ TEXT ppapi·ppb_networklist_get_name(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_get_type(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_get_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3678,6 +3814,7 @@ TEXT ppapi·ppb_networklist_get_type(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_get_state(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_get_state(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3700,6 +3837,7 @@ TEXT ppapi·ppb_networklist_get_state(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_get_ip_addresses(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3723,6 +3861,7 @@ TEXT ppapi·ppb_networklist_get_ip_addresses(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_get_display_name(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_get_display_name(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3748,6 +3887,7 @@ TEXT ppapi·ppb_networklist_get_display_name(SB),NOSPLIT,$24
 
 TEXT ·ppb_networklist_get_mtu(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networklist_get_mtu(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3770,6 +3910,7 @@ TEXT ppapi·ppb_networklist_get_mtu(SB),NOSPLIT,$24
 
 TEXT ·ppb_network_monitor_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_network_monitor_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3791,6 +3932,7 @@ TEXT ppapi·ppb_network_monitor_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_network_monitor_update_network_list(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_network_monitor_update_network_list(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3815,6 +3957,7 @@ TEXT ppapi·ppb_network_monitor_update_network_list(SB),NOSPLIT,$40
 
 TEXT ·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_network_monitor_is_network_monitor(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3836,6 +3979,7 @@ TEXT ppapi·ppb_network_monitor_is_network_monitor(SB),NOSPLIT,$24
 
 TEXT ·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_networkproxy_get_proxy_for_url(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3862,6 +4006,7 @@ TEXT ppapi·ppb_networkproxy_get_proxy_for_url(SB),NOSPLIT,$56
 
 TEXT ·ppb_tcpsocket_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3883,6 +4028,7 @@ TEXT ppapi·ppb_tcpsocket_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_is_tcp_socket(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3904,6 +4050,7 @@ TEXT ppapi·ppb_tcpsocket_is_tcp_socket(SB),NOSPLIT,$24
 
 TEXT ·ppb_tcpsocket_bind(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_bind(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3928,6 +4075,7 @@ TEXT ppapi·ppb_tcpsocket_bind(SB),NOSPLIT,$40
 
 TEXT ·ppb_tcpsocket_connect(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_connect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3952,6 +4100,7 @@ TEXT ppapi·ppb_tcpsocket_connect(SB),NOSPLIT,$40
 
 TEXT ·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_get_local_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3973,6 +4122,7 @@ TEXT ppapi·ppb_tcpsocket_get_local_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_get_remote_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -3994,6 +4144,7 @@ TEXT ppapi·ppb_tcpsocket_get_remote_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_tcpsocket_read(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_read(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4019,6 +4170,7 @@ TEXT ppapi·ppb_tcpsocket_read(SB),NOSPLIT,$40
 
 TEXT ·ppb_tcpsocket_write(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_write(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4044,6 +4196,7 @@ TEXT ppapi·ppb_tcpsocket_write(SB),NOSPLIT,$40
 
 TEXT ·ppb_tcpsocket_listen(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_listen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4068,6 +4221,7 @@ TEXT ppapi·ppb_tcpsocket_listen(SB),NOSPLIT,$40
 
 TEXT ·ppb_tcpsocket_accept(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_accept(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4092,6 +4246,7 @@ TEXT ppapi·ppb_tcpsocket_accept(SB),NOSPLIT,$40
 
 TEXT ·ppb_tcpsocket_close(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4113,6 +4268,7 @@ TEXT ppapi·ppb_tcpsocket_close(SB),NOSPLIT,$24
 
 TEXT ·ppb_tcpsocket_set_option(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_tcpsocket_set_option(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4139,6 +4295,7 @@ TEXT ppapi·ppb_tcpsocket_set_option(SB),NOSPLIT,$56
 
 TEXT ·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_textinputcontroller_set_text_input_type(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4161,6 +4318,7 @@ TEXT ppapi·ppb_textinputcontroller_set_text_input_type(SB),NOSPLIT,$24
 
 TEXT ·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_textinputcontroller_update_caret_position(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4183,6 +4341,7 @@ TEXT ppapi·ppb_textinputcontroller_update_caret_position(SB),NOSPLIT,$24
 
 TEXT ·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_textinputcontroller_cancel_composition_text(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4204,6 +4363,7 @@ TEXT ppapi·ppb_textinputcontroller_cancel_composition_text(SB),NOSPLIT,$24
 
 TEXT ·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_textinputcontroller_update_surrounding_text(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4229,6 +4389,7 @@ TEXT ppapi·ppb_textinputcontroller_update_surrounding_text(SB),NOSPLIT,$40
 
 TEXT ·ppb_touchinput_event_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_touchinput_event_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4253,6 +4414,7 @@ TEXT ppapi·ppb_touchinput_event_create(SB),NOSPLIT,$40
 
 TEXT ·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_touchinput_event_add_touch_point(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4276,6 +4438,7 @@ TEXT ppapi·ppb_touchinput_event_add_touch_point(SB),NOSPLIT,$24
 
 TEXT ·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_touchinput_event_is_touch_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4297,6 +4460,7 @@ TEXT ppapi·ppb_touchinput_event_is_touch_input_event(SB),NOSPLIT,$24
 
 TEXT ·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_touchinput_event_get_touch_count(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4319,6 +4483,7 @@ TEXT ppapi·ppb_touchinput_event_get_touch_count(SB),NOSPLIT,$24
 
 TEXT ·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_touchinput_event_get_touch_by_index(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4342,6 +4507,7 @@ TEXT ppapi·ppb_touchinput_event_get_touch_by_index(SB),NOSPLIT,$24
 
 TEXT ·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_touchinput_event_get_touch_by_id(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4365,6 +4531,7 @@ TEXT ppapi·ppb_touchinput_event_get_touch_by_id(SB),NOSPLIT,$24
 
 TEXT ·ppb_udpsocket_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4386,6 +4553,7 @@ TEXT ppapi·ppb_udpsocket_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_is_udp_socket(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4407,6 +4575,7 @@ TEXT ppapi·ppb_udpsocket_is_udp_socket(SB),NOSPLIT,$24
 
 TEXT ·ppb_udpsocket_bind(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_bind(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4431,6 +4600,7 @@ TEXT ppapi·ppb_udpsocket_bind(SB),NOSPLIT,$40
 
 TEXT ·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_get_bound_address(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4452,6 +4622,7 @@ TEXT ppapi·ppb_udpsocket_get_bound_address(SB),NOSPLIT,$24
 
 TEXT ·ppb_udpsocket_recvfrom(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_recvfrom(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4478,6 +4649,7 @@ TEXT ppapi·ppb_udpsocket_recvfrom(SB),NOSPLIT,$40
 
 TEXT ·ppb_udpsocket_sendto(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_sendto(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4504,6 +4676,7 @@ TEXT ppapi·ppb_udpsocket_sendto(SB),NOSPLIT,$40
 
 TEXT ·ppb_udpsocket_close(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4525,6 +4698,7 @@ TEXT ppapi·ppb_udpsocket_close(SB),NOSPLIT,$24
 
 TEXT ·ppb_udpsocket_set_option(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_udpsocket_set_option(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4551,6 +4725,7 @@ TEXT ppapi·ppb_udpsocket_set_option(SB),NOSPLIT,$56
 
 TEXT ·ppb_urlloader_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4572,6 +4747,7 @@ TEXT ppapi·ppb_urlloader_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlloader_is_url_loader(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_is_url_loader(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4593,6 +4769,7 @@ TEXT ppapi·ppb_urlloader_is_url_loader(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlloader_open(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_open(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4617,6 +4794,7 @@ TEXT ppapi·ppb_urlloader_open(SB),NOSPLIT,$40
 
 TEXT ·ppb_urlloader_follow_redirect(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_follow_redirect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4640,6 +4818,7 @@ TEXT ppapi·ppb_urlloader_follow_redirect(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_get_upload_progress(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4663,6 +4842,7 @@ TEXT ppapi·ppb_urlloader_get_upload_progress(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlloader_get_download_progress(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_get_download_progress(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4686,6 +4866,7 @@ TEXT ppapi·ppb_urlloader_get_download_progress(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlloader_get_response_info(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_get_response_info(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4707,6 +4888,7 @@ TEXT ppapi·ppb_urlloader_get_response_info(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlloader_read_response_body(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_read_response_body(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4732,6 +4914,7 @@ TEXT ppapi·ppb_urlloader_read_response_body(SB),NOSPLIT,$40
 
 TEXT ·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_finish_streaming_to_file(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4755,6 +4938,7 @@ TEXT ppapi·ppb_urlloader_finish_streaming_to_file(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlloader_close(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlloader_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4776,6 +4960,7 @@ TEXT ppapi·ppb_urlloader_close(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlrequestinfo_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlrequestinfo_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4797,6 +4982,7 @@ TEXT ppapi·ppb_urlrequestinfo_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlrequestinfo_is_url_request_info(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4818,6 +5004,7 @@ TEXT ppapi·ppb_urlrequestinfo_is_url_request_info(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlrequestinfo_set_property(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4842,6 +5029,7 @@ TEXT ppapi·ppb_urlrequestinfo_set_property(SB),NOSPLIT,$40
 
 TEXT ·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlrequestinfo_append_data_to_body(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4865,6 +5053,7 @@ TEXT ppapi·ppb_urlrequestinfo_append_data_to_body(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlrequestinfo_append_file_to_body(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4890,6 +5079,7 @@ TEXT ppapi·ppb_urlrequestinfo_append_file_to_body(SB),NOSPLIT,$40
 
 TEXT ·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlresponseinfo_is_url_response_info(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4911,6 +5101,7 @@ TEXT ppapi·ppb_urlresponseinfo_is_url_response_info(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlresponseinfo_get_property(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlresponseinfo_get_property(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4936,6 +5127,7 @@ TEXT ppapi·ppb_urlresponseinfo_get_property(SB),NOSPLIT,$24
 
 TEXT ·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_urlresponseinfo_get_body_as_file_ref(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4957,6 +5149,7 @@ TEXT ppapi·ppb_urlresponseinfo_get_body_as_file_ref(SB),NOSPLIT,$24
 
 TEXT ·ppb_var_add_ref(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_var_add_ref(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -4979,6 +5172,7 @@ TEXT ppapi·ppb_var_add_ref(SB),NOSPLIT,$24
 
 TEXT ·ppb_var_release(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_var_release(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5001,6 +5195,7 @@ TEXT ppapi·ppb_var_release(SB),NOSPLIT,$24
 
 TEXT ·ppb_var_from_utf8(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_var_from_utf8(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5026,6 +5221,7 @@ TEXT ppapi·ppb_var_from_utf8(SB),NOSPLIT,$24
 
 TEXT ·ppb_var_to_utf8(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_var_to_utf8(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5049,6 +5245,7 @@ TEXT ppapi·ppb_var_to_utf8(SB),NOSPLIT,$40
 
 TEXT ·ppb_var_to_resource(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_var_to_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5071,6 +5268,7 @@ TEXT ppapi·ppb_var_to_resource(SB),NOSPLIT,$24
 
 TEXT ·ppb_var_from_resource(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_var_from_resource(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5095,6 +5293,7 @@ TEXT ppapi·ppb_var_from_resource(SB),NOSPLIT,$24
 
 TEXT ·ppb_vararray_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararray_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5118,6 +5317,7 @@ TEXT ppapi·ppb_vararray_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_vararray_get(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararray_get(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5144,6 +5344,7 @@ TEXT ppapi·ppb_vararray_get(SB),NOSPLIT,$40
 
 TEXT ·ppb_vararray_set(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararray_set(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5169,6 +5370,7 @@ TEXT ppapi·ppb_vararray_set(SB),NOSPLIT,$56
 
 TEXT ·ppb_vararray_get_length(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararray_get_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5191,6 +5393,7 @@ TEXT ppapi·ppb_vararray_get_length(SB),NOSPLIT,$24
 
 TEXT ·ppb_vararray_set_length(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararray_set_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5214,6 +5417,7 @@ TEXT ppapi·ppb_vararray_set_length(SB),NOSPLIT,$40
 
 TEXT ·ppb_vararraybuffer_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararraybuffer_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5238,6 +5442,7 @@ TEXT ppapi·ppb_vararraybuffer_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararraybuffer_byte_length(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5261,6 +5466,7 @@ TEXT ppapi·ppb_vararraybuffer_byte_length(SB),NOSPLIT,$40
 
 TEXT ·ppb_vararraybuffer_map(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararraybuffer_map(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5283,6 +5489,7 @@ TEXT ppapi·ppb_vararraybuffer_map(SB),NOSPLIT,$24
 
 TEXT ·ppb_vararraybuffer_unmap(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vararraybuffer_unmap(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5305,6 +5512,7 @@ TEXT ppapi·ppb_vararraybuffer_unmap(SB),NOSPLIT,$24
 
 TEXT ·ppb_vardictionary_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vardictionary_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5328,6 +5536,7 @@ TEXT ppapi·ppb_vardictionary_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_vardictionary_get(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vardictionary_get(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5355,6 +5564,7 @@ TEXT ppapi·ppb_vardictionary_get(SB),NOSPLIT,$56
 
 TEXT ·ppb_vardictionary_set(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vardictionary_set(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5381,6 +5591,7 @@ TEXT ppapi·ppb_vardictionary_set(SB),NOSPLIT,$56
 
 TEXT ·ppb_vardictionary_delete(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vardictionary_delete(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5405,6 +5616,7 @@ TEXT ppapi·ppb_vardictionary_delete(SB),NOSPLIT,$40
 
 TEXT ·ppb_vardictionary_has_key(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vardictionary_has_key(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5429,6 +5641,7 @@ TEXT ppapi·ppb_vardictionary_has_key(SB),NOSPLIT,$40
 
 TEXT ·ppb_vardictionary_get_keys(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_vardictionary_get_keys(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5454,6 +5667,7 @@ TEXT ppapi·ppb_vardictionary_get_keys(SB),NOSPLIT,$40
 
 TEXT ·ppb_videoframe_is_video_frame(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_videoframe_is_video_frame(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5475,6 +5689,7 @@ TEXT ppapi·ppb_videoframe_is_video_frame(SB),NOSPLIT,$24
 
 TEXT ·ppb_videoframe_get_timestamp(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_videoframe_get_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5496,6 +5711,7 @@ TEXT ppapi·ppb_videoframe_get_timestamp(SB),NOSPLIT,$24
 
 TEXT ·ppb_videoframe_set_timestamp(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_videoframe_set_timestamp(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5518,6 +5734,7 @@ TEXT ppapi·ppb_videoframe_set_timestamp(SB),NOSPLIT,$24
 
 TEXT ·ppb_videoframe_get_format(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_videoframe_get_format(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5539,6 +5756,7 @@ TEXT ppapi·ppb_videoframe_get_format(SB),NOSPLIT,$24
 
 TEXT ·ppb_videoframe_get_size(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_videoframe_get_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5561,6 +5779,7 @@ TEXT ppapi·ppb_videoframe_get_size(SB),NOSPLIT,$24
 
 TEXT ·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_videoframe_get_data_buffer(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5582,6 +5801,7 @@ TEXT ppapi·ppb_videoframe_get_data_buffer(SB),NOSPLIT,$24
 
 TEXT ·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_videoframe_get_data_buffer_size(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5603,6 +5823,7 @@ TEXT ppapi·ppb_videoframe_get_data_buffer_size(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_is_view(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_is_view(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5624,6 +5845,7 @@ TEXT ppapi·ppb_view_is_view(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_get_rect(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_get_rect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5646,6 +5868,7 @@ TEXT ppapi·ppb_view_get_rect(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_is_fullscreen(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_is_fullscreen(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5667,6 +5890,7 @@ TEXT ppapi·ppb_view_is_fullscreen(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_is_visible(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_is_visible(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5688,6 +5912,7 @@ TEXT ppapi·ppb_view_is_visible(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_is_page_visible(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_is_page_visible(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5709,6 +5934,7 @@ TEXT ppapi·ppb_view_is_page_visible(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_get_clip_rect(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_get_clip_rect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5731,6 +5957,7 @@ TEXT ppapi·ppb_view_get_clip_rect(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_get_device_scale(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_get_device_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5752,6 +5979,7 @@ TEXT ppapi·ppb_view_get_device_scale(SB),NOSPLIT,$24
 
 TEXT ·ppb_view_get_css_scale(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_view_get_css_scale(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5773,6 +6001,7 @@ TEXT ppapi·ppb_view_get_css_scale(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5794,6 +6023,7 @@ TEXT ppapi·ppb_websocket_create(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_is_web_socket(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_is_web_socket(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5815,6 +6045,7 @@ TEXT ppapi·ppb_websocket_is_web_socket(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_connect(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_connect(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5847,6 +6078,7 @@ TEXT ppapi·ppb_websocket_connect(SB),NOSPLIT,$56
 
 TEXT ·ppb_websocket_close(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_close(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5873,6 +6105,7 @@ TEXT ppapi·ppb_websocket_close(SB),NOSPLIT,$56
 
 TEXT ·ppb_websocket_receive_message(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_receive_message(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5897,6 +6130,7 @@ TEXT ppapi·ppb_websocket_receive_message(SB),NOSPLIT,$40
 
 TEXT ·ppb_websocket_send_message(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_send_message(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5920,6 +6154,7 @@ TEXT ppapi·ppb_websocket_send_message(SB),NOSPLIT,$40
 
 TEXT ·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_buffered_amount(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5941,6 +6176,7 @@ TEXT ppapi·ppb_websocket_get_buffered_amount(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_get_close_cose(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_close_cose(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5962,6 +6198,7 @@ TEXT ppapi·ppb_websocket_get_close_cose(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_get_close_reason(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_close_reason(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -5986,6 +6223,7 @@ TEXT ppapi·ppb_websocket_get_close_reason(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_close_was_clean(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6007,6 +6245,7 @@ TEXT ppapi·ppb_websocket_get_close_was_clean(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_get_extensions(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_extensions(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6031,6 +6270,7 @@ TEXT ppapi·ppb_websocket_get_extensions(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_get_protocol(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_protocol(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6055,6 +6295,7 @@ TEXT ppapi·ppb_websocket_get_protocol(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_get_ready_state(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_ready_state(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6076,6 +6317,7 @@ TEXT ppapi·ppb_websocket_get_ready_state(SB),NOSPLIT,$24
 
 TEXT ·ppb_websocket_get_url(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_websocket_get_url(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6100,6 +6342,7 @@ TEXT ppapi·ppb_websocket_get_url(SB),NOSPLIT,$24
 
 TEXT ·ppb_wheelinputevent_create(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_wheelinputevent_create(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6126,6 +6369,7 @@ TEXT ppapi·ppb_wheelinputevent_create(SB),NOSPLIT,$40
 
 TEXT ·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_wheelinputevent_is_wheel_input_event(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6147,6 +6391,7 @@ TEXT ppapi·ppb_wheelinputevent_is_wheel_input_event(SB),NOSPLIT,$24
 
 TEXT ·ppb_wheelinputevent_get_delta(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_wheelinputevent_get_delta(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6170,6 +6415,7 @@ TEXT ppapi·ppb_wheelinputevent_get_delta(SB),NOSPLIT,$24
 
 TEXT ·ppb_wheelinputevent_get_ticks(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_wheelinputevent_get_ticks(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
@@ -6193,6 +6439,7 @@ TEXT ppapi·ppb_wheelinputevent_get_ticks(SB),NOSPLIT,$24
 
 TEXT ·ppb_wheelinputevent_get_scroll_by_page(SB),NOSPLIT,$8
 	GO_ARGS
+	NO_LOCAL_POINTERS
 	LEAL	ppapi·ppb_wheelinputevent_get_scroll_by_page(SB), AX
 	MOVL	AX, 0(SP)
 	LEAL	arg0+0(FP), AX
