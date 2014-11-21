@@ -1,4 +1,4 @@
-#!/bin/sh -x -e
+#!/bin/bash
 
 export GOROOT=${HOME}/google/nacl/go-ppapi-veyron
 GOOS=nacl GOARCH=amd64p32 ${GOROOT}/bin/go build -o basic_x86_64.nexe basic_nacl.go
