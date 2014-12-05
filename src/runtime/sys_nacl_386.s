@@ -839,7 +839,7 @@ setldt_irt:
 	NEGL	AX
 	RET
 
-TEXT runtime·sigtramp(SB),NOSPLIT,$0
+TEXT runtime·sigtramp(SB),NOSPLIT,$24
 	get_tls(CX)
 
 	// check that g exists
@@ -881,7 +881,7 @@ sigtramp_ret:
 	NACL_SYSCALL(SYS_exception_clear_flag)
 	JMP	sigtramp_ret2
 sigtramp_irt:
-	MOVL	runtime·nacl_irt_exception_handling_v0_1+(IRT_EXCEPTION_STACK*4)(SB), AX
+	MOVL	runtime·nacl_irt_exception_handling_v0_1+(IRT_EXCEPTION_CLEAR*4)(SB), AX
 	CALL	AX
 sigtramp_ret2:
 

@@ -393,7 +393,7 @@ mutex_create_irt:
 	CALL	AX
 	NEGL	AX
 	JNZ	mutex_create_irt_done
-	MOVL	4(SP), AX
+	MOVL	(SP), AX
 mutex_create_irt_done:
 	ADDL	$4, SP
 mutex_create_done:
@@ -464,7 +464,7 @@ cond_create_irt:
 	CALL	AX
 	NEGL	AX
 	JNZ	cond_create_irt_done
-	MOVL	4(SP), AX
+	MOVL	(SP), AX
 cond_create_irt_done:
 	ADDL	$4, SP
 cond_create_done:
@@ -731,7 +731,6 @@ TEXT runtime·sigtramp(SB),NOSPLIT,$80
 	// check that g exists
 	get_tls(CX)
 	MOVL	g(CX), DI
-
 	CMPL	DI, $0
 	JEQ	nog
 
@@ -743,7 +742,7 @@ TEXT runtime·sigtramp(SB),NOSPLIT,$80
 	MOVL	m_gsignal(BX), BX
 	MOVL	BX, g(CX)
 
-//JMP debughandler
+// JMP debughandler
 
 	// copy arguments for sighandler
 	MOVL	$11, 0(SP) // signal
@@ -766,7 +765,7 @@ sigtramp_ret:
 	NACL_SYSCALL(SYS_exception_clear_flag)
 	JMP	sigtramp_ret2
 sigtramp_irt:
-	MOVL	runtime·nacl_irt_exception_handling_v0_1+(IRT_EXCEPTION_STACK*4)(SB), AX
+	MOVL	runtime·nacl_irt_exception_handling_v0_1+(IRT_EXCEPTION_CLEAR*4)(SB), AX
 	CALL	AX
 sigtramp_ret2:
 
