@@ -788,7 +788,7 @@ sigtramp_ret:
 	NACL_SYSCALL(SYS_exception_clear_flag)
 	JMP	sigtramp_ret2
 sigtramp_irt:
-	MOVL	runtime·nacl_irt_exception_handling_v0_1+(IRT_EXCEPTION_STACK*4)(SB), AX
+	MOVL	runtime·nacl_irt_exception_handling_v0_1+(IRT_EXCEPTION_CLEAR*4)(SB), AX
 	CALL	AX
 sigtramp_ret2:
 
