@@ -1,10 +1,10 @@
 {
   "program": {
     "x86-32": {
-      "url": "message_x86_32.nexe"
+      "url": "basic_x86_32.nexe"
     },
     "x86-64": {
-      "url": "message_x86_64.nexe"
+      "url": "basic_x86_64.nexe"
     }
   }
 }
