@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Copyright 2014 The Go Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
 """This is a code generator.  It reads configuration information that
 describes types, functions, and enums; and it uses the info to expand
 code templates.  The config contains lines of the following form:

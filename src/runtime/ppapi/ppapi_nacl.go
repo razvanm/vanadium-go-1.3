@@ -1,3 +1,7 @@
+// Copyright 2014 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 // Package ppapi provides the Pepper API (PPAPI) to Native Client applications.
 // Native Client (NaCl) is a sandbox for running compiled code in the browser
 // efficiently and securely, independent of the user’s operating system.  See
