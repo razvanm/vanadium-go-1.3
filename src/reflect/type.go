@@ -1690,7 +1690,7 @@ func SliceOf(t Type) Type {
 // for the type. This may require significant work.
 //
 // TODO(rsc): TestArrayOf is also disabled. Re-enable.
-func arrayOf(count int, elem Type) Type {
+func ArrayOf(count int, elem Type) Type {
 	typ := elem.(*rtype)
 	slice := SliceOf(elem)
 

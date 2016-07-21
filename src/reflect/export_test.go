@@ -15,5 +15,4 @@ func IsRO(v Value) bool {
 	return v.flag&flagRO != 0
 }
 
-var ArrayOf = arrayOf
 var CallGC = &callGC
